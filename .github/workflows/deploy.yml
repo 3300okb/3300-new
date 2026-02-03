@@ -34,7 +34,24 @@ jobs:
           chmod 600 ~/.ssh/id_ed25519
           ssh-keyscan -p ${{ secrets.LOLIPOP_SSH_PORT }} ${{ secrets.LOLIPOP_SSH_HOST }} >> ~/.ssh/known_hosts
 
+      - name: Check dist changes
+        id: dist_check
+        run: |
+          set -e
+          CHANGES=$(rsync -avz --delete --dry-run --itemize-changes \
+            -e "ssh -p ${{ secrets.LOLIPOP_SSH_PORT }}" \
+            dist/ \
+            ${{ secrets.LOLIPOP_SSH_USER }}@${{ secrets.LOLIPOP_SSH_HOST }}:${{ secrets.LOLIPOP_TARGET }})
+          if [ -n "$CHANGES" ]; then
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+            echo "$CHANGES"
+          else
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+            echo "No changes in dist. Skip deploy."
+          fi
+
       - name: Deploy via rsync
+        if: steps.dist_check.outputs.changed == 'true'
         run: |
           rsync -avz --delete \
             -e "ssh -p ${{ secrets.LOLIPOP_SSH_PORT }}" \
