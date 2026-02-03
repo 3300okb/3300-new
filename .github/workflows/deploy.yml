@@ -28,7 +28,7 @@ jobs:
         run: npm run build
 
       - name: Deploy dist via rsync over SSH
-        uses: easingthemes/ssh-deploy@v5
+        uses: easingthemes/ssh-deploy@v4.1.10
         env:
           SSH_PRIVATE_KEY: ${{ secrets.LOLIPOP_SSH_KEY }}
           REMOTE_HOST: ${{ secrets.LOLIPOP_SSH_HOST }}
