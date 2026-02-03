@@ -1,0 +1,38 @@
+name: Deploy Vite dist to Lolipop (rsync)
+
+on:
+  push:
+    branches: ['main']
+
+concurrency:
+  group: deploy-lolipop
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'npm'
+
+      - name: Install
+        run: npm ci
+
+      - name: Build
+        run: npm run build
+
+      - name: Deploy dist via rsync over SSH
+        uses: easingthemes/ssh-deploy@v5
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.LOLIPOP_SSH_KEY }}
+          REMOTE_HOST: ${{ secrets.LOLIPOP_SSH_HOST }}
+          REMOTE_USER: ${{ secrets.LOLIPOP_SSH_USER }}
+          REMOTE_PORT: ${{ secrets.LOLIPOP_SSH_PORT }}
+          SOURCE: 'dist/'
+          TARGET: ${{ secrets.LOLIPOP_TARGET }}
+          ARGS: '-rlgoDzvc --delete'
