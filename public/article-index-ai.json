@@ -6,6 +6,12 @@
     "updateDate": "2026/01/30"
   },
   {
+    "articlePath": "ai/review-test",
+    "articleName": "review-test",
+    "category": "ai",
+    "updateDate": "2026/01/30"
+  },
+  {
     "articlePath": "ai/translation",
     "articleName": "translation",
     "category": "ai",
