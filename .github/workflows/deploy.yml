@@ -27,6 +27,12 @@ jobs:
       - name: Build
         run: npm run build
 
+      - name: Debug secrets (port only)
+        run: |
+          echo "PORT=${{ secrets.LOLIPOP_SSH_PORT }}"
+          echo "HOST=${{ secrets.LOLIPOP_SSH_HOST }}"
+          echo "USER=${{ secrets.LOLIPOP_SSH_USER }}"
+
       - name: Deploy dist via rsync over SSH
         uses: easingthemes/ssh-deploy@v4.1.10
         env:
