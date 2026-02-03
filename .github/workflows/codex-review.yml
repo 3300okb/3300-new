@@ -1,0 +1,66 @@
+name: Codex review on PR comment
+
+on:
+  issue_comment:
+    types: [created]
+
+jobs:
+  codex:
+    if: github.event.issue.pull_request && contains(github.event.comment.body, '@codex') && contains(github.event.comment.body, 'review')
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write
+      issues: write
+    steps:
+      - name: Load PR info
+        id: pr
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const pr = await github.rest.pulls.get({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              pull_number: context.payload.issue.number,
+            });
+            core.setOutput('number', pr.data.number);
+            core.setOutput('base', pr.data.base.ref);
+            core.setOutput('head', pr.data.head.ref);
+
+      - uses: actions/checkout@v5
+        with:
+          # Explicitly check out the PR's merge commit.
+          ref: refs/pull/${{ steps.pr.outputs.number }}/merge
+
+      - name: Pre-fetch base and head refs for the PR
+        run: |
+          git fetch --no-tags origin \
+            ${{ steps.pr.outputs.base }} \
+            +refs/pull/${{ steps.pr.outputs.number }}/head
+
+      - name: Run Codex
+        id: run_codex
+        uses: openai/codex-action@v1
+        with:
+          openai-api-key: ${{ secrets.OPENAI_API_KEY }}
+          safety-strategy: drop-sudo
+          prompt: |
+            This is PR #${{ steps.pr.outputs.number }} for ${{ github.repository }}.
+
+            Review ONLY the changes introduced by the PR.
+            Focus on correctness, security, performance, and maintainability.
+            If no issues, say "LGTM".
+
+      - name: Post review comment
+        uses: actions/github-script@v7
+        env:
+          CODEX_REVIEW: ${{ steps.run_codex.outputs.final-message }}
+        with:
+          script: |
+            const body = process.env.CODEX_REVIEW || "Codex returned no output.";
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.payload.issue.number,
+              body,
+            });
