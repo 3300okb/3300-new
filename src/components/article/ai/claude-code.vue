@@ -13,7 +13,7 @@ import PreCodes from '@/components/PreCodes.vue'
   <ArticleHeader title="claude code" :update-date="metadata.updateDate" />
 
   <PreCodes>
-    <pre>test<b class="t01">claude</b>  <b class="t02">// Start session</b>
+    <pre><b class="t01">claude</b>  <b class="t02">// Start session</b>
 <b class="t01">claude -c</b>  <b class="t02">// Resume the most recent session</b>
 <b class="t01">claude -r</b>  <b class="t02">// Resume a specific session</b>
 

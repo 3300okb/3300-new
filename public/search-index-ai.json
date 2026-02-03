@@ -4,7 +4,7 @@
     "articleName": "claude-code",
     "category": "ai",
     "preBlocks": [
-      "testclaude  // Start session\nclaude -c  // Resume the most recent session\nclaude -r  // Resume a specific session\n\n// CLI Reference\nhttps://code.claude.com/docs/ja/cli-reference",
+      "claude  // Start session\nclaude -c  // Resume the most recent session\nclaude -r  // Resume a specific session\n\n// CLI Reference\nhttps://code.claude.com/docs/ja/cli-reference",
       "shift + tab  // Change modes during a session\nesc  // Interrupt thinking\n\n/init  // Remember the project's structure\n\n// Interactive mode Reference\nhttps://code.claude.com/docs/ja/interactive-mode"
     ]
   },
