@@ -9,6 +9,12 @@
     ]
   },
   {
+    "articlePath": "ai/test",
+    "articleName": "test",
+    "category": "ai",
+    "preBlocks": []
+  },
+  {
     "articlePath": "ai/translation",
     "articleName": "translation",
     "category": "ai",
