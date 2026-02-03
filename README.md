@@ -1,13 +1,28 @@
-# Vue 3 + TypeScript + Vite
+# 3300-new
 
-This template should help get you started developing with Vue 3 and TypeScript in Vite. The template uses Vue 3 `<script setup>` SFCs, check out the [script setup docs](https://v3.vuejs.org/api/sfc-script-setup.html#sfc-script-setup) to learn more.
+Personal notes for how I work on this repo. No extra guidance for other contributors.
 
-Learn more about the recommended Project Setup and IDE Support in the [Vue Docs TypeScript Guide](https://vuejs.org/guide/typescript/overview.html#project-setup).
+## Overview
 
-## Manual font subset
+- Vue 3 + Vite + TypeScript + Tailwind CSS.
+- UI entry is `src/App.vue`; app bootstraps in `src/main.ts`.
+- Articles live in `src/components/article/<category>/<name>.vue`.
+- List/search indexes are generated into `public/` and fetched at runtime.
 
-Font subsetting is not run automatically on build. Run it manually when needed:
+## Common commands
 
-```sh
-npm run font:subset
-```
+- Dev: `npm run dev` (auto-runs `npm run index:generate`)
+- Build: `npm run build`
+- Lint: `npm run lint`
+- Format: `npm run format`
+- Checks: `npm run check`
+- Regenerate indexes: `npm run index:generate`
+- Font subset: `npm run subset`
+
+## Article notes
+
+- Each article exports `metadata.updateDate`.
+- Example: `export const metadata = { updateDate: 'YYYY/MM/DD' }`
+- Use `<ArticleHeader ... :update-date="metadata.updateDate" />`.
+- Search index is built from `<pre>` blocks (HTML stripped).
+- Article IDs are fixed to `category/filename`, so keep paths stable.
