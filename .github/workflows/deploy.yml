@@ -3,6 +3,7 @@ name: Deploy Vite dist to Lolipop (rsync)
 on:
   push:
     branches: ['main']
+  workflow_dispatch:
 
 concurrency:
   group: deploy-lolipop
