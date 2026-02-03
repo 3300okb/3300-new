@@ -1,0 +1,81 @@
+<!doctype html>
+<title>smoothScroll</title>
+<link rel="stylesheet" href="/sample/font-select.css" />
+<meta
+  name="viewport"
+  content="width=device-width, user-scalable=no, initial-scale=1, maximum-scale=1"
+/>
+
+<style>
+  html,
+  body,
+  ul,
+  p {
+    margin: 0;
+    padding: 0;
+    font-size: 14px;
+  }
+  h1 {
+    margin: 0;
+  }
+  ul {
+    position: fixed;
+    top: 0;
+    right: 0;
+  }
+  li {
+    list-style: none;
+  }
+  a {
+    display: block;
+    width: 44px;
+    height: 44px;
+    border: #ddd 1px dotted;
+    background: #fff;
+    cursor: pointer;
+  }
+  p {
+    height: 400px;
+  }
+  #a,
+  #c,
+  #e {
+    background: #eee;
+  }
+</style>
+
+<ul>
+  <li><a class="smoothScroll" href="#top">top</a></li>
+  <li><a class="smoothScroll" href="#a">a</a></li>
+  <li><a class="smoothScroll" href="#b">b</a></li>
+  <li><a class="smoothScroll" href="#c">c</a></li>
+  <li><a class="smoothScroll" href="#d">d</a></li>
+  <li><a class="smoothScroll" href="#e">e</a></li>
+  <li><a class="smoothScroll" href="#f">f</a></li>
+</ul>
+
+<h1 id="top">smooth scroll</h1>
+<p id="a">a</p>
+<p id="b">b</p>
+<p id="c">c</p>
+<p id="d">d</p>
+<p id="e">e</p>
+<p id="f">f</p>
+
+<script src="polyfill.min.js"></script>
+<script>
+  ;(function (cls) {
+    document.addEventListener('click', (ev) => {
+      const target = ev.target
+      if (!target.classList.contains(cls)) {
+        return
+      }
+      ev.preventDefault()
+      const targetId = target.hash
+      document.querySelector(targetId).scrollIntoView({
+        behavior: 'smooth',
+        block: 'start',
+      })
+    })
+  })('smoothScroll')
+</script>

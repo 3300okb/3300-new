@@ -1,0 +1,306 @@
+[
+  {
+    "articlePath": "etc/bower",
+    "articleName": "bower",
+    "category": "etc",
+    "preBlocks": [
+      "http://nodejs.org/   // node.js インストール\nnode -v  // node.js バージョン確認\nnpm -v  // npm(node package manager: https://www.npmjs.org/) バージョン確認\n\nsudo npm install bower -g  // bower グローバルインストール\nbower -v  // バージョン確認",
+      "bower init  // bower.json作成\n\nbower i [library] --save-dev   // bower_component/ を作りその中にinstallしてbower.jsonのdependenciesを編集\nbower i jquery --save-dev\nbower i jquery#1 --save-dev\nbower i jquery#1.11.3 --save-dev\n\nbower uninstall [library] --save-dev  // bower_component/ からuninstallしてbower.jsonのdependenciesを編集",
+      "bower ls   // installしたものを確認\nbower update   // installしたものをupdate\n\nbower search [library]  // ライブラリ検索\nbower info [library]   // ライブラリ情報確認",
+      "bower.json (exsample)\n\n{\n  \"name\": \"package\",\n  \"version\": \"\",\n  \"dependencies\": {\n    \"jquery\": \"~1.12.0\",\n    \"zepto\": \"~1.1.6\"\n  }\n}\n\n// bower i で bower_components/ フォルダを作りその中にinstallする"
+    ]
+  },
+  {
+    "articlePath": "etc/charles",
+    "articleName": "charles",
+    "category": "etc",
+    "preBlocks": [
+      "https://www.charlesproxy.com/   // Download\n\n// charles側\n[command]+[shift]+L  // Map Local Settings (Protocol, Host, Path, Local Path を設定してローカルファイルと紐付け)\nProxy > Proxying Setting > Mac OS X > Enable Mac OS X Proxy にチェック(Macの場合)\n// SSLの場合は、HELP > SSL Proxying > Install Charles Root Certificate からキーチェーンリストの中のCharles証明書を信頼設定する\n// SSLの場合は、Proxy > SSL Proxying Setting > Enable SSL Proxying にチェック > Locationsにアスタリスク(*)を設定\n\n// 端末側(iOS)\n設定 > Wi-Fi > iマーク > HTTPプロキシ[手動] > サーバ(PCのIP)とポート(8888)を入力  // 8888はcharles側初期ポート\n// SSLの場合は、↓端末に証明書をインストール(iOS: charlesにプロキシした状態で、safariで、以下にアクセス)\n// http://www.charlesproxy.com/getssl"
+    ]
+  },
+  {
+    "articlePath": "etc/ds-store",
+    "articleName": "ds-store",
+    "category": "etc",
+    "preBlocks": [
+      "find . -name \".DS_Store\" -print -exec rm {} \";\"\n // カレント配下から .DS_Store の全削除\n\nhttp://asepsis.binaryage.com/\n // .DS_Storeを作らないソフト -> OSアップデート時は念のためアンインストール\n // defaults write com.apple.desktopservices DSDontWriteNetworkStores true で可能という記事は嘘っぽい"
+    ]
+  },
+  {
+    "articlePath": "etc/emmet",
+    "articleName": "emmet",
+    "category": "etc",
+    "preBlocks": [
+      "http://docs.emmet.io/  // ドキュメント\n\nhttps://github.com/mattn/emmet-vim  // インストール\nダウンロードし、autoloadフォルダとpluginフォルダを ~/.vim/ 直下にコピー\n\n---\n\nvi ~/.vimrc  // vim設定ファイルを開き、以下1行を追記\nlet g:user_emmet_expandabbr_key = '<c-y>'  // [control]+y で展開するという設定\n\n---\n\ndiv#main>ul.menu>li{item}*3 [control]+y  // html展開\n\n[control]+y /  コメントon,off\n\n複数行選択 [control]+y m  // 連結\nimgタグ上 [control]+y i  // 幅自動入力\nURL上 [control]+y a  // aタグ記述"
+    ]
+  },
+  {
+    "articlePath": "etc/english-grammar",
+    "articleName": "english-grammar",
+    "category": "etc",
+    "preBlocks": [
+      "// 現在形\n\nI am 〜\n// 一人称\n\nHe is 〜\nShe is 〜\nIt is 〜\n// 三人称単数\n\nYou are 〜\nWe are 〜\nThey are 〜\n// 二人称・三人称複数\n\n---\n\n// 否定の現在形\n\nI am not 〜\n// 一人称\n\nHe is not 〜\nShe is not 〜\nIt is not 〜\n// 三人称単数\n// is not = isn't\n\nYou are not 〜\nWe are not 〜\nThey are not 〜\n// 二人称・三人称複数\n// are not = aren't\n\n---\n\n// 過去形\n\nI was 〜\n// 一人称\n\nHe was 〜\nShe was 〜\nIt was 〜\n// 三人称単数\n\nYou were 〜\nWe were 〜\nThey were 〜\n// 二人称・三人称複数\n\n---\n\n// 否定の過去形\n\nI was not 〜\n// 一人称\n\nHe was not 〜\nShe was not 〜\nIt was not 〜\n// 三人称単数\n// was not = wasn't\n\nYou were not 〜\nWe were not 〜\nThey were not 〜\n// 二人称・三人称複数\n// were not = weren't\n\n---\n\n// 疑問形\n\n主語の前にbe動詞(+not)がくる",
+      "// 現在形\n\nI like 〜\nYou like 〜\nWe like 〜\nThey like 〜\n// 一人称・二人称・三人称複数\n\nHe likes 〜\nShe likes 〜\nIt likes 〜\n// 三人称単数\n// likeの場合はこの形\n\n---\n\n// 否定の現在形\n\nI do not like 〜\nYou do not like 〜\nWe do not like 〜\nThey do not like 〜\n// 一人称・二人称・三人称複数\n// do not = don't\n\nHe does not like 〜\nShe does not like 〜\nIt does not like 〜\n// 三人称単数ではdoesになる代わりに動詞は原型\n// does not = doesn't\n\n---\n\n// 過去形\n\nI liked 〜\nYou liked 〜\nWe liked 〜\nThey liked 〜\n// 一人称・二人称・三人称複数\n\nHe liked 〜\nShe liked 〜\nIt liked 〜\n// 三人称単数\n\n// likeの場合はこの形\n\n---\n\n// 否定の過去系\n\nI did not like 〜\nYou did not like 〜\nWe did not like 〜\nThey did not like 〜\n\nHe did not like 〜\nShe did not like 〜\nIt did not like 〜\n\n// didになる代わりに動詞は原型\n\n// did not = didn't\n\n---\n\n// 疑問形\n\n主語の前に do/does/did(+not) がくる",
+      "// be going to 〜\n// 決定された予定(〜します)\n\nHe is going to come tomorrow.\nHe is not going to come tomorrow.\nIs he going to come tomorrow?\nIs not he going to come tomorrow?\n\n---\n\n// will 〜\n// 推量・予測(〜するでしょう)\n\nHe will come tomorrow.\nHe will not come tomorrow.\nWill he come tomorrow?\nWill not he come tomorrow?",
+      "// shall\n// 提案(〜しましょうか？)\n\nShall we go?\n\n---\n\n// should\n// 助言(〜すべき)\n\nWe should go.\nWe should not go.\nShould we go?\nShould not we go?\n\n---\n\n// may, might\n// 推量(〜かもしれない)\n\nWe may go.\nWe may not go.\n\nWe might go.\nWe might not go.\n// might は may より可能性が低い\n\n// mayの疑問形\n// 確認(〜してもいいですか？)\n\nMay we go?\nMay not we go?\n\n// Can we go? のほうが使うかも",
+      "// 能力(〜することができる)\nHe can speak English.\nHe can not speak English.\nHe could speak English. // 過去形\nHe could not speak English.\nCan he speak English?\nCan not he speak English?\n\n// 許可(〜してもよいですか？)\nCan I speak English?\n\n// 依頼(〜してくれますか？)\nCan you speak English?\nCould you speak English? // より丁寧",
+      "// have to\n// 義務(〜しなければならない(外的要因))\n\nWe have to go.\nWe do not have to go.\nHe has to go. // 三人称単数\nHe does not have to go. // 三人称単数\nWe had to go. // 過去形\nWe did not have to go. // 過去形\nDo we have to go? // 疑問形\nDoes he have to go? // 疑問形\n\n---\n\n// must\n// 義務(〜しなければならない(自分の意思))\n\nWe must go.\nWe must not go.\nHe must go.\nHe must not go.\nMust we go?\nMust he go?\n\n// mustは元々過去形の語で、原型のmusは使わなくなったらしい\n\n---\n\n// must\n// 推量(〜にちがいない)\n\nShe must be sleepy.",
+      "// 主語の場合\n\nHe is here.\n↓\nWho is here?\n\nShe liked that.\n↓\nWho liked that?\n\n// 主語の位置にWhoがくる\n\n---\n\n// 目的語の場合\n\nHe called to his friend.\n↓\nDid he call to his friend?\n↓\nWho did he call to?\n\n// まず疑問文にしてその後 his friend を who に変えて文頭に移動\n// 目的語は whom になるはずだがそれだと文語調になるので who にするらしい",
+      "// 主語の場合\n\nIt happened.\n↓\nWhat happened?\n\n// 主語の位置にWhatがくる\n\n---\n\n// 目的語の場合\n\nThis is a pen.\n↓\nIs this a pen?\n↓\nWhat is this?\n\n// まず疑問文にしてその後 a pen を what に変えて文頭に移動\n\n---\n\n// what + (名詞)\n// 何の〜\n\nWhat time is it?\nWhat kind of color do you like?\n\n---\n\n// what about + (名詞かing形の動詞)\n// 質問・提案(〜はどう思いますか、〜するのはどうですか) \n\nWhat about you?\nWhat about going to lunch?",
+      "// when\n\nShe will come tomorrow.\n↓\nWill she come tomorrow?\n↓\nWhen will she come?\n\n// まず疑問文にしてその後 tomorrow を when に変えて文頭に移動\n\n---\n\n// where\n\nThe restaurant is behind this building.\n↓\nIs the restaurant behind this building?\n↓\nWhere is the restaurant?\n\n// まず疑問文にしてその後 behind this building を where に変えて文頭に移動",
+      "// how\n\nHe came by a bicycle.\n↓\nDid he come by a bicycle?\n↓\nHow did he come?\n\n// まず疑問文にしてその後 by bicycle を how に変えて文頭に移動\n\n---\n\n// how + 形容詞\n\nShe has three dolls.\n↓\nDoes she have three dolls?\n↓\nHow many dolls does she have?\n\n// まず疑問文にしてその後、数を how many に変えて文頭に移動\n\n// その他\n// How much\n// How long\n// How old\n// How often\n// How far\n// How tall\n// How high\n// How wide\n// など\n\n---\n\n// how about + (名詞かing形の動詞)\n// 質問・提案(〜はどう思いますか、〜するのはどうですか) \n\nHow about that coffee shop?\nHow about going to lunch?",
+      "// why\n// 質問(なぜ〜ですか？)\n\nHe goes to a station.\n↓\nDoes he go to a station?\n↓\nWhy does he go to a station?\n\n// まず疑問文にしてその後、文頭にwhyをつける\n\n---\n\n// why don't you 〜\n// 提案(なぜ〜しないか？ -> 〜したらどうですか？)\n\nYou have lunch.\n↓\nYou do not have lunch.\n↓\nDo not you have lunch?\n↓\nWhy do not you have lunch?\n\n// あなたはなぜ昼食をとらないのですか？\n// ↓\n// あなたは昼食をとったらどうですか？",
+      "// 形容詞 + 名詞\n\nCan I drink water?\n↓\nCan I drink cold water?\n\nThis is a book.\n↓\nThis is a new book.\n\n---\n\n// 動詞 + 形容詞\n\nI am busy.\nYou look busy.\n\n---\n\n// many, much\n// たくさんの〜\n\nI have many pens.\nI have much power.\n// many + 可算名詞\n// much + 不可算名詞\n\n---\n\n// some, any\n// いくつか〜、いくらか〜\n\nI have some pens.\nI have any pens.\n\n// some: 数が主(いくつかのペンを持っている)\n// any: 種類が主(どのようなペンでも持っている)",
+      "// 動詞 + 副詞\n\nI walked.\nI walked slowly.\nI slowly walked.\nSlowly I walked.\n\n---\n\n// 頻度の副詞\n\nHe sleeps.\nHe sleeps always.\nHe always sleeps.\nAlways he sleeps.\n\n// 他に usually,often,sometimes,never など\n\n---\n\n// 程度の副詞\n\nHe isn't late almost.\nHe isn't almost late.\nHe almost isn't late.\nAlmost he isn't late.\n\n// 他に so,too,very,hardly など\n\n---\n\n// so, very, too\n// 形容詞や前につく\n\nShe comes early.\nShe comes so early.\nShe comes very early.\nShe comes too early.\n\n// so = そのように〜\n// very = 非常に〜\n// too = 過剰に〜\n\n---\n\n// much\n// 動詞につく\n\nI walked much.\nI much walked.",
+      "// 主語＋be動詞＋過去分詞\n\nHe called to her.\n↓\nShe was called to by him.\n\n// He called to her. -> 彼は彼女を呼んだ\n// She was called to by him. -> 彼女は彼に呼ばれた",
+      "// 時の前置詞\n\nI was born in 1976.\nI was born in September.\nI was born in the morning.\nI was born on Thursday.\nI was born at 8:00.\n\n---\n\n// 位置の前置詞\n\nI am in the room.\nI am on the 2nd floor.\nI am at a bus stop.\n\n// 他に、next to, in front of, in back of, around, across など",
+      "// 主語 - 所有 - 目的語\n\nI - my - me\nwe - our - us\nyou - your - you\nhe - his - him\nshe - her - her\nthey - their - them\nit - its - it\n\n---\n\n// 単数 - 複数\n\nthis - these\nthat - those\n\n    \n\n    \n      \n// There + be動詞 + 主語\n// 〜があります\n\nThere is a cup of coffee.\n↓\nIs there a cup of coffee?",
+      "I had coffee and I slept.  // そして〜\n\nbut  // しかし〜\nbecause  // なぜならば〜\nbefore  // 〜の前に\nafter  // 〜の後に\nso  // それで〜\nwhen  // 〜をしたとき\nif  // もし〜",
+      "// 比較級\n// 〜よりも\nHe is taller than me.\n\n\n// 最上級\n// 〜の中で一番\nHe is tallest in the class.",
+      "I like food for example egg.  // たとえば\n\nafter all  // 結局は\nas a result  // 結果として\nin general  // 一般的に\nin fact  // 実は\nin short  // つまり\nso to speak  // いわば\nto tell the truth  // 実を言うと"
+    ]
+  },
+  {
+    "articlePath": "etc/git",
+    "articleName": "git",
+    "category": "etc",
+    "preBlocks": [
+      "git --version  // バージョン確認\n\ngit config -l  // リモートURLやエイリアス内容など確認\ngit config --global color.ui auto  // gitコンソールの色付け\ngit config --global alias.[string] '[command]'  // \"git \"以降のコマンドをエイリアス化\n// git config --global alias.a 'add -A'\n// git config --global alias.c 'commit'\n// git config --global alias.b 'branch'\n// git config --global alias.co 'checkout'\n// git config --global alias.s 'status -s -b -uall'\n// git config --global alias.t 'log --graph --all --date=short --format=\"%C(green)[%ad] %C(cyan)%h %C(yellow)%an %C(red)%d %Creset%s\"'\n\ngit remote -v  // リモートURL確認\ngit remote set-url origin [remote url]  // 現ローカルをリモートoriginに紐づける\ngit remote set-url [remote repository name] [url(to)]  // リモートのアドレスを変更\ngit remote rename [remote repository name(from)] [remote repository name(to)]  // リモートのリポジトリ名を変更\n\n\ngit status  // ファイルのステータス確認\ngit status -s -b -uall  // 簡易表示・ブランチ表示・非追跡ファイル表示\n\ngit log  // リポジトリの変更履歴確認\ngit log -[n]  // n個前まで表示\ngit log -p  // 差分も表示\ngit log --decorate  // headの位置やbranch,tag情報を含めて表示\ngit log --oneline  // 簡易履歴確認\ngit log --oneline --graph --decorate --all  // アスキーアートで表示\ngit log --graph --all --date=short --format=\"%C(green)[%ad] %C(cyan)%h %C(yellow)%an %C(red)%d %Creset%s\"  // ログ表示の色付け\n\ngitk  // GUIツールで変更履歴確認\n\ngit show  // HEADとその前回コミットの差分を表示\ngit show [commit id]  // 指定コミットとその前回コミットの差分を表示\n\ngit diff  // HEADと作業フォルダの差分を表示\ngit diff --cached  // HEADとインデックスの差分を表示\ngit diff [commit id(before)] [commit id(after)]  // beforeとafterの差分を表示\n// [commit id(after)]を省略すると、[commit id(before)]からHEADまでの差分を表示\ngit diff [commit id(before)] [commit id(after)] --name-only  // 差分のあるファイル名のみ表示\ngit diff [commit id(before)] [commit id(after)] [file]  // 指定したファイルの差分表示",
+      "git clone [remote url] [dir]  // カレント内にdirという名でリポジトリを取得(dir指定無しだとremoteの名前が入る)\n// リモートリポジトリ ---|--> ローカルリポジトリ --- インデックス ---> 作業フォルダ\n\ngit clone [remote url] [dir] --recursive   // サブモジュールごと取得",
+      "git add [file]  // 編集内容をインデックスに登録(ステージング)\ngit add .  // カレント以下の全ての更新ファイル対象\ngit add -A  // 加えて、追加ファイルや削除ファイルも対象\n// リモートリポジトリ ---|--- ローカルリポジトリ --- インデックス <--- 作業フォルダ(編集後) --- 作業フォルダ(編集前)\n\ngit commit -m \"comment\"  // インデックス内容をローカルリポジトリに送る\ngit commit -am \"comment\"  // addを兼ねる\ngit commit --amend  // 直前のコミットに上書き\ngit commit --amend -m '[str]'  // 直前のコミットのコメントを上書き\n// リモートリポジトリ ---|--- ローカルリポジトリ <--- インデックス --- 作業フォルダ(編集後) --- 作業フォルダ(編集前)\n\ngit reset\ngit reset [file]\ngit reset [commit id]\n// コミットやステージングしたファイルをステージング前の状態に戻す(アンステージング)\n// リモートリポジトリ ---|--- ローカルリポジトリ --- インデックス ---> 作業フォルダ(編集後) --- 作業フォルダ(編集前)\n// リモートリポジトリ ---|--- ローカルリポジトリ --- インデックス ---> 作業フォルダ(編集後) --- 作業フォルダ(編集前)\n\ngit reset --hard\ngit reset --hard [commit id]\n// コミットやステージングの有無にかかわらず全てのファイルを編集前の状態に戻す(追加してステージングしていないファイルはそのまま残る)\n// リモートリポジトリ ---|--- ローカルリポジトリ --- インデックス --- 作業フォルダ(編集後) ---> 作業フォルダ(編集前)\n// リモートリポジトリ ---|--- ローカルリポジトリ --- インデックス --- 作業フォルダ(編集後) ---> 作業フォルダ(編集前)\n// リモートリポジトリ ---|--- ローカルリポジトリ --- インデックス --- 作業フォルダ(編集後) ---> 作業フォルダ(編集前)\n\ngit checkout [commit id or branch]  // 各ポイントのファイル状態を取得(ステージングや作業中のファイルがある場合はエラー)\ngit checkout -f [commit id or branch]  // 各ポイントのファイル状態を取得(ステージングや作業中のファイルがある場合でも強制実行し作業内容は削除)\n// リモートリポジトリ ---|--- ローカルリポジトリ --- インデックス --- 作業フォルダ(編集後) ---> 作業フォルダ(編集前)\ngit checkout  [commit id] [file]  // ファイル個別に取得\n\n\ngit push  // 現ローカルブランチが既にリモートに存在する場合\ngit push origin [remote branch]:[local branch]  // pushしたいローカルブランチがまだリモートに無い場合\n// リモートリポジトリ <--|--- ローカルリポジトリ --- インデックス --- 作業フォルダ(編集後) --- 作業フォルダ(編集前)\n\ngit fetch  // リモートリポジトリの履歴を取得\n// リモートリポジトリ ---|--> ローカルリポジトリ --- インデックス --- 作業フォルダ(編集後) --- 作業フォルダ(編集前)\n// 無名ブランチ FETCH_HEAD として取得\n// git diff FETCH_HEAD で作業フォルダとの差分を表示\n\ngit pull  // fetch + merge(作業フォルダの内容と統合)\ngit pull [remote url] [remote branch]  // [remote branch] から現状ブランチにpull\n// リモートリポジトリ ---|--> ローカルリポジトリ --- インデックス --- 作業フォルダ(編集後) ---> 作業フォルダ(編集前)\n\n\ngit clean -n  // まだ.git管理下に無い(一度もaddされたことのない)ファイルの確認\ngit clean -fdx  // まだ.git管理下に無い(一度もaddされたことのない)ファイルの削除\n\n\n// 競合の編集\n// pushして競合が起きたら、pull -> ファイル編集 -> add -> commit -> push\ngit ls-files -u\n// コンフリクトしたファイル一覧\ngit mergetool -y [file]\n// GUIでコンフリクト処理\n\n\n// behindの解消（developブランチの新しい更新を作業ブランチに取り込む）\n// 作業ブランチ上で\ngit pull\ngit merge origin/develop",
+      "git branch  // ローカルブランチ一覧表示(HEADがあるブランチに*が付く)\ngit branch -r  // リモートブランチ一覧表示\ngit branch -a  // ローカルとリモート一覧表示\n\ngit branch [local branch]  // ブランチ作成\ngit branch -m [local branch(from)] [local branch(to)]   // ブランチ名修正\ngit branch -d [local branch]  // ブランチ削除(マージ済みのみ)\ngit branch -D [local branch]  // ブランチ削除(強制)\ngit branch --list \"dev/*\" | xargs git branch -D  // ブランチ削除(一括)\n\ngit branch [local branch] origin/[remote branch]  // リモートからブランチ取得\ngit push origin [local branch]:[remote branch]  // リモートにブランチをpush\ngit push origin --all  // すべてのブランチをリモートにpush\ngit push origin :[remote branch]  // リモートブランチ削除\n\ngit fetch origin pull/[PRのID]/head:[remote branch]   // メンバーのPR内容をローカルに取得\n\ngit checkout [branch]  // 指定ブランチにHEADを移動\ngit checkout [commit id]  // 指定コミットにHEADを移動\n// ブランチがないコミットにHEADを移動して変更を加えてコミットした場合、そのポイントに孤立(detached)したブランチができる\n// 孤立ブランチを残す場合はそのポイント上でブランチ名を付ける\n// git checkout -b [new branch name]\n\n// PR作成後コンフリクトが起き、mergeやrebaseで修正してたらややこしくなり、一旦ローカルを無しにしてもう一回直したいとき\ngit checkout develop // developに移動\ngit d -D [local branch]  // 作業していたブランチを一旦ローカルから削除\ngit checkout -b [local branch] origin/[local branch] // PR上のリモートブランチをローカルに落とし、そこに移動\nファイルを修正し\ngit add\ngit commit\ngit push\n\n\nブランチ = 履歴ツリー内における、ある参照コミットポイント\nHEAD = 履歴ツリー内における、現在の参照コミットポイント\nmaster = ローカルのデフォルトブランチ\norigin = リモートリポジトリ\norigin/master = リモートのデフォルトブランチ\norigin/HEAD = リモートのカレントポイント",
+      "git tag [tag]  // タグ作成\ngit tag -am \"comment\" [tag]  // comment付きタグ作成\ngit tag  // タグ一覧確認\ngit tag -n  // comment付きタグ一覧確認\n\ngit push origin [tag]  // リモートにタグをpush\ngit push origin --tags  // リモートに全てのタグをpush\ngit pull --tags  // リモートのタグを取得\n\ngit tag -d [tag]  // ローカルタグ削除\ngit push origin :[tag]  // リモートタグ削除(ローカルタグ削除した後)",
+      "git merge [commit id] or [branch]\n// 指定コミットの内容、又は指定ブランチが参照するコミットの内容をHEADに統合し、履歴を繋げる\n// 指定コミットがHEADの先に繋がる場合は、HEADがそこへ移る(fast-forward)\ngit merge --no-ff [commit id] or [branch]\n// 指定コミットがHEADの先に繋がる場合でも、指定コミットの先に新しいマージコミットを作る\ngit merge --squash [commit id] or [branch]\n// 指定コミットの内容は統合するが、履歴は繋がない\n\ngit revert [commit id]\n// [commit id] の内容を打ち消すコミットを1つ先に作る\n// その後pushすることでリモートの状態を戻せる(打ち消した履歴は残す)\ngit revert --abort\n// revert中止\n\ngit rebase [parent branch]\n// 親ブランチの更新分を作業ブランチ(current)に取り込む\ngit stash\n// rebaseでconflictが起きたとき、問題箇所を確認する\ngit rebase --continue\n// rebaseでconflictが起きたとき、conflictを解消してからこのコマンドを打って続行する\ngit rebase --abort\n// rebaseで問題が起きたとき、中止する\n\ngit rebase -i HEAD~~~\ngit rebase -i HEAD~3\n// 同軸の履歴で、過去複数コミットを一覧表示、削除(行そのものを消す)、編集(edit)、前のコミットと統合(squash)、維持(pick)など設定し、その結果を纏めたコミットを別軸に作る\ngit reset --hard ORIG_HEAD\n// rebaseが成功した後、取り消す\n\ngit cherry-pick [commit id]\n// 指定コミットの内容をHEADに統合した新たなコミットを作る\n// 統合元の履歴は繋がない\n\n\n// localで巻き戻したい時(remoteにまだコミットしていない内容に限る)\n\n1) git reflog\n// 操作の履歴を全て表示して戻し先の[commit id]を確認(コミットを削除した履歴も表示される)\n2) git reset --hard [commit id]\n// カレントブランチとHEADを[commit id]の状態に戻す\n\n\n// localとremoteでAからDまで巻き戻したい時(A,B,Cを打ち消すコミットを作る)\n\n1) git revert [commit id A]...[commit id D]\n// 最新コミットからA,B,C,D,E,F,...と並ぶ履歴の時、上記コマンドでA,B,Cの打ち消しコミット-A,-B,-Cが順に生成される(Dの打ち消しコミットは生成されない)\n// revert後の履歴は、-C,-B,-A,A,B,C,D,E,F,...となる\n2) git push\n// revert内容をpushしてremoteの巻き戻しが完了\n\n\n// localとremoteでAからDまで巻き戻したい時(A,B,Cを打ち消すコミットを作るが、その中にmergeコミットが含まれる場合)\n\n1) git revert -m 1 [commit id A]...[commit id D]\n// 最新コミットからA,B,C,D,E,F,...と並ぶ履歴の時、上記コマンドでA,B,Cの打ち消しコミット-A,-B,-Cが順に生成される(Dの打ち消しコミットは生成されない)\n// revert後の履歴は、-C,-B,-A,A,B,C,D,E,F,...となる\n2) git push\n// revert内容をpushしてremoteの巻き戻しが完了\n\n\n// localとremoteで強制的に巻き戻したい時(履歴が消えるので注意)\n\n1) git reset [commit id]\n2) git push",
+      "git grep [string]  // git管理の範囲内でstringをカレント傘下のファイル内から検索\ngit grep -n [string]  // 行番号付き\ngit grep -l [string]  // ファイル名のみ表示\ngit grep [string] [dir]  // dir傘下のファイル内から検索\n\ngit grep -l [from] | xargs sed -i '' -e 's/[from]/[to]/g'  // カレント傘下のファイル内を対象に置換",
+      "1）リモートリポジトリに新規プロジェクト追加\n2）ローカルにプロジェクト用の作業フォルダ作成\n3）作業フォルダに入る\n4）git init  // フォルダ内をGitの管理下にする\n5）ファイル等作成\n6）git add .  // フォルダ内の全てのファイルを更新対象にする\n7）git commit -m \"new project\"  // ローカルリポジトリにコミット\n8）git remote add origin [remote url]  // リモートリポジトリのURLをoriginとして登録\n9）git push -u origin master  // ファイルをリモートリポジトリに送信",
+      "1) サーバのサイトにログイン\n2) sshアカウントを有効にする  // user name, host domain, port number, password を確認\n\n3) ターミナル起動\n4) ssh [user name]@[host domain] -p [port number]  // サーバに入る\n5) (password input)\n\n6) pwd  // user dir を確認\n7) mkdir [user dir]/repos  // ユーザに割り当てられた場所の直下にbareリポジトリを格納するフォルダ\"repos\"を作成\n8) cd [user dir]/repos  // そこに移動\n9) mkdir [project name].git  // 新規projectのbareリポジトリ用フォルダ作成\n10) cd [project name].git  // そこに移動\n11) git init --bare --shared  // bareリポジトリ作成\n12) cd [user dir]/web  // 公開projectを格納する場所に移動\n13) git clone [user dir]/repos/[project name].git [project name]  // bareリポジトリからクローンして公開用フォルダを作成\n14) cd [user dir]/repos/[project name].git/hooks  // bareリポジトリのhooksフォルダに移動\n\n15) vi post-receive  // post-receiveファイルを作成し、以下のシェルスクリプト3行を記入し保存\n#!/bin/sh\ncd [user dir]/web/[project name];\ngit --git-dir=.git pull\n\n16) chmod +x post-receive  // hookに実行属性を与える\n17) exit  // サーバを抜ける\n\n18) mkdir [work space]/[project name]  // ローカルにproject作成\n19) cd [work space]/[project name]  // そこに移動\n20) git init  // ローカルリポジトリ作成\n21) git remote add origin ssh://[host domain]:[port number][user dir]/repos/[project name].git  // bareリポジトリに紐づける\n22) ファイル作成/編集\n23) git add .\n24) git commit -m 'comment'\n25) git push origin master  // 以降は git push\n26) (password input)\n\npush 完了\nbareリポジトリにpushされたファイルが、post-receiveによって自動的に公開用リポジトリにpullされる\n\n26) git branch --set-upstream-to=origin/master master  // 最初のpull設定\n27) git pull\n28) (password input)\n\npull 完了",
+      "git submodule  // サブモジュールのステータス表示\n\ngit submodule add [submodule remote url] [dir]  // サブモジュールのリポジトリurlと格納するdirを登録\n// 下記の内容を持った .gitmodules が生成される\n//\n// [submodule \"[dir]\"]\n//   path = [dir]\n//   url = [submodule remote url]\n\ngit submodule init  // .gitmodules の内容を、親リポジトリの .git/config に登録\ngit submodule update  // サブモジュールの更新分をダウンロード\ngit submodule update --init  // init + update\n\n// 上記は親リポジトリのルートで実行\n// サブモジュールとその親リポジトリのコミットは連動しない\n\ngit clone [remote url] [dir] --recursive  // サブモジュールごとクローン",
+      "// global\ngit config --global core.excludesfile {workspace}/.gitignore\n\n// local\nvi {project}/.gitignore\n\n\n// exsample\nThumbs.db\nehthumbs.db\n\nDesktop.ini\n\n.DS_Store\n.AppleDouble\n.AppleSingle\n.LSOverride\nIcon\n._*\n\n.sass-cache\n*.css.map\n*.sass.map\n*.scss.map\n.stylelintcache\n\n.Trashes\n\nnode_modules/\nnpm-debug.log\nbower_components/\n\n*.swp\n\n.idea\n\n.vscode/*\n!.vscode/settings.json\n!.vscode/tasks.json\n!.vscode/launch.json\n!.vscode/extensions.json",
+      "rm -rf .git  // 切断するプロジェクトのルートで実行、傘下の.gitフォルダを削除"
+    ]
+  },
+  {
+    "articlePath": "etc/htaccess",
+    "articleName": "htaccess",
+    "category": "etc",
+    "preBlocks": [
+      "/home/users/1/{XXX}/web/  // The root of domain\n  ├── .htaccess  // Redirect to dist/index.html\n  ├── index.html\n  └── dist/  // The root of the custom domain\n      ├── .htaccess  // If the access is HTTP, redirect to HTTPS\n      ├── index.html\n      ├── assets/\n      └── ...\n\n---------------------------------\n# web/.htaccess\n# Access to the Root is permanently redirected (301) to the custom root\nRewriteCond %{HTTP_HOST} ^{XXX}$ [NC]\nRewriteRule ^(.*)$ https://{XXX}/$1 [R=301,L]\n\n---------------------------------\n# web/dist/.htaccess\n# Force redirect to HTTPS\nRewriteEngine On\nRewriteCond %{HTTPS} off\nRewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [R=301,L]",
+      "/home/users/1/{XXX}/repo/\n  ├── {XXX}.git  // bare repository\n  └── hooks/\n      ├── post-receive\n      └── ...\n\n---------------------------------\n#!/bin/bash\n\nWORKDIR=\"/home/users/1/{XXX}/tmp/deploy\"\nTARGET=\"/home/users/1/{XXX}/web/dist\"\n\nrm -rf \"$WORKDIR\"\nmkdir -p \"$WORKDIR\"\n\n# Deploy the latest content\nGIT_WORK_TREE=\"$WORKDIR\" git checkout -f\n\n# Sync only the dist folder (use cp if rsync is not available)\nif command -v rsync > /dev/null; then\n  rsync -av --delete \"$WORKDIR/dist/\" \"$TARGET/\"\nelse\n  rm -rf \"$TARGET\"\n  mkdir -p \"$TARGET\"\n  cp -r \"$WORKDIR/dist/\"* \"$TARGET/\"\nfi\n\necho \"Deployed to $TARGET\"\n---------------------------------\n\n// Grant execute permission\nchmod +x post-receive"
+    ]
+  },
+  {
+    "articlePath": "etc/iterm",
+    "articleName": "iterm",
+    "category": "etc",
+    "preBlocks": [
+      "http://iterm2.com/downloads  // ダウンロード\n\n[command]+[Enter]  // フルスクリーン\n\n[command]+d  // 縦分割\n[command]+[shift]+d  // 横分割\n[command]+[  // 移動\n[command]+[option]+[arrow]  // 移動\n\n[command]+w  // 今いるウィンドウを閉じる \n\n[command]+f  // 検索\n[command]+g  // 前の候補に移動\n[command]+[shift]+g  // 次の候補に移動"
+    ]
+  },
+  {
+    "articlePath": "etc/mac-hosts",
+    "articleName": "mac-hosts",
+    "category": "etc",
+    "preBlocks": ["sudo vi /private/etc/hosts"]
+  },
+  {
+    "articlePath": "etc/mamp",
+    "articleName": "mamp",
+    "category": "etc",
+    "preBlocks": [
+      "// Install\nhttps://www.mamp.info/\n\n// Setting\n1) open \"Preference > Web Server\" and select \"Apache\"\n2) select \"Document Root\"\nor) vi /Applications/MAMP/conf/apache/httpd.conf\nand rewrite path to your workspace at about line 194, 219, and 247"
+    ]
+  },
+  {
+    "articlePath": "etc/metasyntactic-variable",
+    "articleName": "metasyntactic-variable",
+    "category": "etc",
+    "preBlocks": ["1) foo\n2) bar\n3) baz\n4) qux\n5) quux\n6) foobar"]
+  },
+  {
+    "articlePath": "etc/network",
+    "articleName": "network",
+    "category": "etc",
+    "preBlocks": [
+      "OSI(Open Systems Interconnection)\nISO(国際標準化機構)により制定\nネットワークシステムの様々な仕様を標準化する\n\n第7層(アプリケーション層) = アプリケーションとサーバの通信に関する規定(HTTP、FTPなど)\n第6層(プレゼンテーション層) = データの意味に関する規定(文字コード、圧縮、暗号など)\n第5層(セッション層) = 送受信の同期に関する規定\n第4層(トランスポート層) = 通信の信頼性に関する規定(TCP、UDP、再送制御など)\n第3層(ネットワーク層) = ルーティングに関する規定(IP、ルータなど)\n第2層(データリンク層) = 隣接する通信機器間の送受信に関する規定(MACアドレス、ハブ、ブリッジなど)\n第1層(物理層) = 物理的な接続に関する規定(コネクタ、ケーブルなど)",
+      "IPネットワークの定義\nIETF(標準化団体)が仕様を決める\nルーターやレイヤー3スイッチなどのネットワーク機器が中継しデータを送受信\n\n\n// IPパケット\n\n伝送するデータの最小単位\nIPv4(IPヘッダー(諸情報96bit|送信元IPアドレス32bit|宛先IPアドレス32bit)|データ部)\nIPv6(IPヘッダー(諸情報64bit|送信元IPアドレス128bit|宛先IPアドレス128bit)|(拡張ヘッダー)データ部)\n\nバージョン = IPv4かIPv6か\nTOS = 優先度\nTTL = パケットの寿命\nパケット長 = IPパケット全体のバイト数\nプロトコル = TCP(途中で失われたデータを再送する)かUDP(再送せずに速度を上げる)か",
+      "// IPv4\n\n32bit\n192.168.10.1 の場合\n11000000 10101000 00001010 00000001\n\n192.168.10.0/24 = ネットワーク部(11000000 10101000 00001010) + ホスト部(00000001〜11111110) = 192.168.10.1〜192.168.10.254 = 254個のホスト・アドレス\n192.168.10.0 はネットワーク・アドレスのため端末に割り当て不可\n192.168.10.255 はブロードキャスト・アドレスのため端末に割り当て不可\n\n192.168.10.0/28 = ネットワーク部(11000000 10101000 00001010 0000) + ホスト部(0001〜1110) = 192.168.10.1〜192.168.10.14 = 14個のホスト・アドレス\n192.168.10.0 はネットワークアドレスのためホストとしては使用不可\n192.168.10.15 はブロードキャストアドレスのためホストとしては使用不可\n\n24や28はサブネット・マスク(ネットワーク部のビット数の長さ)\nホスト部の一部をネットワーク部として拡張することで複数のネットワーク(サブネット)を作成可能\n\nユニキャスト・アドレス = 1対1でデータを送受信\nマルチキャスト・アドレス = 特定グループの端末に同じデータを同時に送信\nブロードキャスト・アドレス = LAN内の全ての端末に同じデータを同時に送信\nループバック・アドレス = 自分自身を示す\n\n\n// IPv6\n\n128bit\nfe80::718d:8f5:eab2:4a26 の場合\nfe80:0000:0000:0000:718d:8f5:eab2:4a26\n11111110 10000000 00000000 00000000 00000000 00000000 00000000 00000000 01110001 10001101\n00001000 11110101 11101010 10110010 01001010 00100110\n\nプレフィックス(64bit) + インターフェースID(64bit)\nプレフィックス = ISPへの分配(32bit) + ISPからUserへの分配(32bit-n) + サブネットID(n)\nインターフェースID = MACアドレスから自動生成するか、ランダム生成\n\nDHCPサーバーを必要としない\n\nグローバル・ユニキャスト・アドレス = 1対1でデータを送受信\nリンクローカル・ユニキャスト・アドレス = IPv6の制御通信用\nマルチキャスト・アドレス = 特定グループの端末に同じデータを同時に送信\nエニーキャスト・アドレス = 特定グループ内の一番近い端末だけに送信\n\n\n// IPv4とIPv6の共存\n\nデュアル・スタック = 両方のプロトコルを機器に共存させる\nトンネリング = IPv4ネットワークを伝達する際は、IPv6パケットはIPv4パケットで内包する",
+      "TCPスタックプログラムがIPネットワーク上にTCPコネクションを確立しデータを確実に送り届ける\n\nTCPパケット(TCPヘッダー(コネクション情報|伝達情報|オプション|その他)|データ) -> IPパケットのデータ部に入る\nコネクション情報 = 送信元ポート番号、あて先ポート番号、制御ビット\n伝達情報 = シーケンス番号、確認応答番号、ウインドウ・サイズ(連続して受信できるデータ量)、チェックサム\nオプション = 最大セグメント・サイズ、ウインドウ・スケール、SACKなど\n\n\n// TCPコネクション\n\nC = クライアント\nS = サーバー\n\n1) 確立(スリーウェイ・ハンドシェイク)\nC -------------- SYN -------------> S\nC <---------- SYN + ACK ----------- S\nC -------------- ACK -------------> S\n\n2) データ転送(1個のパケットで100バイトの場合)\nC ----- SEQ:101,data:101-200 -----> S\nC <----------- ACK:201 ------------ S\nC ----- SEQ:201,data:201-300 --X  S\nC ----- SEQ:301,data:301-400 -----> S(201が未転送)\nC (Timeout)             S\nC ----- SEQ:201,data:201-300 -----> S\nC ----- SEQ:301,data:301-400 -----> S\nC <----------- ACK:401 ------------ S\n\n2-a) エラー時の機能(高速再転送:抜けがあれば要求を3回送る)\nC ----- SEQ:201,data:201-300 --X  S\nC ----- SEQ:301,data:301-400 -----> S(201が未転送)\nC <----------- ACK:201 ------------ S\nC <----------- ACK:201 ------------ S\nC <----------- ACK:201 ------------ S\nC ----- SEQ:201,data:201-300 -----> S\nC ----- SEQ:301,data:301-400 -----> S\n\n2-b) エラー時の機能(SACK:未転送のものをピンポイントで要求)\nC ----- SEQ:201,data:201-300 --X  S\nC ----- SEQ:301,data:301-400 -----> S(201が未転送)\nC <---- ACK:201,SACK:301-400 ------ S\nC ----- SEQ:201,data:201-300 -----> S\n\n3) 切断\nC ----------- FIN + ACK ----------> S\nC <------------- ACK -------------- S\nC <---------- FIN + ACK ----------- S\nC -------------- ACK -------------> S",
+      "TCPと対になるもので、UDPスタックがIPネットワーク上でデータを転送する\nポート番号の管理以外は何もしないことが特徴\nコネクションを作らないため信頼性が低いが、速く、スタックにかかる負荷が小さい\n再送制御はアプリケーションが行なう\nブロードキャストやマルチキャストはTCPでは実現不可能\nIP電話や映像配信のアプリケーションはUDPを使うメリットが大きい\n\nUDPパケット(UDPヘッダー(コネクション情報|伝達情報|長さ)|データ) -> IPパケットのデータ部に入る\nコネクション情報 = 送信元ポート番号、あて先ポート番号\n伝達情報 = チェックサム(パケットが壊れていないか検証するためのデータ)",
+      "エラーや通信状態を知らせるプロトコル\nIPパケットのデータ部分にICMPメッセージ(タイプ|コード|チェックサム|データ)が入る\nIPヘッダーにTTLとプロトコル番号が入る\ntracerouteコマンドやpingコマンドで状態を参照できる",
+      "イーサネットでLANポートを識別するための番号\nLANカードやルータなどのLAN機器に出荷時点で設定されている\nイーサネットを越えたインターネット(IPネットワーク)で通信相手を識別するためにはIPアドレスが必要\nルーターはあて先IPアドレスを持つ機器のMACアドレスを探し(ARP)データを転送する\n\n48bit(24bit(OUI=ベンダー識別(8bit(6bit|G/L(1bit)|I/G(1bit))|8bit|8bit))|24bit(ベンダーが使用))\nG/Lビット = MACアドレスがグローバル・アドレスかローカル・アドレスかを示す\nI/Gビット = Individual/Group = あて先がユニキャストかマルチ/グローバルキャストかを示す",
+      "パケットを内包し、特定のルーターまで運ぶ\nルーターを越えるとイーサネットフレームは別のものを使う\n長さは64～1518バイト(その内18バイトはMACアドレスなどの制御情報)\n\n|FCS(4Bite)|データ(46-1500Bite)|MACヘッダー(タイプ(2Bite)|送信元MACアドレス(6Bite)|あて先MACアドレス(6Bite))|プリアンブル(8Bite)|\n\nFCS = データやMACヘッダーに誤りが無いか検査するための値\nタイプ = データに入るものの種類を示す\nプリアンブル = フレームの先端を表す",
+      "IPアドレスを元にMACアドレスを取得する\n\n\n// ARP要求\n\nMACフレーム(ARPパケット(目標IPアドレス|目標MACアドレス|送信元IPアドレス|送信元MACアドレス|コード|制御情報)|送信元MACアドレス|あて先MACアドレス)\n\n目標IPアドレス = 相手のIPアドレス\n目標MACアドレス = 不明(全て0)\n送信元IPアドレス = 自分のIPアドレス\n送信元MACアドレス = 自分のMACアドレス\nコード = 要求(1)\n送信元MACアドレス = 自分のMACアドレス\nあて先MACアドレス = ブロードキャスト(FF-FF-FF-FF-FF-FF)\n\n\n// ARP応答\n\nMACフレーム(ARPパケット(目標IPアドレス|目標MACアドレス|送信元IPアドレス|送信元MACアドレス|コード|制御情報)|送信元MACアドレス|あて先MACアドレス)\n\n目標IPアドレス = 自分のIPアドレス\n目標MACアドレス = 自分のMACアドレス\n送信元IPアドレス = 相手のIPアドレス\n送信元MACアドレス = 相手のMACアドレス\nコード = 応答(2)\n送信元MACアドレス = 相手のMACアドレス\nあて先MACアドレス = 自分のMACアドレス",
+      "IPアドレス、サブネット・マスク、デフォルト・ゲートウェイなどの設定を自動で行なう\nDHCPクライアント = DHCPサーバーから設定情報を取得\nDHCPサーバー = 設定情報の配布や管理\n\nサブネット・マスク = 伝送がルーターを越えるか否かの境界を示す\nデフォルト・ゲートウェイ = 転送を依頼する最寄りのルーターのIPアドレス\n\n\n// クライアントとサーバーのやりとり\n\n1) DHCPディスカバー = DHCPクライアントがブロードキャストで設定情報を要求\n2) DHCPオファー = DHCPサーバーが設定情報を提供\n3) DHCPリクエスト = DHCPクライアントが採用する設定情報を決めブロードキャストで連絡\n4) DHCPアック = 採用されたDHCPサーバーが要求を確認したことを連絡\n\nリース = 設定情報の割当期間で、半分減ったら延長要求を送る\nリース期間延長 = ネットワークが繋がったままならユニキャストで延長要求を送り、再起動した場合はネットワークが変わっている可能性があるためブロードキャストで延長要求を送り、ネットワークが変わっていた場合はサーバが否定応答(DHCPナック)を送るので、クライアントはDHCPディスカバーから再度始める\n\n\n// 設定情報\n\n|IPヘッダー(20bite)|UDPヘッダー(4bite)|DHCPメッセージ(本体)(236bite)|DHCPメッセージ(オプション)(可変長)|\n\nDHCPメッセージ(本体)には、割り当てるIPアドレスやサーバーのIPアドレスなどが入る\nDHCPメッセージ(オプション)には、ドメイン名・サブネットマスク・デフォルトゲートウェイ・DNSサーバアドレス・リース期間、などが入る\n\n\n// DHCPリレー・エージェント\n\nDHCPクライアントからの情報を別のネットワークにあるDHCPサーバに中継する",
+      "アドレスとドメイン名を対応付けるシステム\nドメインを元にDNSサーバに問い合わせると対応したIPアドレスを教えてくれる\n\nリゾルバ = WebブラウザやDNSサーバに含まれるプログラムで、IPアドレスを問い合わせる",
+      "Webブラウザによる要求(HTTPリクエスト)とWebサーバーによる応答(HTTPレスポンス)\n\n\n// HTTPリクエスト\n\n1) リクエスト行 = [メソッド] [データのパス] [バージョン]\nGET /index.html HTTP/1.1\n2) メッセージ・ヘッダー = 対応言語やエンコード方式など\n3) メッセージ・ボディ = データ送信時に使う\n\n- メソッドの種類\nCONNECT = プロキシ経由のSSL通信を要求\nDELETE = データの削除を要求\nGET = データを要求\nHEAD = データに関する情報を要求\nOPTIONS = オプション機能の問い合わせ\nPOST = データを送信\nPUT = データファイルをアップロード\nTRACE = 経由マシンが返答するよう要求\n\n\n// HTTPレスポンス\n\n1) ステータス行: [バージョン] [ステータス・コード] [説明]\nHTTP/1.1 200 OK\n2) メッセージ・ヘッダー = 対応言語やエンコード方式など\n3) メッセージ・ボディ = 要求されたデータなど\n\n- ステータス・コードの種類\n100 Continue = データに続きがある\n101 Switching Protocols = 指定したプロトコルで再接続を要求\n200 OK = 処理成功\n201 Created = ファイル作成成功\n301 Moved Parmanently = データは移動\n302 Moved Temporary = データは一時的に移動\n401 Unauthorized = 認証が必要\n403 Forbidden = アクセス不可\n404 Not Found = データが無い\n500 Internal Server Error = サーバーエラー\n503 Servive Unavailable = 処理不能",
+      "メールの送受信に使用(SMTP = 送信に使用 / POP3 = 受信に使用)\n相手のメールサーバーはDNSが探す\n\n1) 自分のメーラーがSMTPで自分のメールサーバーにメールを送信\n2) メールサーバーがSMTPで相手のメールサーバーに転送\n3) 相手のメールサーバーは、相手のメーラーから要求が来たらPOP3でメールを転送"
+    ]
+  },
+  {
+    "articlePath": "etc/php-control-method",
+    "articleName": "php-control-method",
+    "category": "etc",
+    "preBlocks": [
+      "// switch\n\n---\n\n<?php\nswitch($foo) {\n\n  case \"bar\":\n\n    $bar1 = 'qux1';\n    $bar2 = 'qux2';\n    break;\n\n  case \"baz\":\n\n    $baz1 = 'quxx1';\n    $baz2 = 'quxx2';\n    break;\n}\n?>\n\n\n---\n\n<?php\nswitch($foo) {\n\n  case \"bar\":\n?>\n\n<?php\n    break;\n\n  case \"baz\":\n?>\n\n<?php\n    break;\n}\n?>",
+      "// if\n\n---\n\n<?php\nif ($foo) {\n\n} elseif ($bar) {\n\n} else {\n\n}\n?>\n\n\n---\n\n<?php\nif ($foo) {\n?>\n\n<?php\n} elseif ($bar) {\n?>\n\n<?php\n} else {\n?>\n\n<?php\n}\n?>",
+      "// for\n\n---\n\n<?php\nfor($i = 1; $i <= 42; $i++) {\n\n}\n?>\n\n\n---\n\n<?php\nfor($i = 1; $i <= 42; $i++) {\n?>\n\n<?php\n}\n?>",
+      "// isset\n\n---\n\n<?php\nif (isset($_GET[\"param_01\"])) {\n\n} else if (isset($_GET[\"param_02\"])) {\n\n} else if (isset($_GET[\"param_03\"])) {\n\n}\n?>\n\n\n---\n\n<?php\nif (isset($_GET[\"param_01\"])) {\n?>\n\n<?php\n} else if (isset($_GET[\"param_02\"])) {\n?>\n\n<?php\n} else if (isset($_GET[\"param_03\"])) {\n?>\n\n<?php\n}\n?>"
+    ]
+  },
+  {
+    "articlePath": "etc/ricty-font",
+    "articleName": "ricty-font",
+    "category": "etc",
+    "preBlocks": [
+      "http://save.sys.t.u-tokyo.ac.jp/~yusa/fonts/ricty.html\n\nsudo xcodebuild -license  // (Xcodeが必要)\nruby -e \"$(curl -fsSL https://raw.github.com/mxcl/homebrew/goe\"  // Homebrew インストール\necho $PATH  // 表示される変数の値を確認し、/usr/bin より /usr/local/bin が右にあったら入れ替える\nbrew tap sanemat/font\nbrew install ricty\ncd [Ricty生成に必要なファイル(Inconsolata.otf など)のある場所]\nsh ricty_generator.sh Inconsolata.otf migu-1m-regular.ttf migu-1m-bold.ttf\ncp -f Ricty*.ttf ~/Library/Fonts/"
+    ]
+  },
+  {
+    "articlePath": "etc/server-path",
+    "articleName": "server-path",
+    "category": "etc",
+    "preBlocks": [
+      "branch や tag\n      にプロジェクトごとコピーしてフォルダの階層が変わるとき、html内に記述する\n      img や css,\n      htmlモジュールのパス指定を調整しなくて済むように、htmlフォルダ直前までのパスを自動取得するプログラムを書いた。\n    \n\n    \n      explode関数を使うのがミソ。$req_uri[0] の値が /html/\n      の直前までのパスとなる。\n    \n\n    <?php\n$req_uri = explode(\"/html/\", $_SERVER['REQUEST_URI']);\nif($_SERVER[\"SERVER_NAME\"]==='3300.me'){\n  include('サーバー側のconf.htmlのパス');\n}else{\n  include($_SERVER['DOCUMENT_ROOT'].$req_uri[0].'/html/conf.html');\n}\n?>",
+      "if($_SERVER[\"SERVER_NAME\"]==='(サーバーの種類を判断する文字列)'){\n  $inc_path = '(サーバーのルート)';\n  $src_path = '(サーバーのルート)';\n  $lnk_path = '/';\n}else{\n  $inc_path = $_SERVER['DOCUMENT_ROOT'].$req_uri[0].'/';\n  $src_path = $req_uri[0].'/';\n  $lnk_path = $src_path.'html/index.php';\n}"
+    ]
+  },
+  {
+    "articlePath": "etc/ssh",
+    "articleName": "ssh",
+    "category": "etc",
+    "preBlocks": [
+      "// Create keys into ~/.ssh/\nssh-keygen\n\n// Check created keys\nls ~/.ssh/\n\n// Paste code into server's ~/.ssh/authorized_keys or admin\ncat ~/.ssh/id_{XXX}.pub",
+      "// Keychain configuration (to avoid entering a password when pushing)\nvi ~/.ssh/config\n\nHost *\n  AddKeysToAgent yes\n  UseKeychain yes\n  IdentityFile ~/.ssh/id_{XXX}\n\n// Add the key to Keychain\nssh-add --apple-use-keychain ~/.ssh/id_{XXX}"
+    ]
+  },
+  {
+    "articlePath": "etc/svn",
+    "articleName": "svn",
+    "category": "etc",
+    "preBlocks": [
+      "// Xcode インストール\nhttps://developer.apple.com/xcode/  // AppleIDが必要\nXcode > Open Developer Tool > More Developer Tools...\nCommand Line Tools for Xcode インストール  // Homebrewに必要\n\n// Homebrew インストール\nruby -e \"$(curl -fsSL https://raw.github.com/mxcl/homebrew/go/install)\"  // 下記コマンド使用に必要\n\n// Subversion インストール\nbrew install svn",
+      "svn --version  // バージョン確認\n\nsvn info  // リポジトリ情報表示\n\nsvn status  // 変更内容表示\n\nsvn log  // コミットログ表示\nsvn log --verbose  // コメント表示\nsvn log --limit [n]// 最新n件表示(コミットした直後の最新は表示されない)\nsvn log --limit [n] [repository]  // 共有された最新n件表示(コミットした直後の最新も表示される)\n\nsvn diff -r [commit id(before)]:[commit id(after)]  // 差分全表示\nsvn diff -r [commit id(before)]:[commit id(after)] | awk '/^Index/ {print $NF}'  // 差分のあるファイル名のみ表示\nsvn diff -r [commit id(before)]:[commit id(after)] [file]  // 指定ファイルの差分表示",
+      "svn mkdir -m \"comment\" [repository]/trunk/[dir]  // trunkフォルダ作成\n\nsvn mkdir -m \"comment\" [repository]/branches/[branch name]  // branchフォルダ作成\nsvn cp -m \"comment\" [repository]/trunk/[dir] [repository]/branches/[branch name]/[dir]\n// trunkからbranchを切る\n\nsvn rm -m \"comment\" [repository]/branches/[branch name]  //不要branch削除",
+      "svn co [repository]/trunk/[dir] [local dir]  // trunk チェックアウト\nsvn co [repository]/branches/[branch name]/[dir] [local dir]  // branch チェックアウト\n\nsvn co [repository]/trunk/[dir]@[revision num] [local dir]\n// 特定 revision num チェックアウト(dirが消えた後に取得する場合、revision numはtrunk直下のlogから参照したものを入れる)",
+      "svn up  // アップデート\n\nsvn add [file,dir]  // 追加登録\nsvn add * --force  // カレント以下全て対象\n\nsvn delete [file,dir]  // 削除登録\nsvn status | grep '^!' | awk '{print $2}' | xargs svn delete  // カレント以下のステータス'!'のファイル対象\n\nsvn revert [file]  // ファイル変更の取り消し\n\nsvn ci -m \"comment\"  // コミット",
+      "svn merge [repository]/branches/[branch]/[remote dir]\n// branchからmerge([local dir]内の最上階層で実行,[remote dir]が[local dir]にmergeされる)\nsvn merge -r HEAD:[revision num] [local dir]\n// revision num の内容に戻す(commitで反映)\n\nsvn resolved [C file]\n// [C file]を編集した後、競合の中間ファイル[? file]が削除される",
+      "find . -type d -name .svn  // カレント以下の.svn検索\nfind . -type d -name .svn -print0 | xargs -0 rm -rf  // カレント以下の.svn削除"
+    ]
+  },
+  {
+    "articlePath": "etc/terminal",
+    "articleName": "terminal",
+    "category": "etc",
+    "preBlocks": [
+      "pwd  // カレント表示\n\nls  // カレントのファイル・ディレクトリ表示\nls [dir]  // 配下のファイル・ディレクトリ表示\nls -a  // 隠しファイル表示\nls -l  // 詳細情報表示\n\ncd /  // ルートへ移動\ncd  // ホームへ移動\ncd -  // 1つ前へ移動\ncd ..  // 上階層へ移動\ncd [dir]  // dirへ移動\n\nmkdir [dir]   // 新規ディレクトリ作成\ncp -r [dir] [dir]  // ディレクトリをコピー\nmv [dir] [dir]   // ディレクトリ名変更\nrmdir [dir]   // 空ディレクトリ削除\nrm -r [dir]   // ファイルごとディレクトリ削除\n\nln -s [path] [name]  // エイリアス作成\n\npushd [dir]  // カレントをスタックに記録し、移動\npopd  // 記録した位置へ移動し、スタックはリセット",
+      "touch [file]  // 空ファイル作成\ncp [file] [file]  // ファイルをコピー\nrm [file]  // ファイルを削除\nmv [file] [file]  // ファイル名変更\nmv [file] [dir/file]  // ファイル移動\n\nless [file]  // ファイル内容表示, f 次頁, b 前頁, G 文末 , /[char] 検索, q 終了\ndiff [file] [file]  // 差分表示\n\npbpaste > [file]  // コピーした内容を貼り付けたファイルを作成",
+      "mdfind [string]  // ファイル名で検索\nmdfind -onlyin [dir] [string]  // dir内から検索\ngrep -rn [string] [dir]  // dir内全てのファイルの内容からstringとその行数を検索\n\ngrep -l [from] [dir/files] | xargs sed -i -e \"s/[from]/[to]/g\"\n// [dir/files]で指定した複数のファイルに含まれる全ての[from]を[to]に一括置換\n// 元ファイルのバックアップが作成される\nfind . -type f -name '*.*' -print0 | xargs -0 perl -i -pe 's/[from]/[to]/g'\n// カレント以下の全ての「*.*」という名のファイルに含まれる全ての[from]を[to]に一括置換",
+      "open [dir]  // Finderオープン\nopen [img]  // プレビューオープン",
+      "zip -r [filename.zip] [dir]  // zip圧縮\nunzip [filename.zip]  // zip解凍",
+      "history  // コマンド履歴を表示\n![num]  // 指定のコマンドを再実行\n!!  // 直前のコマンドを再実行",
+      "hostname  // ホスト名(コンピュータ名)表示\ntty  // 端末名表示\nid  // ID表示\nuname -a  // システム情報表示\nifconfig  // IPアドレスなどネットワーク環境表示\ngroups  // 所属グループ表示\n\ndu [file]  // ファイル容量表示\ndu -s [dir]  // ディレクトリ容量表示\ndf  // ディスク容量表示\n\nset  // 変数と値を表示\nprintenv  // 諸情報表示\n\necho $PATH  // 環境変数の値の確認\nexport PATH=[パス]:[パス]:[パス]  // PATHの値を変更\n例) export PATH=/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/git/bin\n\nuptime  // Mac起動からの累計時間確認\nsw_vers  // MacのOSバージョン表示\nlast  // Macの使用履歴表示\nac  // ログインしている時間表示\n\ncal  // カレンダー表示\ndate  // 現在日時表示",
+      "ssh-keygen 公開鍵(id_rsa.pub)と秘密鍵(id_rsa)を生成\n// 公開鍵をサーバ側に設定すると秘密鍵を持つ端末からアクセス可能になる\n// それでもアクセスできない場合は、他端末やwebコンソールでサーバ側の ~/.ssh/authorized_keys に公開鍵が入っているか確認\nssh-keygen -p パスフレーズ変更\nssh [user]@[host]  // リモートホストにログイン\n// サーバ側で /etc/ssh/sshd_config を編集してパス入力解除\nChallengeResponseAuthentication no\nPasswordAuthentication no\n\nwho  // ログインしているユーザ表示\nwhoami  // ログイン名表示\npasswd [user]  // ユーザのパスワード変更\nlast  // ログイン履歴の表示\n\nwhois [domain]  // ドメインの所有者表示\ndig [domain]  // ドメインのIPアドレスなど表示",
+      "top   // プロセス一覧\njobs  // ジョブ(バックグラウンドで実行されてるプロセス)表示\n\nkill [PID]   // プロセスやジョブを強制終了",
+      "curl [URL]  // ファイル内容表示\ncurl -o[name] [URL]  // ファイル内容保存\n\ncurl -I [URL]  // HTTPヘッダ情報表示",
+      "clear  // 端末画面クリア",
+      "man [cmd]  // コマンドマニュアル表示",
+      "exit  // シェルを終了(リモートホストからログアウト)"
+    ]
+  },
+  {
+    "articlePath": "etc/vi",
+    "articleName": "vi",
+    "category": "etc",
+    "preBlocks": [
+      "vi [file] 新規、又は既存ファイル  view [file] readonly\nvi [file] +[n]  n行目から\nvi [file] +/[string] 最初の[string]から\nvi -r [file] file復元",
+      "i カーソル前に入力  a カーソル後に入力  I 行頭に入力  A 行末に入力  o 下行に入力  O 上行に入力\nv 選択  V 行選択  [control]+v 矩形選択  (選択モードで)o 選択範囲の始点終点にカーソル移動\n: コマンド\n[esc] or [control]+c ノーマル\n\n\n[control]+v > 縦に範囲選択 > I > 文字入力 > [esc]  // 複数行頭に同時入力\n[control]+v > 縦に範囲選択 > A > 文字入力 > [esc]  // 複数行末に同時入力",
+      "gg 文頭\n\n% 対応する括弧\n\n\n{ 上の段落\n\n- 上行頭文字\nk 上\ngk 表示行上\n0 行頭  ^ 行頭文字    b 前単語頭  ge 前単語末  h 左  l 右  w 次単語頭  e 次単語末    $ 行末\ngj 表示行下\nj 下\n[enter] 下行頭文字\n\nF[char] 行の任意文字(前)  f[char] 行の任意文字(次)  ; 次の候補  , 前の候補\n\n} 下の段落\n\n\nH 画面上\nM 画面中央\nL 画面下\n\n''(シングル2個) 直前の場所\n\n[n]G 指定行\n\nG 文末",
+      "m[a~z] カーソル位置を記録\n'[a~z] 記録位置の行頭文字に移動\n\n:marks マーク一覧",
+      "y 選択範囲コピー  yy 行コピー  \"[a~z]y 特定バッファにコピー\n\nx 文字カット  X バックスペース\ndw 単語カット  dd 行カット  d[move] 移動分カット  D 行末までカット\ns 文字カットし入力  S 行カットし入力\ncw 単語カットし入力  cc 行カットし入力  c[move] 移動分カットし入力  C 行末までカットし入力\n\nP 文字は左、行は上にペースト  p 文字は右、行は下にペースト  \"[a~z]p 特定バッファをペースト\n\n[v,y,d,c]at タグごと編集  [v,y,d,c]it タグ内編集  [v,y,d,c]a\" \"ごと編集  [v,y,d,c]i\" \"内編集\n\nr[char] 上書き\n~ 大文字小文字変換\n文字選択をして u 小文字に変換\n[control]+a インクリメント\n[control]+x デクリメント\n\nJ 次行を連結\n\n[n]<< n行シフト  [n]>> n行シフト\n< 選択範囲左シフト  > 選択範囲右シフト\n\nu undo  [control]+r redo\n\n. 直前動作の繰り返し\n\n[n1]=[n2] n1行からn2行までインデントを整形\n\n[control]+p, [control]+n 入力補完\n[control]+[shift]+v [control]+[shift]+m 改行コード入力",
+      "q[a〜z] 記録開始\nq 記録終了\n\n[n]@[a〜z] 記録したマクロをn回実行",
+      "[control]+b 1頁上、カーソルは下\n[control]+u 半頁上、カーソルは同位置の行頭\n[control]+y 1行上\n\nz[enter] カーソル行を画面上へ\nzz カーソル行を中央へ\nz- カーソル行を画面下へ\n\n[control]+e 1行下\n[control]+d 半頁下、カーソルは同位置の行頭\n[control]+f 1頁下、カーソルは上",
+      "?[string] 前を検索(nで次候補,Nで前候補)\n/[string] 後を検索(nで次候補,Nで前候補)\n* 選択範囲と同じ文字を検索\n\n:%s/[from]/[to]/g 一括置換\n:%s/[from]/[to]/gc 1つずつ置換\n:[n],[m]s/[from]/[to]/g n行からm行まで一括置換",
+      ":args [dir/files] 複数ファイル抽出\n:args 抽出ファイル確認\n:argadd [dir/files] 抽出ファイル追加\n:argdelete [dir/files] 抽出ファイル削除\n:argdo /[string] 抽出ファイルに対して一括検索\n:argdo %s/[from]/[to]/g | update 抽出ファイルに対して一括置換",
+      "q: コマンド履歴\nq/ 検索履歴\n\n[control]+c 選択中のテキストをコマンドラインに送る",
+      ":![command] vi内からコマンド実行",
+      ":w 保存\n:q 終了\n:wq 保存して終了\n:q! 保存せず終了\n:e! 編集分をリセット",
+      ":sp [file] 縦に分割\n:vs [file] 横に分割\n:new 縦に分割新規\n:vnew 横に分割新規\n\n[control]+ww ウィンドウ移動\n[control]+w c 今いるウィンドウを閉じる\n[control]+w o 今いるウィンドウのみ残す\n\n[control]+wg ファイル名表示",
+      ":e ++enc=utf8 utf-8に変更\n:e ++enc=sjis shift_jisに変更\n:e ++enc=euc-jp euc-jpに変更\n\n:set ff=mac mac形式の改行コードに変更\n:set ff=dos win形式の改行コードに変更\n:set ff=unix unix形式の改行コードに変更",
+      "vi ~/.vimrc open file\n\nset encoding=utf-8 \" reading\nset fileencoding=utf-8 \" saving\nset fileencodings=ucs-boms,utf-8,euc-jp,cp932 \" reading character mode\nset fileformats=unix,mac,dos \" reading new line mode\nset ambiwidth=double \" cure multibyte\nscriptencoding utf-8 \" for use multibyte\n\nset paste \" no autoindent (when paste)\n\nset tabstop=2 \" width tab\nset shiftwidth=2 \" width shift\nset softtabstop=2 \" width shift when delete\nset expandtab \" tab -> a few spaces\n\nset incsearch \" search suggestion\nset ignorecase \" case insensitive\nset smartcase \" sensitive when include upper-case\nset hlsearch \" highlight\n\nsyntax on \" color\nset number \" line number\nlet g:user_emmet_expandabbr_key = '<c-y>'\n\nset statusline=%F \" filename\nset statusline+=%m \" change status\nset statusline+=%r \" readonly\nset statusline+=%h \" help\nset statusline+=%w \" preview\nset statusline+=%= \" pos right\nset statusline+=[ENC=%{&fileencoding}] \" encode\nset statusline+=[LOW=%l/%L] \" line number\nset laststatus=2 \" display status\n\n\"\"\" vundle\nset nocompatible\nfiletype off\nset rtp+=~/.vim/bundle/vundle/\ncall vundle#rc()\n\" vundle basic\nBundle 'gmarik/vundle'\n\" syntax es6\nBundle 'othree/yajs.vim'\n\" activation editorconfig\nBundle 'editorconfig/editorconfig-vim'\n\" tree navigation (<C> - move current to root, <I> - find hide files)\nBundle 'scrooloose/nerdtree'\nnnoremap <silent><Ctrl-e> :NERDTreeToggle<CR>\n\" operation git (:Ggrep [str] - search)\nBundle 'tpope/vim-fugitive'\nautocmd QuickFixCmdPost *grep* cwindow\nset statusline+=%{fugitive#statusline()}\n\" extensive comment (<Ctrl> + 2 hyphens)\nBundle 'tomtom/tcomment_vim'\n\" syntax of vue\nBundle 'posva/vim-vue'\n\" another syntax\nBundle 'lepture/vim-jinja'\n\" file type\nfiletype plugin indent on\n\n\n:BundleInstall plugin install"
+    ]
+  },
+  {
+    "articlePath": "etc/vite+vue+typescript+tailwind",
+    "articleName": "vite+vue+typescript+tailwind",
+    "category": "etc",
+    "preBlocks": [
+      "// at workspace\nnpm create vite@latest {project name}\n\n// - TypeScript: Yes -",
+      "cd {project name}\nnpm install",
+      "npm install tailwindcss @tailwindcss/vite",
+      "// vite.config.ts\n\nimport { defineConfig } from 'vite'\nimport vue from '@vitejs/plugin-vue'\nimport tailwindcss from '@tailwindcss/vite'\n\nexport default defineConfig({\n  plugins: [\n    vue(),\n    tailwindcss(),\n  ],\n})",
+      "// src/assets/main.css\n\n@import \"tailwindcss\";",
+      "// src/main.ts\n\nimport { createApp } from 'vue'\nimport App from './App.vue'\nimport './assets/main.css'\n\ncreateApp(App).mount('#app')",
+      "// exsample\n\n<template>\n  <div class=\"p-6\">\n    <h1 class=\"text-3xl font-bold underline\">Hello Tailwind</h1>\n  </div>\n</template>"
+    ]
+  },
+  {
+    "articlePath": "etc/vocabulary-book",
+    "articleName": "vocabulary-book",
+    "category": "etc",
+    "preBlocks": []
+  },
+  {
+    "articlePath": "etc/voice-over",
+    "articleName": "voice-over",
+    "category": "etc",
+    "preBlocks": [
+      "command + F5 // Voice Over 起動/終了\ncontrol + option + 左右キー // グループ内で要素移動\nダブルクリック // 任意の場所に移動\n\n---\n\ncontrol // 音声一時停止/再生\n\ncontrol + option + shift + 下キー // グループに入る\ncontrol + option + shift + 上キー // グループを出る\ncontrol + option + a // 全て読み上げる\ncontrol + option + u // リンク一覧表示\nesc // リンク一覧終了"
+    ]
+  },
+  {
+    "articlePath": "etc/vscode-cursor-issue",
+    "articleName": "vscode-cursor-issue",
+    "category": "etc",
+    "preBlocks": [
+      "defaults write com.microsoft.VSCode ApplePressAndHoldEnabled -bool false\ndefaults write com.microsoft.VSCodeInsiders ApplePressAndHoldEnabled -bool false"
+    ]
+  },
+  {
+    "articlePath": "etc/vscode",
+    "articleName": "vscode",
+    "category": "etc",
+    "preBlocks": [
+      "// ウィンドウ\ncommand + opt + p // プロジェクトを開く\ncommand + shift + E // EXPLORERを開く\ncommand + shift + F // SEARCHを開く\nctrl + shift + G // SOURCE CONTROLを開く\ncommand + shift + X // EXTENSIONSを開く\ncommand + b // サイドバー開閉\ncommand + j // ボトムバー開閉\ncommand + , // 設定画面を開く\n(ファイルにフォーカス当たっている状態で) ctrl + enter // 分割で開く\n\n\n// 検索\ncommand + p // ファイル名からファイル検索\ncommand + shift + O // ファイル内のシンボルを検索\ncommand + shift + p // コマンド検索\ncommand + shift + F // プロジェクト内テキスト検索\n(テキストを選択している状態で)command + shift + F // 選択範囲内のテキストのプロジェクト内検索\n\n\n// 移動\nctrl + ` // ターミナルに移る\nctrl + 1 // アクティブなウィンドウのエディタにタブ指定で移る\ncommand + 1 // 分割されたエディタにウィンドウ指定で移る\n\n\n// エディタ\ncommand + \\ // ウィンドウ分割\ncommand + 2 // ウィンドウ分割 (3分割目は command + 3)\nctrl + tab // タブ移動\n\n\n// 編集\ncommand + / // 選択範囲をコメントに変換\noption + shift + I // 選択範囲の末尾にカーソルを揃える\ncommand + shift + L // カーソル上の単語を全て選択\n\n\n// ターミナル\nctrl + ` // ターミナルを開閉, ターミナルにカーソルを移動\nctrl + shift + 5 // ターミナル分割 (3分割目も同様)\n$ exit // カレントターミナル閉じる\ncommand + option + -> // 分割されたターミナル間移動\n\n\n// project manager\nInstall \"Project Manager / Alessandro Fragnani\"\n---\n[File] > [Open...] > {folder}\n[File] > [Save Workspace As...] > {name}\n[View] > [Command Palette...] > View Project Manager\nClick file icon side of \"FAVORITES\""
+    ]
+  },
+  {
+    "articlePath": "etc/webfont-import",
+    "articleName": "webfont-import",
+    "category": "etc",
+    "preBlocks": [
+      "// Exsample 'Noto Sans JP'\n\nhttps://fonts.google.com/specimen/Noto+Sans+JP (size: 30.1 KB)\nSELECT THIS FONT > Family Selected > CUSTOMIZE > EMBED > @IMPORT",
+      "@import url(//fonts.googleapis.com/css?family=Noto+Sans+JP:300&display=swap&subset=japanese);\n\n.foo {\n  font-family: 'Noto Sans JP', sans-serif;\n}"
+    ]
+  },
+  {
+    "articlePath": "etc/wifi-check",
+    "articleName": "wifi-check",
+    "category": "etc",
+    "preBlocks": [
+      "1) Finder 起動\n2) command + shift + G\n3) /System/Library/CoreServices/Applications/\n4) ワイヤレス診断 起動\n5) ウィンドウ > スキャン"
+    ]
+  },
+  {
+    "articlePath": "etc/xampp",
+    "articleName": "xampp",
+    "category": "etc",
+    "preBlocks": [
+      "DocumentRoot変更\n\n    \n      xamppを「/Applications」直下にインストール後、xampp起動時に、ブラウザで「http://localhost」にアクセスすると、「/Applications/XAMPP/xamppfiles/htdocs」を読みにいく。これを、自分で用意したワーキングディレクトリ「/Users/me/workspace」を読みにいくように変更。\n    \n\n    1）設定ファイル(httpd.conf)を開く\n\n    vi /Applications/XAMPP/etc/httpd.conf  // バージョンによって場所が違うので注意",
+      "DocumentRoot \"/Applications/XAMPP/xamppfiles/htdocs\"\n<Directory \"/Applications/XAMPP/xamppfiles/htdocs\">\n↓\nDocumentRoot \"/Users/me/workspace\"\n<Directory \"/Users/me/workspace\">",
+      "// 「/Applications/XAMPP/xamppfiles」傘下のディレクトリ以外は参照させない設定\n<Directory \"/Applications/XAMPP/xamppfiles/cgi-bin\">\n  AllowOverride None\n  Options None\n  Require all granted\n</Directory>\n\n\n// ここから追加\n\n// 「/Users/me/workspace」傘下のディレクトリへの参照を許可する設定\n<Directory \"/Users/me/workspace\">\n  Options Indexes FollowSymLinks Includes ExecCGI\n  AllowOverride All\n  Order allow,deny\n  Allow from all\n</Directory>\n\n// 「http://localhost/xampp/」でのAdmin画面参照を有効にするエイリアス設定\nAlias /xampp \"/Applications/XAMPP/xamppfiles/htdocs/xampp\"\n<Directory \"/Applications/XAMPP/xamppfiles/htdocs/xampp\">\n  Options Indexes FollowSymLinks Includes ExecCGI\n  AllowOverride All\n  Order allow,deny\n  Allow from all\n</Directory>",
+      "vi /Applications/XAMPP/etc/php.ini  // バージョンによって場所が違うので注意",
+      "default_charset = \"UTF-8\"\nmbstring.language = Japanese\nmbstring.internal_encoding = UTF-8\nmbstring.http_input = auto\nmbstring.detect_order = SJIS,EUC-JP,UTF-8,ASCII\ndate.timezone = 'Asia/Tokyo'",
+      "sudo /Applications/XAMPP/xamppfiles/xampp security"
+    ]
+  }
+]

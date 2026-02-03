@@ -1,0 +1,80 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>grid-template-columns</title>
+    <meta
+      name="viewport"
+      content="width=device-width, user-scalable=no, initial-scale=1, maximum-scale=1"
+    />
+    <link rel="stylesheet" href="/sample/font-select.css" />
+
+    <style>
+      html,
+      body {
+        margin: 0;
+        padding: 0;
+      }
+      dl {
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr 1fr;
+        width: 375px;
+        margin: 60px auto 0;
+        border-bottom: #ddd 1px solid;
+        font-size: 15px;
+      }
+      dt,
+      dd {
+        border-top: #ddd 1px solid;
+        margin: 0;
+        padding: 10px 0;
+      }
+      dt {
+        grid-column: 1 / span 2;
+        font-weight: 700;
+      }
+      dd {
+        grid-column: 3 / span 2;
+        text-align: right;
+      }
+      dt[data-long] {
+        grid-column: 1 / span 3;
+      }
+      dt[data-short] {
+        grid-column: 1 / span 1;
+      }
+      dd[data-long] {
+        grid-column: 2 / span 3;
+      }
+      dd[data-short] {
+        grid-column: 4 / span 1;
+      }
+      div {
+        margin: 60px auto;
+        width: 424px;
+        position: relative;
+        left: 2px;
+      }
+      img {
+        width: 100%;
+      }
+    </style>
+  </head>
+
+  <body>
+    <dl>
+      <dt>氏名</dt>
+      <dd>あああああ</dd>
+      <dt data-long>今から10年以内に叶えたい夢があるか</dt>
+      <dd data-short>ある</dd>
+      <dt data-short>将来設計</dt>
+      <dd data-long>
+        あああああああああああああああああああああああああああああああああああ
+      </dd>
+      <dt>あなたの長所</dt>
+      <dd>ああああああああああああああ</dd>
+      <dt>好きな食べ物</dt>
+      <dd>あああああああ</dd>
+    </dl>
+  </body>
+</html>

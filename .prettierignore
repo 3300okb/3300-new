@@ -1,0 +1,29 @@
+dist/
+
+# tailwind
+**/output.css
+
+# Node
+node_modules/
+package-lock.json
+pnpm-lock.yaml
+yarn.lock
+
+# assets
+public/**/*.{png,jpg,jpeg,gif,svg,ico,woff2}
+src/assets/**/*.{png,jpg,jpeg,gif,svg,ico,woff2}
+
+# log, cache
+*.log
+*.tmp
+.cache/
+
+# env
+.env*
+
+# Git
+.gitignore
+.gitattributes
+
+# .github
+.github/workflows/claude.yml

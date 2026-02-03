@@ -1,0 +1,310 @@
+<!doctype html>
+<html>
+  <link rel="stylesheet" href="/sample/font-select.css" />
+  <head>
+    <meta name="viewport" content="width=device-width" />
+    <title>youtube-embed-layer</title>
+
+    <style>
+      html,
+      body {
+        margin: 0;
+        padding: 0;
+        height: 100%;
+        position: relative;
+      }
+      body {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+      .play {
+        top: 50%;
+        -webkit-transform: translateY(-50%);
+        -ms-transform: translateY(-50%);
+        transform: translateY(-50%);
+      }
+      .play span {
+        display: inline-block;
+        width: 80px;
+        height: 50px;
+        padding-top: 11px;
+        border: #000 1px solid;
+        text-align: center;
+        box-sizing: border-box;
+        cursor: pointer;
+        margin: auto;
+      }
+      .play span + .play span {
+        margin-left: 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="play">
+      <span data-videoid="4ZUfl0fPg88">play1</span>
+      <span data-videoid="uQ2j201BWIg">play2</span>
+      <span data-videoid="EXBKfYF7OKU">play3</span>
+    </div>
+
+    <div class="setYoutubeLayer"></div>
+
+    <script>
+      ;(function (w, doc) {
+        var setYoutubeLayer = {
+          init: function () {
+            var target = doc.querySelector('.setYoutubeLayer')
+            if (!target) {
+              return
+            }
+
+            var videoIds = doc.querySelectorAll('[data-videoid]')
+
+            this.appendLayer(target)
+            this.operationLayer(target, videoIds)
+            this.appendStyles()
+          },
+
+          appendLayer: function (target) {
+            var templateLiteralToHtmlStrings = function (strings, ...values) {
+              return strings.reduce(function (accumlate, str, i) {
+                return accumlate + escapeHtml(values[i - 1]) + str
+              })
+            }
+            var htmlStringsToHtmlElements = function (htmlStrings) {
+              var template = doc.createElement('template')
+              template.innerHTML = htmlStrings
+              return template.content.firstElementChild
+            }
+            var escapeHtml = function (str) {
+              if (!str) {
+                return ''
+              }
+              return str.replace(/["'`<>&]/g, function (m) {
+                return {
+                  '"': '&quot;',
+                  "'": '&#x27;',
+                  '`': '&#x60;',
+                  '<': '&lt;',
+                  '>': '&gt;',
+                  '&': '&amp;',
+                }[m]
+              })
+            }
+            var htmlStrings = templateLiteralToHtmlStrings`<div class="movie">
+        <div class="overlay"></div>
+        <div class="player">
+        <div class="close"></div>
+        <iframe src="" frameborder="0" allow="fullscreen"></iframe>
+        </div>
+        </div>`
+            target.appendChild(htmlStringsToHtmlElements(htmlStrings))
+          },
+
+          operationLayer: function (target, videoIds) {
+            var movie = doc.querySelector('.movie')
+            var overlay = doc.querySelector('.overlay')
+            var player = doc.querySelector('.player')
+
+            var iframe = doc.querySelector('iframe')
+            iframe.style.width = '1045px'
+            iframe.style.height = '588px'
+
+            var iframe_defaultW = iframe.offsetWidth
+            var iframe_defaultH = iframe.offsetHeight
+
+            var closeMovie = doc.querySelector('.close')
+            closeMovie.style.width = '50px'
+            closeMovie.style.height = '50px'
+            var closeMovieH = closeMovie.offsetHeight
+
+            var frameW, frameH
+            var posL, posT
+
+            // setPlayer
+            var setPlayer = function () {
+              var w_W =
+                w.innerWidth ||
+                doc.documentElement.clientWidth ||
+                doc.body.clientWidth
+              var w_H =
+                w.innerHeight ||
+                doc.documentElement.clientHeight ||
+                doc.body.clientHeight
+              var wLack = w_W < iframe_defaultW
+              var hLack = w_H < iframe_defaultH + closeMovieH * 2
+              var ori = window.screen.orientation || window.orientation
+              var stickW = function () {
+                frameW = w_W
+                frameH = (frameW / 16) * 9
+                posT = w_H / 2 - frameH / 2 - closeMovieH
+                posL = 0
+              }
+              var stickH = function () {
+                frameH = w_H - closeMovieH
+                frameW = (frameH / 9) * 16
+                posT = 0
+                posL = w_W / 2 - frameW / 2
+              }
+
+              if (wLack || hLack) {
+                if (wLack && !hLack) {
+                  stickW()
+                } else if (!wLack && hLack) {
+                  stickH()
+                } else if (wLack && hLack) {
+                  if (
+                    ori.type === 'portrait-primary' ||
+                    ori === 0 ||
+                    ori === 180
+                  ) {
+                    stickW()
+                  } else {
+                    stickH()
+                  }
+                }
+              } else {
+                frameW = iframe_defaultW
+                frameH = iframe_defaultH
+                posT = w_H / 2 - frameH / 2 - closeMovieH
+                posL = w_W / 2 - frameW / 2
+              }
+
+              iframe.style.width = frameW + 'px'
+              iframe.style.height = frameH + 'px'
+              player.style.left = posL + 'px'
+              player.style.top = posT + 'px'
+            }
+            // openLayer - playMovie
+            videoIds.forEach(function (el) {
+              el.addEventListener('click', function () {
+                target.classList.remove('reverse')
+                target.style.display = 'block'
+                setPlayer()
+                iframe.setAttribute(
+                  'src',
+                  '//www.youtube.com/embed/' +
+                    el.dataset.videoid +
+                    '?loop=1&autoplay=1&playlist=' +
+                    el.dataset.videoid
+                )
+              })
+            })
+            // closeLayer - stopMovie
+            var closeLayer = function () {
+              target.classList.add('reverse')
+              w.setTimeout(function () {
+                target.style.display = 'none'
+                iframe.setAttribute('src', '')
+              }, 300)
+            }
+            closeMovie.addEventListener('click', function () {
+              closeLayer()
+            })
+            overlay.addEventListener('click', function () {
+              closeLayer()
+            })
+            // resizeWindow
+            w.addEventListener('resize', function () {
+              setPlayer()
+            })
+          },
+
+          appendStyles: function () {
+            var body = doc.querySelector('body')
+            var styleStr = `
+        @keyframes fadeIn {
+          from {
+            opacity: 0;
+          }
+          to {
+            opacity: 1;
+          }
+        }
+        @keyframes fadeOut {
+          from {
+            opacity: 1;
+          }
+          to {
+            opacity: 0;
+          }
+        }
+        .setYoutubeLayer {
+          display: none;
+          position: fixed;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          z-index: 2147483647;
+          animation-name: fadeIn;
+          animation-duration: .3s;
+        }
+        .setYoutubeLayer.reverse {
+          animation-name: fadeOut;
+          animation-duration: .3s;
+        }
+        .setYoutubeLayer .movie {
+          position: relative;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+        }
+        .setYoutubeLayer .overlay {
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          background: #000;
+          opacity: .8;
+        }
+        .setYoutubeLayer .player {
+          position: absolute;
+        }
+        .setYoutubeLayer .close {
+          position: relative;
+          display: block;
+          margin-left: auto;
+          box-sizing: border-box;
+          cursor: pointer;
+        }
+        .setYoutubeLayer .close::before {
+          content: '';
+          display: block;
+          width: 1px;
+          height: 50px;
+          background: #fff;
+          transform: rotate(-45deg);
+          position: absolute;
+          top: -4px;
+          left: 20px;
+        }
+        .setYoutubeLayer .close::after {
+          content: '';
+          display: block;
+          width: 1px;
+          height: 50px;
+          background: #fff;
+          transform: rotate(45deg);
+          position: absolute;
+          top: -4px;
+          left: 20px;
+        }
+        `
+            var styleDom = doc.createElement('style')
+            styleDom.innerText = styleStr
+            var brs = styleDom.querySelectorAll('br')
+            Object.values(brs).forEach(function (value) {
+              value.parentNode.removeChild(value)
+            })
+            body.appendChild(styleDom)
+          },
+        }
+
+        setYoutubeLayer.init()
+      })(window, document)
+    </script>
+  </body>
+</html>

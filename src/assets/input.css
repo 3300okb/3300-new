@@ -1,0 +1,67 @@
+@config '../../tailwind.config.js';
+
+@import 'tailwindcss';
+
+@font-face {
+  font-family: 'LINE Seed Sans JP';
+  src:
+    url('/sample/font/LINESeedJP_OTF_Rg.woff2') format('woff2'),
+    url('/sample/font/LINESeedJP_OTF_Rg.otf') format('opentype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'LINE Seed Sans JP';
+  src:
+    url('/sample/font/LINESeedJP_OTF_Bd.woff2') format('woff2'),
+    url('/sample/font/LINESeedJP_OTF_Bd.otf') format('opentype');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@layer base {
+  body,
+  pre,
+  code {
+    font-family:
+      'LINE Seed Sans JP',
+      -apple-system,
+      BlinkMacSystemFont,
+      'Segoe UI',
+      sans-serif;
+  }
+  pre,
+  code {
+    font-weight: 400;
+  }
+}
+
+@layer components {
+  .t01 {
+    @apply font-semibold text-[#c5fe00];
+  }
+
+  .t02 {
+    @apply text-gray-500;
+    font-weight: 400;
+  }
+
+  .t03 {
+    @apply text-[#feb300];
+  }
+
+  .t04 {
+    @apply text-[#f77676];
+  }
+
+  .t05 {
+    @apply text-[#5ad3dd];
+  }
+
+  .t06 {
+    @apply text-[#b896ed];
+  }
+}

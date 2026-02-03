@@ -1,0 +1,227 @@
+<!doctype html>
+<title>battery-level-with-clock</title>
+<meta
+  name="viewport"
+  content="width=device-width, user-scalable=no, initial-scale=1, maximum-scale=1, viewport-fit=cover"
+/>
+<link rel="stylesheet" href="/sample/font-select.css" />
+
+<style>
+  html {
+    height: 100%;
+  }
+  body {
+    margin: 0;
+    padding: 0;
+    display: flex;
+    height: 100%;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    background: #000;
+    line-height: 1;
+  }
+  div {
+    display: flex;
+    align-items: center;
+  }
+  #level {
+    display: inline-block;
+    margin: 0;
+    position: relative;
+    font-size: 8vw;
+    -moz-osx-font-smoothing: grayscale;
+    -webkit-font-smoothing: antialiased;
+    color: #fff;
+  }
+  #remain {
+    display: inline-block;
+    width: 16vw;
+    height: 8vw;
+    margin-left: 2vw;
+    position: relative;
+  }
+  #remain .graph {
+    display: block;
+    width: 100%;
+    height: 100%;
+    padding: 0.8vw;
+    box-sizing: border-box;
+    z-index: 1;
+  }
+  #remain .bar {
+    content: '';
+    display: block;
+    width: 100%;
+    height: 100%;
+    padding: 0;
+    background: #1ed57a;
+  }
+  #remain::after {
+    content: '';
+    display: block;
+    width: 16vw;
+    height: 8vw;
+    position: absolute;
+    top: 0;
+    left: 0;
+    border: #fff 1vw solid;
+    border-radius: 1vw;
+    box-sizing: border-box;
+    z-index: 2;
+  }
+  #remain .charging {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 3;
+  }
+  #remain canvas {
+    width: 16vw;
+    height: 10vw;
+    position: relative;
+    left: 5.3vw;
+    top: -1vw;
+  }
+  #clock {
+    display: inline-block;
+    margin: 0;
+    margin-right: 5.7vw;
+    padding-right: 6vw;
+    position: relative;
+    font-size: 12vw;
+    -moz-osx-font-smoothing: grayscale;
+    -webkit-font-smoothing: antialiased;
+    color: #fff;
+  }
+  #clock::after {
+    content: '';
+    display: block;
+    width: 0.1vw;
+    height: 9vw;
+    position: absolute;
+    top: 1.5vw;
+    right: 0;
+    background: #fff;
+    opacity: 0.5;
+  }
+</style>
+
+<div>
+  <span id="clock"></span>
+  <span id="level"></span>
+  <span id="remain">
+    <span class="graph"><span class="bar"></span></span>
+    <span class="charging"><canvas></canvas></span>
+  </span>
+</div>
+
+<script>
+  const body = document.querySelector('body')
+  const remain = document.querySelector('#remain')
+  const bar = document.querySelector('#remain .bar')
+  const level = document.querySelector('#level')
+  const canvas = document.querySelector('.charging canvas')
+  const clock = document.querySelector('#clock')
+  if (navigator.getBattery === undefined) {
+    level.innerHTML = 'Not supported by your browser'
+    level.style.padding = '0 20px'
+    level.style.fontSize = '20px'
+    remain.style.display = 'none'
+    clock.style.display = 'none'
+    ;(() => {
+      return false
+    })()
+  }
+  const battery = navigator.getBattery().then((battery) => {
+    const colorChange = () => {
+      if (battery.level <= 0.3) {
+        body.style.background = '#e5e100'
+      }
+      if (battery.level <= 0.2) {
+        body.style.background = '#f53232'
+      }
+      if (battery.level > 0.31) {
+        body.style.background = '#000'
+      }
+      if (battery.level > 0.79) {
+        body.style.background = '#1ed57a'
+      }
+    }
+    const renderRemainWidth = () => {
+      bar.style.width = battery.level * 100 + '%'
+    }
+    const renderText = (battery) => {
+      level.innerHTML = Math.floor(battery.level * 100) + '%'
+    }
+    const renderCharging = (battery) => {
+      const ctx = canvas.getContext('2d')
+      const scale = 2
+
+      // reset
+      ctx.save()
+      ctx.setTransform(1, 0, 0, 1, 0, 0)
+      ctx.clearRect(0, 0, canvas.width, canvas.height)
+      ctx.restore()
+
+      if (canvas.getContext && battery.charging) {
+        ctx.beginPath()
+        ctx.moveTo(scale * 0, scale * 45)
+        ctx.lineTo(scale * 40, scale * 0)
+        ctx.lineTo(scale * 28, scale * 30)
+        ctx.lineTo(scale * 50, scale * 30)
+        ctx.lineTo(scale * 10, scale * 75)
+        ctx.lineTo(scale * 23, scale * 45)
+        ctx.closePath()
+        ctx.fill()
+        ctx.stroke()
+
+        ctx.beginPath()
+        ctx.lineWidth = 3
+        ctx.strokeStyle = 'rgb(255, 255, 255)'
+        ctx.moveTo(scale * 0, scale * 45)
+        ctx.lineTo(scale * 40, scale * 0)
+        ctx.lineTo(scale * 28, scale * 30)
+        ctx.lineTo(scale * 50, scale * 30)
+        ctx.lineTo(scale * 10, scale * 75)
+        ctx.lineTo(scale * 23, scale * 45)
+        ctx.closePath()
+        ctx.stroke()
+      }
+    }
+    const refresh = (battery) => {
+      renderText(battery)
+      renderCharging(battery)
+      colorChange()
+      renderRemainWidth()
+    }
+    setInterval(() => {
+      refresh(battery)
+    }, 1000)
+    window.onresize = () => {
+      refresh(battery)
+    }
+    refresh(battery)
+  })
+
+  const to2Digits = (num) => {
+    let r
+    if (num < 10) {
+      r = `0${num}`
+    } else {
+      r = num
+    }
+    return r
+  }
+  const renderTime = () => {
+    const date = new Date()
+    const hour = to2Digits(date.getHours())
+    const min = to2Digits(date.getMinutes())
+    const time = `${hour}:${min}`
+    clock.innerHTML = time
+  }
+  setInterval(() => {
+    renderTime()
+  }, 1000)
+  renderTime()
+</script>

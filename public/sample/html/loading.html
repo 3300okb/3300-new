@@ -1,0 +1,71 @@
+<!doctype html>
+<title>title</title>
+<link rel="stylesheet" href="/sample/font-select.css" />
+<meta
+  name="viewport"
+  content="width=device-width, user-scalable=no, initial-scale=1, maximum-scale=1"
+/>
+
+<style>
+  body {
+    margin: 0;
+    padding: 0;
+  }
+  .loading {
+    position: relative;
+    top: 50px;
+    left: 50px;
+    display: block;
+    width: 2px;
+    height: 2px;
+  }
+  .loading span {
+    display: block;
+    content: '';
+    width: 4px;
+    height: 12px;
+    border-radius: 4px;
+    position: absolute;
+    background: #f4f4f4;
+  }
+  .loading .chip0 {
+    background: #ccc;
+  }
+  .loading .chip1 {
+    background: #ddd;
+  }
+  .loading .chip2 {
+    background: #eee;
+  }
+</style>
+
+<div class="loading"></div>
+
+<script>
+  ;((w, d) => {
+    w.onload = () => {
+      const icon = d.querySelector('.loading')
+      for (i = 0; i < 8; i++) {
+        const span = d.createElement('span')
+        span.classList.add(`chip${i}`)
+        icon.appendChild(span)
+        const chip = d.querySelector('.chip' + i)
+        const r = 14
+        chip.style.transform = 'rotate(-' + 45 * i + 'deg)'
+        chip.style.top = r * Math.cos(((45 * i) / 180) * Math.PI) - 5 + 'px'
+        chip.style.left = r * Math.sin(((45 * i) / 180) * Math.PI) - 1 + 'px'
+      }
+      const rtt45 = () => {
+        var i = 0
+        return () => {
+          icon.style.transform = 'rotate(' + 45 * i + 'deg)'
+          i === 7 ? (i = 0) : i++
+        }
+      }
+      var id = setInterval(rtt45(), 100)
+      w.setTimeout(() => {
+        clearInterval(id)
+      }, 5000)
+    }
+  })(window, document)
+</script>

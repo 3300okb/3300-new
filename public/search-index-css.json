@@ -1,0 +1,215 @@
+[
+  {
+    "articlePath": "css/clearfix-extend",
+    "articleName": "clearfix-extend",
+    "category": "css",
+    "preBlocks": [
+      "h3\n      \n        li\n        li\n      \n    \n\n    // ie8 <=\n\n%clearfix {\n  &::after {\n    content: \"\";\n    display: block;\n    clear: both;\n  }\n}",
+      "// ie8 >\n\n$view-ie7 : true;\n\n%clearfix {\n  &:before,\n  &:after {\n    content: \"\";\n    display: table;\n  }\n  &:after {\n    clear: both;\n  }\n  @if $view-ie7 {\n    & {\n      *zoom: 1;\n    }\n  }\n}",
+      ".foo {\n  position: relative;\n  padding: 20px;\n  background: #eee;\n  @extend %clearfix;\n  h3 {\n    position: absolute;\n    top: -5px;\n    left: -5px;\n    padding: 10px;\n    background: #ccc;\n  }\n  li {\n    float: left;\n    padding: 50px;\n    background: #ddd;\n  }\n}",
+      "<section class=\"foo\">\n  <h3>h3</h3>\n  <ul>\n    <li>li</li>\n    <li>li</li>\n  </ul>\n</section>"
+    ]
+  },
+  {
+    "articlePath": "css/color-conversion",
+    "articleName": "color-conversion",
+    "category": "css",
+    "preBlocks": []
+  },
+  {
+    "articlePath": "css/darkmode",
+    "articleName": "darkmode",
+    "category": "css",
+    "preBlocks": [
+      ":root {\n  --main-text: #000;\n  --main-bg: #fff;\n}\n\n@media (prefers-color-scheme: dark) {\n  :root {\n    --main-text: #ddd;\n    --main-bg: #000;\n  }\n}\n\nbody {\n  color: var(--main-text);\n  background: var(--main-bg);\n}"
+    ]
+  },
+  {
+    "articlePath": "css/fixed-sp",
+    "articleName": "fixed-sp",
+    "category": "css",
+    "preBlocks": [
+      "<!doctype html>\n<html>\n<head>\n<title>fixed_sp</title>\n<meta name=\"viewport\" content=\"width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no\">\n<style>\nhtml, body {\n  margin: 0;\n  padding: 0;\n  height: 100%;\n}\n.wrap {\n  position: relative;\n}\n.head {\n  position: fixed;\n  top: 0;\n  width: 100%;\n  height: 50px;\n  background: #ddd;\n  opacity: 0.9;\n}\n</style>\n</head>\n<body>\n<div class=\"wrap\">\n  <div class=\"head\">head</div>\n  <div class=\"content\">content<br>...</div>\n  <div class=\"foot\">foot<br>...</div>\n</div>\n</body>\n</html>",
+      "(NG)Android 2.3.6 GALAXY SⅡ LTE SC-03D -> headが遅れて追従Windows Phone 7.10.8 IS12T -> headが追従しない",
+      "(OK)iOS 6.0.1 iPhone 4SiOS 7.0.4 iPhone 5Android 2.3.4 XPERIA ray SC-03CAndroid 4.0.4 GALAXY SⅢ SC-06DAndroid 4.0.4 ARROWS Z ISW13FAndroid 4.1.2 XPERIA Z SO-02EBlackBerry 7.1.0 Bold 9900"
+    ]
+  },
+  {
+    "articlePath": "css/flex-center",
+    "articleName": "flex-center",
+    "category": "css",
+    "preBlocks": [
+      "<!doctype html>\n<html>\n<head>\n<title>vh_center3</title>\n<style>\nhtml, body {\n  margin: 0;\n  padding: 0;\n  height: 100%;\n}\nbody {\n  display: flex;\n  justify-content: center;\n  align-items: center;\n  /*-- safari5.1以前, iOS8.4以前, Android4.3以前, IE10は要prefix --*/\n  /*-- IE9以前は非対応 --*/\n}\n.content {\n  width: 200px;\n  height: 120px;\n  background: #000;\n  color: #fff;\n}\n</style>\n</head>\n<body>\n<div class=\"content\">content</div>\n</body>\n</html>"
+    ]
+  },
+  {
+    "articlePath": "css/font-feature-settings",
+    "articleName": "font-feature-settings",
+    "category": "css",
+    "preBlocks": ["font-feature-settings: 'palt' on;"]
+  },
+  {
+    "articlePath": "css/font-smoothing",
+    "articleName": "font-smoothing",
+    "category": "css",
+    "preBlocks": [
+      "<!doctype html>\n<meta charset=\"utf-8\">\n<title>title</title>\n<meta name=\"viewport\" content=\"width=device-width, user-scalable=no, initial-scale=1, maximum-scale=1\">\n\n<style>\ndiv {\n  margin-bottom:20px;\n  padding: 6px;\n}\n.default {\n  -moz-osx-font-smoothing: auto;\n  -webkit-font-smoothing: auto;\n}\n.smooth {\n  -moz-osx-font-smoothing: grayscale;\n  -webkit-font-smoothing: antialiased;\n}\n.none {\n  -moz-osx-font-smoothing: none;\n  -webkit-font-smoothing: none;\n}\n</style>\n\n<div class=\"default\">abcdefghijklmnopqrstuvwxyzあいうえお<br>default</div>\n<div class=\"smooth\">abcdefghijklmnopqrstuvwxyzあいうえお<br>smooth</div>\n<div class=\"none\">abcdefghijklmnopqrstuvwxyzあいうえお<br>none</div>"
+    ]
+  },
+  {
+    "articlePath": "css/grid-center",
+    "articleName": "grid-center",
+    "category": "css",
+    "preBlocks": [
+      "<!doctype html>\n<html>\n<head>\n<title>vh_center4</title>\n<style>\nhtml, body {\n  margin: 0;\n  padding: 0;\n  height: 100%;\n}\nbody {\n  display: grid;\n  place-content: center;\n}\n.content {\n  width: 200px;\n  height: 120px;\n  background: #000;\n  color: #fff;\n}\n</style>\n</head>\n<body>\n<div class=\"content\">content</div>\n</body>\n</html>"
+    ]
+  },
+  {
+    "articlePath": "css/grid-template-columns",
+    "articleName": "grid-template-columns",
+    "category": "css",
+    "preBlocks": [
+      "<dl>\n  <dt>氏名</dt>\n  <dd>あああああ</dd>\n  <dt data-long>今から10年以内に叶えたい夢があるか</dt>\n  <dd data-short>ある</dd>\n  <dt data-short>将来設計</dt>\n  <dd data-long>あああああああああああああああああああああああああああああああああああ</dd>\n  <dt>あなたの長所</dt>\n  <dd>ああああああああああああああ</dd>\n  <dt>好きな食べ物</dt>\n  <dd>あああああああ</dd>\n</dl>",
+      "dl {\n  display: grid;\n  grid-template-columns: 1fr 1fr 1fr 1fr; // 横4マス\n  width: 375px;\n  margin: 60px auto 0;\n  border-bottom: #ddd 1px solid;\n  font-size: 15px;\n}\ndt,\ndd {\n  border-top: #ddd 1px solid;\n  margin: 0;\n  padding: 10px 0;\n}\ndt {\n  grid-column: 1 / span 2; // 1から2マス分繋げる\n  font-weight: 700;\n}\ndd {\n  grid-column: 3 / span 2; // 3から2マス分繋げる\n  text-align: right;\n}\ndt[data-long] {\n  grid-column: 1 / span 3; // 1から3マス分繋げる\n}\ndt[data-short] {\n  grid-column: 1 / span 1; // 1から1マス分\n}\ndd[data-long] {\n  grid-column: 2 / span 3; // 2から3マス分繋げる\n}\ndd[data-short] {\n  grid-column: 4 / span 1; // 4から1マス分\n}"
+    ]
+  },
+  {
+    "articlePath": "css/grid",
+    "articleName": "grid",
+    "category": "css",
+    "preBlocks": [
+      "display: grid;\ngrid-template-columns: 1fr 1fr;\ngrid-auto-rows: 50px;",
+      "display: grid;\ngrid-template-columns: 72px 1fr;\nword-break: break-all;",
+      "display: grid;\ngrid-template-columns: repeat(3, 1fr);\ngrid-auto-rows: minmax(100px, auto);\nrow-gap: 20px;\ncolumn-gap: 10px;",
+      ".ex04 {\n  display: grid;\n  grid-template-columns: repeat(3, 1fr);\n  gap: 10px;\n}\n.ex04 p {\n  position: relative;\n  padding-bottom: 50px;\n  word-break: break-all;\n}\n.ex04 i {\n  width: 100%;\n  height: 50px;\n  border: #d22 3px solid;\n  position: absolute;\n  left: 0;\n  bottom: 0;\n}"
+    ]
+  },
+  {
+    "articlePath": "css/has",
+    "articleName": "has",
+    "category": "css",
+    "preBlocks": [
+      "// scss\n\np {\n  display: none;\n}\n\nli {\n  &:has(input:checked) {\n    label {\n      font-weight: 700;\n    }\n    p {\n      display: block;\n    }\n  }\n}"
+    ]
+  },
+  {
+    "articlePath": "css/keyframes",
+    "articleName": "keyframes",
+    "category": "css",
+    "preBlocks": [
+      "@keyframes openMenu {\n  0% {\n    left: 100vw;\n  }\n\n  100% {\n    left: 0;\n  }\n}\n\n@keyframes closeMenu {\n  0% {\n    left: 0;\n  }\n\n  100% {\n    left: 100vw;\n  }\n}\n\n.Open {\n  animation-name: openMenu;\n  animation-duration: 0.3s;\n  left: 0;\n}\n\n.Close {\n  animation-name: closeMenu;\n  animation-duration: 0.3s;\n  left: 100vw;\n}"
+    ]
+  },
+  {
+    "articlePath": "css/line-clamp-ellipsis",
+    "articleName": "line-clamp-ellipsis",
+    "category": "css",
+    "preBlocks": [
+      "display: -webkit-box;\noverflow: hidden;\n-webkit-line-clamp: 2;\n-webkit-box-orient: vertical;"
+    ]
+  },
+  {
+    "articlePath": "css/radio-checkbox-image-replacement",
+    "articleName": "radio-checkbox-image-replacement",
+    "category": "css",
+    "preBlocks": [
+      "<style>\n  li {\n    margin-top: 10px;\n    list-style: none;\n  }\n\n  .foo input[type='radio'] {\n    display: none;\n  }\n\n  .foo input[type='radio'] + label {\n    position: relative;\n    display: flex;\n    font-size: 14px;\n    font-weight: 300;\n  }\n\n  .foo input[type='radio'] + label::before {\n    content: '';\n    background: url(../img/radio-off.svg), url(../img/radio-on.svg);\n    background-size: 20px 20px, 0 0;\n    width: 20px;\n    height: 20px;\n    display: block;\n    margin-right: 8px;\n    position: relative;\n    top: -1px;\n  }\n\n  .foo input[type='radio']:checked + label::before {\n    background-size:\n      0 0,\n      20px 20px;\n  }\n</style>\n\n<ul>\n  <li>\n    <div class=\"foo\">\n      <input type=\"radio\" name=\"name1\" id=\"check1\" value=\"\" checked=\"checked\" />\n      <label for=\"check1\">ああああああ</label>\n    </div>\n  </li>\n  <li>\n    <div class=\"foo\">\n      <input type=\"radio\" name=\"name1\" id=\"check2\" value=\"\" />\n      <label for=\"check2\">いいいいいい</label>\n    </div>\n  </li>\n  <li>\n    <div class=\"foo\">\n      <input type=\"radio\" name=\"name1\" id=\"check3\" value=\"\" />\n      <label for=\"check3\">うううううう</label>\n    </div>\n  </li>\n  <li>\n    <div class=\"foo\">\n      <input type=\"radio\" name=\"name1\" id=\"check4\" value=\"\" />\n      <label for=\"check4\">ええええええ</label>\n    </div>\n  </li>\n  <li>\n    <div class=\"foo\">\n      <input type=\"radio\" name=\"name1\" id=\"check5\" value=\"\" />\n      <label for=\"check5\">おおおおおお</label>\n    </div>\n  </li>\n</ul>"
+    ]
+  },
+  {
+    "articlePath": "css/remove-scrollbar",
+    "articleName": "remove-scrollbar",
+    "category": "css",
+    "preBlocks": [
+      "overflow-x: scroll;\n-ms-overflow-style: none;\nscrollbar-width: none;\n\n&::-webkit-scrollbar {\n  display: none;\n}"
+    ]
+  },
+  {
+    "articlePath": "css/rounded-table",
+    "articleName": "rounded-table",
+    "category": "css",
+    "preBlocks": [
+      "table {\n  border: #000 1px solid;\n  border-radius: 10px;\n  border-collapse: separate;\n  border-spacing: 0;\n}\nth, td {\n  border-right: #000 1px solid;\n  border-bottom: #000 1px solid;\n}\nth:last-child, td:last-child {\n  border-right: none;\n}\ntr:last-child td {\n  border-bottom: none;\n}\n\n// border-collapse: separate; （角丸を有効にする。ただし、trにborderが引けなくなる）\n// border-spacing: 0; （border-collapse: separate;にした時に発生するセル間の余白を詰める）"
+    ]
+  },
+  {
+    "articlePath": "css/safearea",
+    "articleName": "safearea",
+    "category": "css",
+    "preBlocks": [
+      "// viewport\n\n<meta name=\"viewport\" content=\"width=*******, *******, *******, viewport-fit=cover\">",
+      "// scss\nex) 16px\n\n$space: 16px;\n@each $side in right left bottom {\n  padding-#{$side}: $space;\n  padding-#{$side}: calc(constant(safe-area-inset-#{$side}) + #{$space}); // 11.1\n  padding-#{$side}: calc(env(safe-area-inset-#{$side}) + #{$space}); // 11.2 ~\n}",
+      "// css\nex) 16px\n\npadding-right: 16px;\npadding-left: 16px;\npadding-bottom: 16px;\npadding-right: calc(constant(safe-area-inset-right) + 16px); // 11.1\npadding-left: calc(constant(safe-area-inset-left) + 16px); // 11.1\npadding-bottom: calc(constant(safe-area-inset-bottom) + 16px); // 11.1\npadding-right: calc(env(safe-area-inset-right) + 16px); // 11.2 ~\npadding-left: calc(env(safe-area-inset-left) + 16px); // 11.2 ~\npadding-bottom: calc(env(safe-area-inset-bottom) + 16px); // 11.2 ~"
+    ]
+  },
+  {
+    "articlePath": "css/sass",
+    "articleName": "sass",
+    "category": "css",
+    "preBlocks": [
+      "// scss\n\ndiv {\n  border: {\n    style: solid;\n    left: {\n      width: 1px;\n      color: #111;\n    }\n    right: {\n      width: 1px;\n      color: #222;\n    }\n  }\n  margin: 10px {\n    top: 0;\n  }\n}\n\n\n---\n\n// css\n\ndiv {\n  border-style: solid;\n  border-left-width: 1px;\n  border-left-color: #111;\n  border-right-width: 1px;\n  border-right-color: #222;\n  margin: 10px;\n  margin-top: 0;\n}",
+      "// scss\n\ndiv {\n  color: #aaa;\n  @media all and (orientation:landscape) {\n    color: #bbb;\n  }\n}\n\n\n---\n\n// css\n\ndiv {\n  color: #aaa;\n}\n@media all and (orientation: landscape) {\n  div {\n  color: #bbb;\n  }\n}",
+      "// scss\n\n$string_1: \".foo\"; // .(ドット)など記号で始まる場合、引用符が必要\n$string_2: color;\n$number_1: 1;\n$number_2: 1px; // cssで有効な単位は数値扱い\n$color_1: rgba(17,34,51,1.0); // アルファが1.0だと16進数6桁表記に変換される\n$color_2: #123; // 6桁表記に変換される\n$boolean: true;\n$null: null;\n$list: 0 0 no-repeat; // カンマ区切りも有効\n$map: (\n  img_c: \"/img/common/\",\n  img_s: \"/img/sprite/\",\n  img_f: \"/img/figure/\"\n);\n// グローバルスコープ = どこでも有効\n// セレクタ内で宣言した変数はそのセレクタ内でのみ有効(ローカルスコープ)\n// グローバルとローカルで同じ変数名の場合はローカル優先\n// listの値にlistやmapを入れたり、mapの値にlistやmapを入れることができる\n// mapのキーと値はeach文で変数2つとして使うことができる\n// 使えない変数名: 数字から始まる,@などの記号,--(ハイフン2個)から始まる\n\n#{$string_1} {\n\n  line-height: $number_1;\n  box-shadow: 0 $number_2 1px $color_1;\n  #{$string_2}: $color_2;\n  background-#{$string_2}: #000;\n\n  @if $boolean == true {\n    @if $null == null {\n      background: url(#{map-get($map,img_c)}bg.png) $list;\n    }\n  }\n  opacity: $null; // 値にnullが入るとプロパティ名も出力しない\n}\n// #{} = インターポレーション = 文字との連結やプロパティやセレクタのとき必要\n\n\n---\n\n// css\n\n.foo {\n  line-height: 1;\n  box-shadow: 0 1px 1px #112233;\n  color: #112233;\n  background-color: #000;\n  background: url(/img/common/bg.png) 0 0 no-repeat;\n}",
+      "// scss\n\ndiv {\n  margin: 10px + 5;\n  margin: 10px - 5;\n  margin: 10px * 5;\n  margin: (10px / 5); // 割算のスラッシュはフォント一括指定と区別するため括弧が必要\n  margin: 10px % 5;\n\n  color: #111 + #aaa;\n  color: #aaa + #aaa; // 範囲を超えたら自動調整\n  color: (#999 / 3);\n  color: rgba(0, 50, 255, 0.5) + rgba(100, 50, 255, 0.5); // 255以上は自動調整,アルファは演算不可\n\n  $size: 20px;\n  font: $size / 2; // 変数の時は割算でも括弧が要らない\n  font: #{$size} / 2; // フォント一括指定にしたいときはインターポレーション\n}\n\n\n---\n\n// css\n\ndiv {\n  margin: 15px;\n  margin: 5px;\n  margin: 50px;\n  margin: 2px;\n  margin: 0px;\n  color: #bbbbbb;\n  color: white;\n  color: #333333;\n  color: rgba(100, 100, 255, 0.5);\n  font: 10px;\n  font: 20px / 2;\n}",
+      "// scss\n\ndiv:before {\n  content : foo + bar;\n  content : \"foo\" + bar;\n  content : foo + \"bar\";\n  content : \"foo\" + \"bar\";\n  // 先頭の引用符の有無が反映される\n\n  $root : \"../\";\n  $kind : \"img/\";\n  $file : \"bg\";\n  background: url(\"#{$root + $kind + $file}.png\") 0 0 no-repeat;\n}\n\n\n---\n\n// css\n\ndiv:before {\n  content: foobar;\n  content: \"foobar\";\n  content: foobar;\n  content: \"foobar\";\n  background: url(\"../img/bg.png\") 0 0 no-repeat;\n}",
+      "// scss\n\n$foo : 1;\n\n.bar {\n  @if $foo { /* falseかnull以外の値が存在するとき */\n    color: #111;\n  } @else { /* 値がfalseかnullのとき */\n    color: #222;\n  }\n}\n// .bar { color: if($foo == 1, #111, #222); } も同義\n\n.baz {\n  @if $foo == 0 { /* 値が0のとき */\n    color: #333;\n  } @else if $foo == 1 { /* 値が1のとき */\n    color: #444;\n  } @else { /* 0か1以外の値が存在するとき */\n    color: #555;\n  }\n}\n// .baz { color: if($foo == 0, #333, if($foo == 1, #444, #555)); } も同義\n\n\n---\n\n// css\n\n.bar {\n  /* falseかnull以外の値が存在するとき */\n  color: #111;\n}\n.baz {\n  /* 値が1のとき */\n  color: #444;\n}\n\n\n// 値が存在しない場合はコンパイルエラー\n// 他の演算子は !=, >, <, >=, <=, and, or, not",
+      "// scss\n\n@for $num from 1 through 3 {\n  .icon_A_#{$num} {\n    background: url(/img/icon_A_#{$num}.png) 0 (($num - 1)*100px) no-repeat;\n  }\n}\n\n@for $num from 1 to 3 {\n  .icon_B_#{$num} {\n    background: url(/img/icon_B_#{$num}.png) 0 (($num - 1)*100px) no-repeat;\n  }\n}\n\n\n---\n\n// css\n\n.icon_A_1 {\n  background: url(/img/icon_A_1.png) 0 0px no-repeat;\n}\n.icon_A_2 {\n  background: url(/img/icon_A_2.png) 0 100px no-repeat;\n}\n.icon_A_3 {\n  background: url(/img/icon_A_3.png) 0 200px no-repeat;\n}\n\n.icon_B_1 {\n  background: url(/img/icon_B_1.png) 0 0px no-repeat;\n}\n.icon_B_2 {\n  background: url(/img/icon_B_2.png) 0 100px no-repeat;\n}",
+      "// scss\n\n$num: 5;\n@while $num > 0 {\n  .icon_#{$num} {\n    background: url(/img/icon_#{$num}.png) 0 (($num - 1)*100px) no-repeat;\n  }\n  $num: $num - 1;\n}\n\n\n---\n\n// css\n\n.icon_5 {\n  background: url(/img/icon_5.png) 0 400px no-repeat;\n}\n.icon_4 {\n  background: url(/img/icon_4.png) 0 300px no-repeat;\n}\n.icon_3 {\n  background: url(/img/icon_3.png) 0 200px no-repeat;\n}\n.icon_2 {\n  background: url(/img/icon_2.png) 0 100px no-repeat;\n}\n.icon_1 {\n  background: url(/img/icon_1.png) 0 0px no-repeat;\n}",
+      "// scss\n\n// each文の中に値を適用\n.foo {\n  @each $prefix in -webkit- -moz- -ms- -o- null {\n    #{$prefix}border-radius: 10px;\n  }\n}\n\n// リストにしてからeach文に適用\n$vendor: -webkit- -moz- -ms- -o- null;\n.bar {\n  @each $prefix in $vendor {\n    #{$prefix}border-radius: 20px;\n  }\n}\n\n// マップにしてからeach文に適用\n$vendor_prefix: (\n  webkit: -webkit-,\n  mozilla: -moz-,\n  ie: -ms-,\n  opera: -o-,\n  none: null\n);\n.baz {\n  @each $vendor, $prefix in $vendor_prefix {\n    #{$prefix}border-radius: 30px; /* #{$vendor} */\n  }\n}\n\n\n---\n\n// css\n\n.foo {\n  -webkit-border-radius: 10px;\n  -moz-border-radius: 10px;\n  -ms-border-radius: 10px;\n  -o-border-radius: 10px;\n  border-radius: 10px;\n}\n\n.bar {\n  -webkit-border-radius: 20px;\n  -moz-border-radius: 20px;\n  -ms-border-radius: 20px;\n  -o-border-radius: 20px;\n  border-radius: 20px;\n}\n\n.baz {\n  -webkit-border-radius: 30px;\n  /* webkit */\n  -moz-border-radius: 30px;\n  /* mozilla */\n  -ms-border-radius: 30px;\n  /* ie */\n  -o-border-radius: 30px;\n  /* opera */\n  border-radius: 30px;\n  /* none */\n}",
+      "// sass template\n\n{project}\n│\n├ css\n│　└ {project}.css\n└ sass\n　　├ {project}.scss\n　　│\n　　├ _conf.scss\n　　│\n　　└ parts\n　　　 ├ lib\n　　　 │ ├ _reset.scss\n　　　 │ └ _utility.scss\n　　　 ├ _base.scss\n　　　 ├ _layout.scss\n　　　 └ _module.scss\n\n\n\n// {project}.scss\n\n@use \"conf\";\n@use \"parts/lib/reset\";\n@use \"parts/lib/utility\";\n@use \"parts/base\";\n@use \"parts/layout\";\n@use \"parts/module\";\n\n\n// {project}.scss の中にlib,mod内のscssファイルの内容を読み込む\n// 名前がアンダーバーで始まるパーシャルファイルは、sassフォルダごとコンパイルしても個別に出力しない\n// @use文の値で、パーシャルファイルの最初のアンダーバーと拡張子は省略可能",
+      ".foo {\n\n  // A\n  $body_font_size: 12px;\n  $body_line_height: 1em;\n\n  // B\n  body {\n    font-size: $body_font_size; // 12px\n    line-height: $body_line_height; // 1em\n  }\n}\n\n\n// Aが別ファイルのパーシャルなどからimportしたものの場合、上記のコードならBは問題無くcssに反映される\n// しかし、Aのパーシャル内で仮に変更があった下記のような場合、\n\n.foo {\n\n  // A'\n  $body_font_size: 14px; // 値が更新されていた\n  $text_line_height: 1.5em; // 変数名と値が更新されていた\n\n  // B\n  body {\n    font-size: $body_font_size; // 14px\n    line-height: $body_line_height; // コンパイルエラー\n  }\n}\n\n\n// Bの $body_font_size には問題なくA'の値が適用されるが、$body_line_height は定義されていないのでエラーになる\n// そこで、下記のようにBで!defaultを指定しておくことにより、\n\n\n.foo {\n\n  // A'\n  $body_font_size: 14px; // 値が更新されていた\n  $text_line_height: 1.5em; // 変数名と値が更新されていた\n\n  // B\n  $body_font_size: 12px !default;\n  $body_line_height: 1em !default;\n  body {\n    font-size: $body_font_size; // 14px\n    line-height: $body_line_height; // 1em\n  }\n}\n\n\n// A'の変数宣言はBにとって問題が無く、値が更新された $body_font_size には A'の値が適用され、A'の変数宣言に問題がある $body_line_height には !default の値が適用される",
+      "// scss\n\n@mixin baz {\n  margin: 0;\n  padding: 10px;\n}\n\n.foo {\n  @include baz;\n  color: #000;\n}\n\n.bar {\n  @include baz;\n  color: #f00;\n}\n\n\n---\n\n// css\n\n.foo {\n  margin: 0;\n  padding: 10px;\n  color: #000;\n}\n\n.bar {\n  margin: 0;\n  padding: 10px;\n  color: #f00;\n}\n\n// includeした場所にmixinの内容を読み込む\n// includeした場所よりmixinの表記場所が下にあるとコンパイルエラー\n// mixinの中でincludeすることも可\n// mixinの中でincludeする場合は互いのmixinの表記順にルールは無い\n// 使えないmixin名: 数字から始まる,@などの記号,--(ハイフン2個)から始まる",
+      "// scss\n\n@mixin baz($value: 10px) {  // : 10px = 初期値\n  margin: 0;\n  padding: $value;\n}\n\n.foo {\n  @include baz;\n  color: #000;\n}\n\n.bar{\n  @include baz(20px);\n  color: #f00;\n}\n\n\n---\n\n// css\n\n.foo {\n  margin: 0;\n  padding: 10px;  // 引数を指定しなければ初期値が反映される\n  color: #000;\n}\n\n.bar {\n  margin: 0;\n  padding: 20px;\n  color: #f00;\n}\n\n// 初期値は未設定でも可 @mixin baz($value) { 〜 }\n// 初期値が未設定の時、includeで引数を設定しなければエラー\n// 引数の複数設定可 @mixin baz($value1: 10px, $value2: 20px, 〜 ) { 〜 }",
+      "@mixin foo1($value) {\n  text-shadow: $value;\n}\n\n.bar1 {\n  @include foo1(1px 1px 0 #555, -1px -1px 0 #eee); // 1つの引数に2つの値を渡しているのでエラー\n  @include foo1((1px 1px 0 #555, -1px -1px 0 #eee)); // valid\n  @include foo1(unquote(\"1px 1px 0 #555, -1px -1px 0 #eee\")); // valid\n}\n\n\n@mixin foo2($value...) { // 引数の数を限定しない\n  text-shadow: $value;\n}\n\n.bar2 {\n  @include foo2(1px 1px 0 #555, -1px -1px 0 #eee); // valid\n}\n\n\n\n---\n\n\n@mixin foo($t, $r, $b, $l) {\n  padding-top: $t;\n  padding-right: $r;\n  padding-bottom: $b;\n  padding-left: $l;\n}\n\n.bar {\n  $value: 10px, 20px, 30px, 40px;\n\n  @include foo($value); // $t に4つの値を渡し、$r,$b,$l に値が入らないのでエラー\n  @include foo($value...); // valid\n}",
+      "// scss\n\n@mixin media($value) {\n\n  @if $value == pc {\n    @media(min-width:769px){\n      @content;\n    }\n  }\n  @if $value == tablet {\n    @media(max-width:768px) and (min-width: 321px){\n      @content;\n    }\n  }\n  @if $value == sp {\n    @media(max-width:320px){\n      @content;\n    }\n  }\n}\n\n#header {\n\n  background: #edf;\n  color: #222;\n\n  @include media(pc) {\n    height: 100px;\n    font-size: 18px;\n  }\n  @include media(tablet) {\n    height: 60px;\n    font-size: 16px;\n  }\n  @include media(sp) {\n    height: 30px;\n    font-size: 12px;\n  }\n}\n\n\n---\n\n// css\n\n#header {\n  background: #edf;\n  color: #222;\n}\n@media (min-width: 769px) {\n  #header {\n  height: 100px;\n  font-size: 18px;\n  }\n}\n@media (max-width: 768px) and (min-width: 321px) {\n  #header {\n  height: 60px;\n  font-size: 16px;\n  }\n}\n@media (max-width: 320px) {\n  #header {\n  height: 30px;\n  font-size: 12px;\n  }\n}\n\n// includeした場所にmixinの内容を読み込み、contentした場所にはincludeの{}の内容が入る\n// 上記はレスポンシブのmediaquery表記を簡素化するためmixinに纏めた例",
+      "// scss\n\n.baz {\n  margin: 0;\n  padding: 10px;\n}\n\n.foo {\n  @extend .baz;\n  color: #000;\n}\n\n.bar {\n  @extend .baz;\n  color: #f00;\n}\n\n\n---\n\n// css\n\n.baz, .foo, .bar {\n  margin: 0;\n  padding: 10px;\n}\n\n.foo {\n  color: #000;\n}\n\n.bar {\n  color: #f00;\n}\n\n// extendした場所のセレクタ(.fooと.bar)が、指定したセレクタ(.baz)の後に追記される\n// mixinと違い、指定したセレクタの場所が上になければエラー、というルールは無い\n// 指定したセレクタが無い場合はエラーになるが、@extend .baz !optional; とすれば回避する\n// @mediaの中から、外にあるセレクタはextendできない",
+      "// scss\n\n%baz {\n  margin: 0;\n  padding: 10px;\n}\n\n.foo {\n  @extend %baz;\n  color: #000;\n}\n\n.bar {\n  @extend %baz;\n  color: #f00;\n}\n\n\n---\n\n// css\n\n.foo, .bar {\n  margin: 0;\n  padding: 10px;\n}\n\n.foo {\n  color: #000;\n}\n\n.bar {\n  color: #f00;\n}\n\n// extendした場所のセレクタ(.fooと.bar)が、指定したセレクタ(%baz)に代わって表記される\n// mixinと違い、指定したセレクタの場所がextendした場所より上になければエラーというルールは無い\n// 指定したセレクタが無い場合はエラーになるが、@extend %baz !optional; とすれば回避する\n// @mediaの中から、外にあるプレースホルダセレクタはextendできない",
+      "// sass\n\n.foo_1 {\n  content: \"1\";\n\n  .foo_2a {\n    content: \"2a\";\n  }\n  @at-root .foo_2b { /* セレクタの前に付けることで親(.foo_1)の外に出す */\n    content: \"2b\";\n  }\n}\n\n.bar_1 {\n  content: \"1\";\n\n  @at-root { /* 複数のセレクタを親(.bar_1)の外に出す */\n    .bar_2 {\n      content: \"2\";\n    }\n    .bar_3 {\n      content: \"3\";\n    }\n  }\n}\n\n@media all and (orientation:landscape) {\n  .baz_1 {\n    content: \"1\";\n\n    @at-root .baz_2a { /* @mediaの外に出ない */\n      content: \"2a\";\n    }\n    @at-root (without: media) {\n      .baz_2b { /* @mediaの外に出る */\n        content: \"2b\";\n      }\n    }\n    @at-root (without: media rule) {\n      .baz_2c { /* @mediaの外に出て親(.baz_1)からも出る */\n        content: \"2c\";\n      }\n    }\n    @at-root (with: media) {\n      .baz_2d { /* @mediaの外に同じ@mediaを作り、親(.baz_1)からは出る */\n        content: \"2d\";\n      }\n    }\n  }\n}\n\n\n---\n\n// css\n\n\n.foo_1 {\n  content: \"1\";\n}\n.foo_1 .foo_2a {\n  content: \"2a\";\n}\n.foo_2b {\n  /* セレクタの前に付けることで親(.foo_1)の外に出す */\n  content: \"2b\";\n}\n\n\n.bar_1 {\n  content: \"1\";\n}\n/* 複数のセレクタを親(.bar_1)の外に出す */\n.bar_2 {\n  content: \"2\";\n}\n.bar_3 {\n  content: \"3\";\n}\n\n\n@media all and (orientation: landscape) {\n  .baz_1 {\n  content: \"1\";\n  }\n  .baz_2a {\n  /* @mediaの外に出ない */\n  content: \"2a\";\n  }\n}\n.baz_1 .baz_2b {\n  /* @mediaの外に出る */\n  content: \"2b\";\n}\n.baz_2c {\n  /* @mediaの外に出て親(.baz_1)からも出る */\n  content: \"2c\";\n}\n@media all and (orientation: landscape) {\n  .baz_2d {\n  /* @mediaの外に同じ@mediaを作り、親(.baz_1)からは出る */\n  content: \"2d\";\n  }\n}",
+      "// scss\n\n$path: (\n  img_c: \"/img/common/\",\n  img_s: \"/img/sprite/\",\n  img_f: \"/img/figure/\"\n);\n\ndiv {\n  background-image: url(#{map-get($path,img_c)}bg.png);\n}\n// map-get($map, $key) -> マップのキーから値を返す関数\n// 関数一覧 -> http://sass-lang.com/documentation/Sass/Script/Functions.html\n\n\n---\n\n// css\n\ndiv {\n  background-image: url(/img/common/bg.png);\n}",
+      "// scss\n\n@function function_name($value) {  // 自作関数\n  @return $value * 100;\n}\n\ndiv {\n  content: function_name(1px);\n}\n\n\n---\n\n// css\n\ndiv {\n  content: 100px;\n}",
+      "// scss\n\n@function double($value) {\n  @debug $value;\n  $value: $value * 2;\n  @debug $value;\n  @return $value;\n}\n\n.foo {\n  content: double(10px);\n}\n\n\n---\n\n// css\n\n.foo {\n  content: 20px;\n}\n\n---\n\n// console\n\nsass/filename.scss:2 DEBUG: 10px\nsass/filename.scss:4 DEBUG: 20px",
+      "// scss\n\n@function double($value) {\n  @if type-of($value) == number { // type-of() -> 値のタイプを返す関数\n    @return $value * 2;\n  } @else {\n    @warn \"引数には数値を入れてください\";\n    @return null;\n  }\n}\n\n.foo {\n  content: double(null);\n}\n\n\n---\n\n// css\n\n---\n\n// console\n\nWARNING: 引数には数値を入れてください\n     on line 5 of sass/filename.scss",
+      "ruby -v  // Rubyバージョン確認\ngem -v  // RubyGemsバージョン確認\nsass -v  // sassバージョン確認\n\nsudo gem install sass  // sassインストール\nsudo gem install sass -v [version]  // バージョン指定インストール\n// sudo gem install sass -v 3.2.17\nsudo gem install sass --pre  // アルファ版インストール\n\nsudo gem install oily_png  // スプライト画像生成の高速化\n\nsudo gem update --system  // RubyGemsアップデート\nsudo gem update sass  // sassアップデート\n\nsudo gem uninstall sass  // sassアンインストール\n\nsass -?  // ヘルプ表示\n\nhttp://sass-lang.com/documentation/file.SASS_REFERENCE.html  // Reference\nhttp://sass-lang.com/documentation/file.SASS_CHANGELOG.html  // Changelog\n\n---\n\n// compile\n\nscssが以下のとき\n/*\n * comment A\n */\n\n/*!\n * comment B\n */\n\n// comment C\n\nbody {\n  margin: 0;\n  padding: 0;\n  div {\n    display: block;\n  }\n}\n\n\nsass [scss path]:[css path]\nsass [scss path]:[css path] -t nested\n/*\n * comment A\n */\n/*!\n * comment B\n */\nbody {\n  margin: 0;\n  padding: 0; }\n  body div {\n  display: block; }\n\nsass [scss path]:[css path] -t expanded\n/*\n * comment A\n */\n/*!\n * comment B\n */\nbody {\n  margin: 0;\n  padding: 0;\n}\nbody div {\n  display: block;\n}\n\nsass [scss path]:[css path] -t compact\n/* comment A */\n/*!\n * comment B\n */\nbody { margin: 0; padding: 0; }\nbody div { display: block; }\n\nsass [scss path]:[css path] -t compressed\n/*!\n * comment B\n */body{margin:0;padding:0}body div{display:block}\n\n\n\n---\n\n監視コンパイル\n\nsass -w [scss path]:[css path]\nsass -w [scss dir]:[css dir]  // フォルダ指定\nsass -w --line-comments [scss dir]:[css dir]  // line comment付き\nsass -w --no-cache [scss dir]:[css dir]  // キャッシュフォルダを作らない\nsass -w [scss dir]:[css dir] --load-path [other project dir]  // 別プロジェクトからライブラリ等をimport\n\n---\n\ncssからscssにコンパイル\n\nsass-convert --to scss [css path] [scss path]\nsass-convert --recursive --from css --to scss [dir] [dir]// フォルダごと",
+      "// npm command\n\nnpm install gulp-sass --save-dev // install\nnpm uninstall gulp-sass --save-dev // uninstall\nnpm install gulp-sass@x.x.x --save-dev // specified version install\nnpm info gulp-sass // check version\n\n\n// gulpfile.js\n\nvar sass = require('gulp-sass');\n\ngulp.task('sass', function(){\n  gulp.src('scssのパス')\n    .pipe(sass())\n    .pipe(gulp.dest('出力するcssのパス'));\n});\n\ngulp.task('default', ['sass']);",
+      "npm install node-sass --save-dev // install\n\nnode-sass -o {css folder} {sass folder} // compile"
+    ]
+  },
+  {
+    "articlePath": "css/scroll-behavior",
+    "articleName": "scroll-behavior",
+    "category": "css",
+    "preBlocks": [
+      "<!DOCTYPE html>\n<html>\n  <head>\n    <title>scroll-behavior</title>\n    <style>\n      html,\n      body {\n        margin: 0;\n        padding: 0;\n        height: 100%;\n      }\n      html {\n        scroll-behavior: smooth;\n      }\n      .header {\n        width: 100%;\n        height: 60px;\n        position: fixed;\n      }\n      .header ul {\n        display: flex;\n        align-items: center;\n        gap: 20px;\n        padding: 0;\n      }\n      .header li {\n        list-style: none;\n      }\n      .header a {\n        color: #fff;\n      }\n      .inner {\n        position: relative;\n      }\n      .overlay {\n        width: 100%;\n        height: 60px;\n        position: absolute;\n        opacity: 0.6;\n        background: #000;\n      }\n      .menu {\n        width: 100%;\n        display: grid;\n        place-content: center;\n        position: absolute;\n      }\n      .content {\n        padding-top: 60px;\n      }\n      section {\n        height: calc(100vh - 60px);\n        border: #000 1px solid;\n      }\n      section a {\n        scroll-margin-top: 60px;\n      }\n      h1 {\n        margin: 0;\n        padding: 30px;\n      }\n    </style>\n  </head>\n  <body>\n    <div class=\"header\">\n      <div class=\"inner\">\n        <div class=\"overlay\"></div>\n        <div class=\"menu\">\n          <ul>\n            <li><a href=\"#a\">scroll a</a></li>\n            <li><a href=\"#b\">scroll b</a></li>\n            <li><a href=\"#c\">scroll c</a></li>\n          </ul>\n        </div>\n      </div>\n    </div>\n    <div class=\"content\">\n      <section>\n        <a name=\"a\"></a>\n        <h1>a</h1>\n      </section>\n      <section>\n        <a name=\"b\"></a>\n        <h1>b</h1>\n      </section>\n      <section>\n        <a name=\"c\"></a>\n        <h1>c</h1>\n      </section>\n    </div>\n  </body>\n</html>"
+    ]
+  },
+  {
+    "articlePath": "css/selector-specificity",
+    "articleName": "selector-specificity",
+    "category": "css",
+    "preBlocks": [
+      "(high)\n!important\nインライン\nidセレクタ\nclassセレクタ,属性セレクタ,擬似クラス\n要素セレクタ,擬似要素\nユニバーサルセレクタ\n(low)"
+    ]
+  },
+  {
+    "articlePath": "css/selectors",
+    "articleName": "selectors",
+    "category": "css",
+    "preBlocks": [
+      "// その他\n\n:target\n:root\n:required\n:optional\n:valid\n:invalid\n:in-range\n\n:out-of-range\n::first-line\n::first-letter\n::after\n::before\n::selection\n\n※コロン2つなのは擬似クラスとの区別のため推奨される"
+    ]
+  },
+  {
+    "articlePath": "css/thin-border",
+    "articleName": "thin-border",
+    "category": "css",
+    "preBlocks": [
+      "<!doctype html>\n<title>title</title>\n<meta name=\"viewport\" content=\"width=device-width, user-scalable=no, initial-scale=1, maximum-scale=1\">\n\n<style>\ndiv {\n  margin: 20px 10px;\n  padding-top: 6px;\n}\n.normal {\n  height: 100px;\n  border-top: #333 1px solid;\n}\n.thin {\n  height: 100px;\n  position: relative;\n}\n.thin::after {\n  content: \"\";\n  width: 100%;\n  height: 1px;\n  border-top: #333 1px solid;\n  position: absolute;\n  top: 0;\n  left: 0;\n  -webkit-transform: scaleY(0.5);\n  transform: scaleY(0.5);\n}\n</style>\n\n<div class=\"normal\">normal 1px</div>\n<div class=\"thin\">thin scaleY(0.5)</div>"
+    ]
+  },
+  {
+    "articlePath": "css/tooltip",
+    "articleName": "tooltip",
+    "category": "css",
+    "preBlocks": []
+  }
+]

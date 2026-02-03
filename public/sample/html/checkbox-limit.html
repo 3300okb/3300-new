@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="ja">
+  <title>title</title>
+  <meta charset="utf-8" />
+  <meta
+    name="viewport"
+    content="width=device-width, user-scalable=no, initial-scale=1, maximum-scale=1"
+  />
+  <link rel="stylesheet" href="/sample/font-select.css" />
+
+  <div>
+    <label><input type="checkbox" name="name1" value="1" />1</label>
+    <label><input type="checkbox" name="name1" value="2" />2</label>
+    <label><input type="checkbox" name="name1" value="3" />3</label>
+    <label><input type="checkbox" name="name1" value="4" />4</label>
+    <label><input type="checkbox" name="name1" value="5" />5</label>
+    <label><input type="checkbox" name="name1" value="6" />6</label>
+    <label><input type="checkbox" name="name1" value="7" />7</label>
+  </div>
+
+  <div>
+    <label><input type="checkbox" name="name2" value="1" />1</label>
+    <label><input type="checkbox" name="name2" value="2" />2</label>
+    <label><input type="checkbox" name="name2" value="3" />3</label>
+    <label><input type="checkbox" name="name2" value="4" />4</label>
+    <label><input type="checkbox" name="name2" value="5" />5</label>
+    <label><input type="checkbox" name="name2" value="6" />6</label>
+    <label><input type="checkbox" name="name2" value="7" />7</label>
+  </div>
+
+  <script>
+    ;(function (doc) {
+      var lang = doc.querySelector('html').getAttribute('lang')
+      var isJa = !!(lang === 'ja' || lang === 'ja-JP')
+
+      function upperLimit(name, max) {
+        var inputs = doc.querySelectorAll('input[name=' + name + ']')
+        Object.values(inputs).forEach(function (value) {
+          value.addEventListener('click', function (ev) {
+            if (
+              doc.querySelectorAll('input[name=' + name + ']:checked').length >
+              max
+            ) {
+              if (isJa) {
+                alert('最大' + max + 'つまで選択可能です。')
+              } else {
+                alert('The upper limit is ' + max + '.')
+              }
+              ev.preventDefault()
+            }
+          })
+        })
+      }
+      upperLimit('name1', 3)
+      upperLimit('name2', 3)
+    })(document)
+  </script>
+</html>

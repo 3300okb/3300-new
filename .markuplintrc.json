@@ -1,0 +1,43 @@
+{
+  "extends": ["markuplint:recommended"],
+  "excludeFiles": ["./node_modules/**", "./dist/**", "./public/**"],
+  "parser": {
+    ".vue$": "@markuplint/vue-parser"
+  },
+  "specs": {
+    ".vue$": "@markuplint/vue-spec"
+  },
+  "rules": {
+    "landmark-roles": true,
+    "required-h1": false,
+    "heading-levels": false,
+    "use-list": false,
+    "attr-duplication": true,
+    "deprecated-attr": true,
+    "deprecated-element": true,
+    "id-duplication": true,
+    "permitted-contents": false,
+    "required-attr": false,
+    "invalid-attr": false,
+    "character-reference": false,
+    "case-sensitive-attr-name": false,
+    "case-sensitive-tag-name": false,
+    "require-accessible-name": false,
+    "wai-aria": false
+  },
+  "nodeRules": [
+    {
+      "selector": ".ml-swiper-img",
+      "rules": {
+        "required-attr": false,
+        "invalid-attr": false
+      }
+    },
+    {
+      "selector": "img",
+      "rules": {
+        "required-attr": false
+      }
+    }
+  ]
+}

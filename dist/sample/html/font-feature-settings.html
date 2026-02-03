@@ -1,0 +1,48 @@
+<!doctype html>
+<meta charset="utf-8" />
+<title>font-feature-settings</title>
+<meta
+  name="viewport"
+  content="width=device-width, user-scalable=no, initial-scale=1, maximum-scale=1"
+/>
+<link rel="stylesheet" href="/sample/font-select.css" />
+
+<style>
+  .type1 {
+    font-feature-settings: 'palt' on;
+  }
+  .type2 {
+    font-feature-settings: 'palt' on;
+    letter-spacing: 0.06rem;
+  }
+</style>
+
+<ul>
+  <li>
+    default
+    <p>
+      12月4日（水）17:00<br />
+      昔々のお話です。<br />
+      おばあさんが川で洗濯をしていると、どんぶらこっこ、どんぶらこっこ。<br />
+      「おやまあ、大きな桃が流れてきたよ」
+    </p>
+  </li>
+  <li>
+    font-feature-settings: 'palt' on;
+    <p class="type1">
+      12月4日（水）17:00<br />
+      昔々のお話です。<br />
+      おばあさんが川で洗濯をしていると、どんぶらこっこ、どんぶらこっこ。<br />
+      「おやまあ、大きな桃が流れてきたよ」
+    </p>
+  </li>
+  <li>
+    font-feature-settings: 'palt' on; letter-spacing: 0.06rem;
+    <p class="type2">
+      12月4日（水）17:00<br />
+      昔々のお話です。<br />
+      おばあさんが川で洗濯をしていると、どんぶらこっこ、どんぶらこっこ。<br />
+      「おやまあ、大きな桃が流れてきたよ」
+    </p>
+  </li>
+</ul>

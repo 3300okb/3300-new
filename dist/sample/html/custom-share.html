@@ -1,0 +1,193 @@
+<!doctype html>
+<meta charset="UTF-8" />
+<link rel="stylesheet" href="/sample/font-select.css" />
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+
+<!--w3c meta-->
+<title>{title:a}</title>
+<meta name="description" content="{description:a}" />
+<meta
+  name="viewport"
+  content="width=device-width, user-scalable=no, initial-scale=1, maximum-scale=1"
+/>
+
+<!--fb meta-->
+<meta property="og:title" content="{title:b}" />
+<meta property="og:description" content="{description:b}" />
+<meta
+  property="og:url"
+  content="http://3300.me/sample/html/custom_share/popup.html"
+/>
+<meta property="og:image" content="http://3300.me/top/img/photo/coffee.jpg" />
+
+<!--tw meta-->
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="{title:c}" />
+<meta name="twitter:description" content="{description:c}" />
+<meta name="twitter:image" content="http://3300.me/top/img/photo/coffee.jpg" />
+
+<style>
+  html,
+  body,
+  ul {
+    margin: 0;
+    padding: 0;
+  }
+  body {
+    padding: 30px;
+  }
+  ul {
+    overflow: hidden;
+  }
+  li {
+    float: left;
+    margin: 0 4px 4px 0;
+    list-style: none;
+  }
+  .share a {
+    display: inline-block;
+    padding: 10px 20px;
+    border: #000 1px solid;
+    color: #000;
+    text-decoration: none;
+  }
+</style>
+
+<ul class="share">
+  <li class="btnLn"><a href="">LINE</a></li>
+  <li class="btnTw"><a href="">Twitter</a></li>
+  <li class="btnFb"><a href="">Facebook</a></li>
+  <li class="btnTb"><a href="">Tumblr</a></li>
+  <li class="btnGg"><a href="">Google</a></li>
+  <li class="btnMx"><a href="">Mixi</a></li>
+  <li class="btnHt"><a href="">Hatena</a></li>
+</ul>
+
+<script>
+  ;(function (w) {
+    var ua = w.navigator.userAgent
+    var deviceType
+    // sp
+    if (/iPhone/.test(ua) || /iPod/.test(ua)) {
+      deviceType = 'sp'
+    } else if (/Android/.test(ua) && /Mobile/.test(ua)) {
+      deviceType = 'sp'
+    } else if (/Windows/.test(ua) && /Phone/.test(ua)) {
+      deviceType = 'sp'
+    } else if (/Firefox/.test(ua) && /Mobile/.test(ua)) {
+      deviceType = 'sp'
+    } else if (/BlackBerry/.test(ua) || /BB10/.test(ua)) {
+      deviceType = 'sp'
+    } else if (/Nokia/.test(ua)) {
+      deviceType = 'sp'
+      // tablet
+    } else if (/iPad/.test(ua)) {
+      deviceType = 'tablet'
+    } else if (/Android/.test(ua) && !/Mobile/.test(ua)) {
+      deviceType = 'tablet'
+    } else if (
+      /Windows/.test(ua) &&
+      /Touch/.test(ua) &&
+      !/Tablet PC/.test(ua)
+    ) {
+      deviceType = 'tablet'
+    } else if (/Firefox/.test(ua) && /Tablet/.test(ua)) {
+      deviceType = 'tablet'
+    } else if (/Playbook/.test(ua)) {
+      deviceType = 'tablet'
+    } else if (/Kindle/.test(ua) || /Silk/.test(ua)) {
+      deviceType = 'tablet'
+      // pc
+    } else {
+      deviceType = 'pc'
+    }
+    w.deviceType = deviceType
+  })(window)
+  ;(function (w) {
+    // set href
+    var data = {
+      url: encodeURIComponent(w.location.href),
+      text: encodeURIComponent('テキストテキスト'),
+      space: encodeURIComponent(' '),
+    }
+    var href = {
+      LINEPC: 'https://lineit.line.me/share/ui?url=' + data.url,
+      LINESP:
+        'https://line.me/R/msg/text/?' + data.url + data.space + data.text,
+      Twitter:
+        'https://twitter.com/intent/tweet?text=' +
+        data.url +
+        data.space +
+        data.text,
+      Facebook: 'https://www.facebook.com/sharer/sharer.php?u=' + data.url,
+      Tumblr: 'https://tumblr.com/widgets/share/tool?canonicalUrl=' + data.url,
+      Google: 'https://plus.google.com/share?url=' + data.url,
+      Mixi: 'https://mixi.jp/share.pl?u=' + data.url,
+      Hatena: 'https://b.hatena.ne.jp/entry/' + data.url,
+    }
+    if (deviceType === 'pc') {
+      $('.btnLn a').attr('href', href.LINEPC)
+    } else {
+      $('.btnLn a').attr('href', href.LINESP)
+    }
+    $('.btnTw a').attr('href', href.Twitter)
+    $('.btnFb a').attr('href', href.Facebook)
+    $('.btnTb a').attr('href', href.Tumblr)
+    $('.btnGg a').attr('href', href.Google)
+    $('.btnMx a').attr('href', href.Mixi)
+    $('.btnHt a').attr('href', href.Hatena)
+
+    // event
+    if (deviceType === 'pc') {
+      // spの場合window.openの必要無し
+
+      $('.share a').on('click', function () {
+        var site = this.href
+
+        if (!site.match(/b\.hatena\.ne\.jp/)) {
+          // Hatenaはpopup未対応
+
+          // size of popup
+          var pW = 560,
+            pH = 470
+          if (site.match(/lineit\.line\.me/)) {
+            pH = 530
+          }
+          if (site.match(/www\.facebook\.com/)) {
+            pH = 624
+          }
+          if (site.match(/tumblr\.com\/widgets/)) {
+            pH = 716
+          }
+          if (site.match(/plus\.google\.com/)) {
+            pW = 400
+            pH = 616
+          }
+          if (site.match(/mixi\.jp\/share/)) {
+            pW = 632
+            pH = 492
+          }
+
+          // position
+          var pos_x = w.screenX + w.innerWidth / 2 - pW / 2
+          var pos_y = w.screenY + w.innerHeight / 2 - pH / 2
+
+          w.open(
+            site,
+            'popup',
+            'width=' +
+              pW +
+              ', height=' +
+              pH +
+              ', menubar=no, toolbar=no, scrollbars=no, screenX=' +
+              pos_x +
+              ', screenY=' +
+              pos_y
+          )
+
+          return false
+        }
+      })
+    }
+  })(window)
+</script>

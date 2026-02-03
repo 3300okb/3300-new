@@ -1,0 +1,50 @@
+[
+  {
+    "articlePath": "html/apple-touch-icon",
+    "articleName": "apple-touch-icon",
+    "category": "html",
+    "updateDate": "2014/01/05"
+  },
+  {
+    "articlePath": "html/custom-share",
+    "articleName": "custom-share",
+    "category": "html",
+    "updateDate": "2016/09/29"
+  },
+  {
+    "articlePath": "html/default-share",
+    "articleName": "default-share",
+    "category": "html",
+    "updateDate": "2018/11/03"
+  },
+  {
+    "articlePath": "html/fb-like-button",
+    "articleName": "fb-like-button",
+    "category": "html",
+    "updateDate": "2013/03/21"
+  },
+  {
+    "articlePath": "html/font-preload",
+    "articleName": "font-preload",
+    "category": "html",
+    "updateDate": "2026/01/18"
+  },
+  {
+    "articlePath": "html/html5-tag",
+    "articleName": "html5-tag",
+    "category": "html",
+    "updateDate": "2020/12/19"
+  },
+  {
+    "articlePath": "html/input-pattern",
+    "articleName": "input-pattern",
+    "category": "html",
+    "updateDate": "2016/10/01"
+  },
+  {
+    "articlePath": "html/inputmode",
+    "articleName": "inputmode",
+    "category": "html",
+    "updateDate": "2020/12/19"
+  }
+]

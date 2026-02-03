@@ -1,0 +1,275 @@
+<!doctype html>
+<title>getSize</title>
+<link rel="stylesheet" href="/sample/font-select.css" />
+<meta
+  name="viewport"
+  content="width=device-width, user-scalable=no, initial-scale=1, maximum-scale=1"
+/>
+<meta name="format-detection" content="telephone=no" />
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+
+<style>
+  html,
+  body,
+  dl,
+  p {
+    margin: 0;
+    padding: 0;
+  }
+  body {
+    padding: 10px;
+    position: relative;
+  }
+  .innerWindow {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    padding: 5px;
+    background: #5ad3dd;
+    box-sizing: border-box;
+    z-index: 1;
+  }
+  .innerWindow div {
+    height: 100%;
+    background: #fff;
+  }
+  dl {
+    width: 300px;
+    margin-bottom: 18px;
+    overflow: hidden;
+  }
+  dt {
+    width: 200px;
+  }
+  dd {
+    width: 100px;
+    text-align: right;
+  }
+  dt,
+  dd {
+    float: left;
+    margin: 0;
+    font-size: 12px;
+    border-bottom: #ddd 1px solid;
+  }
+  h1 {
+    margin: 0;
+    font-size: 30px;
+  }
+  dl + h1 {
+    margin-top: 30px;
+  }
+  .windowSection,
+  .elementSection {
+    position: relative;
+    z-index: 2;
+  }
+  .inner {
+    position: relative;
+    width: 300px;
+    height: 165px;
+    margin-bottom: 10px;
+    background: #f9cc9d;
+  }
+  .inner p {
+    position: absolute;
+    font-size: 12px;
+    white-space: nowrap;
+  }
+  .margin {
+    right: 5px;
+    bottom: 1px;
+  }
+  .border {
+    top: 115px;
+    right: 50px;
+    color: #f00;
+  }
+  .border span {
+    color: #10af00;
+  }
+  #element {
+    position: relative;
+    display: block;
+    width: 215px;
+    height: 80px;
+    margin: 0 50px 50px 0;
+    padding: 0 30px 30px 0;
+    background: #c4d08b;
+    border-right: #f00 5px solid;
+    border-bottom: #f00 5px solid;
+    font-size: 12px;
+    overflow: scroll;
+  }
+  #element div {
+    position: absolute;
+    top: 0;
+    left: 0;
+  }
+  #element div div {
+    position: relative;
+  }
+  #element span {
+    position: absolute;
+    right: 5px;
+    bottom: 1px;
+  }
+  .pure div {
+    width: 215px;
+    height: 80px;
+    background: #8cb6c1;
+  }
+  .padding div {
+    width: 245px;
+    height: 110px;
+    background: #c4d08b;
+  }
+  .overflow div {
+    width: 285px;
+    height: 150px;
+    background: #e0e0e0;
+  }
+  .targetW {
+    color: #5ad3dd;
+  }
+  .targetE {
+    color: #10af00;
+  }
+  .upperLeftPoint {
+    display: block;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 10;
+    font-size: 8px;
+  }
+</style>
+
+<div class="innerWindow"><div></div></div>
+
+<div class="windowSection">
+  <h1>window</h1>
+  <dl>
+    <dt>window.innerWidth</dt>
+    <dd class="w_iW"></dd>
+    <dt>window.outerWidth</dt>
+    <dd class="w_oW"></dd>
+    <dt class="targetW">$(window).innerWidth()</dt>
+    <dd class="w_iW2 targetW"></dd>
+    <dt>$(window).outerWidth()</dt>
+    <dd class="w_oW2"></dd>
+    <dt>window.innerHeight</dt>
+    <dd class="w_iH"></dd>
+    <dt>window.outerHeight</dt>
+    <dd class="w_oH"></dd>
+    <dt class="targetW">$(window).innerHeight()</dt>
+    <dd class="w_iH2 targetW"></dd>
+    <dt>$(window).outerHeight()</dt>
+    <dd class="w_oH2"></dd>
+  </dl>
+</div>
+
+<div class="elementSection">
+  <h1>element</h1>
+  <div class="inner">
+    <p class="margin">margin +50 / 300 165</p>
+    <p class="border">border +5 / <span>250 115</span></p>
+    <div id="element">
+      <div class="overflow">
+        <div><span>overflow +40 / 285 150</span></div>
+      </div>
+      <div class="padding">
+        <div><span>padding +30 / 245 110</span></div>
+      </div>
+      <div class="pure">
+        <div><span>#element pure / 215 80</span></div>
+      </div>
+    </div>
+  </div>
+  <dl>
+    <dt>el.clientWidth</dt>
+    <dd class="el_cW"></dd>
+    <dt>el.scrollWidth</dt>
+    <dd class="el_sW"></dd>
+    <dt class="targetE">el.offsetWidth</dt>
+    <dd class="el_oW targetE"></dd>
+    <dt>$el.width()</dt>
+    <dd class="el_w"></dd>
+    <dt>$el.innerWidth()</dt>
+    <dd class="el_iw"></dd>
+    <dt class="targetE">$el.outerWidth()</dt>
+    <dd class="el_ow targetE"></dd>
+    <dt>$el.outerWidth(true)</dt>
+    <dd class="el_owt"></dd>
+    <dt>el.clientHeight</dt>
+    <dd class="el_cH"></dd>
+    <dt>el.scrollHeight</dt>
+    <dd class="el_sH"></dd>
+    <dt class="targetE">el.offsetHeight</dt>
+    <dd class="el_oH targetE"></dd>
+    <dt>$el.height()</dt>
+    <dd class="el_h"></dd>
+    <dt>$el.innerHeight()</dt>
+    <dd class="el_ih"></dd>
+    <dt class="targetE">$el.outerHeight()</dt>
+    <dd class="el_oh targetE"></dd>
+    <dt>$el.outerHeight(true)</dt>
+    <dd class="el_oht"></dd>
+  </dl>
+</div>
+
+<div class="upperLeftPoint">
+  (<span class="ulpX"></span>, <span class="ulpY"></span>)
+</div>
+
+<script>
+  ;(function () {
+    // window
+    var w = window
+    var $w = $(window)
+
+    function resizeWindow() {
+      $('.w_iW').text(w.innerWidth)
+      $('.w_oW').text(w.outerWidth)
+      $('.w_iW2').text($w.innerWidth())
+      $('.w_oW2').text($w.outerWidth())
+      $('.w_iH').text(w.innerHeight)
+      $('.w_oH').text(w.outerHeight)
+      $('.w_iH2').text($w.innerHeight())
+      $('.w_oH2').text($w.outerHeight())
+      $('.innerWindow').css('height', $w.innerHeight())
+    }
+    $(window).on('load resize', function () {
+      resizeWindow()
+    })
+
+    // element
+    var el = document.getElementById('element')
+    var $el = $('#element')
+
+    $('.el_cW').text(el.clientWidth)
+    $('.el_sW').text(el.scrollWidth)
+    $('.el_oW').text(el.offsetWidth)
+    $('.el_w').text($el.width())
+    $('.el_iw').text($el.innerWidth())
+    $('.el_ow').text($el.outerWidth())
+    $('.el_owt').text($el.outerWidth(true))
+    $('.el_cH').text(el.clientHeight)
+    $('.el_sH').text(el.scrollHeight)
+    $('.el_oH').text(el.offsetHeight)
+    $('.el_h').text($el.height())
+    $('.el_ih').text($el.innerHeight())
+    $('.el_oh').text($el.outerHeight())
+    $('.el_oht').text($el.outerHeight(true))
+
+    // Point in the upper left
+    function getPoint() {
+      $('.ulpX').text(w.screenX)
+      $('.ulpY').text(w.screenY)
+    }
+    var moveWindow = setInterval(function () {
+      getPoint()
+    }, 500)
+  })()
+</script>
