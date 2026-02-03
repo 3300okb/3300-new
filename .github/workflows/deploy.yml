@@ -27,6 +27,14 @@ jobs:
       - name: Build
         run: npm run build
 
+      - name: Debug marker
+        run: |
+          echo "=== DEBUG MARKER START ==="
+          echo "PORT='${{ secrets.LOLIPOP_SSH_PORT }}'"
+          echo "HOST='${{ secrets.LOLIPOP_SSH_HOST }}'"
+          echo "USER='${{ secrets.LOLIPOP_SSH_USER }}'"
+          echo "=== DEBUG MARKER END ==="
+
       - name: Debug secrets (port only)
         run: |
           echo "PORT=${{ secrets.LOLIPOP_SSH_PORT }}"
