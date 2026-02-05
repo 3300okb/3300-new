@@ -170,7 +170,7 @@
     "category": "etc",
     "preBlocks": [
       "// Create keys into ~/.ssh/\nssh-keygen\n\n// Check created keys\nls ~/.ssh/\n\n// Paste code into server's ~/.ssh/authorized_keys or admin\ncat ~/.ssh/id_{XXX}.pub",
-      "// Keychain configuration (to avoid entering a password when pushing)\nvi ~/.ssh/config\n\nHost *\n  AddKeysToAgent yes\n  UseKeychain yes\n  IdentityFile ~/.ssh/id_{XXX}\n\n// Add the key to Keychain\nssh-add --apple-use-keychain ~/.ssh/id_{XXX}"
+      "// Keychain configuration (to avoid entering a password when pushing)\nvi ~/.ssh/config\n\nHost {HOST}\n  HostName {HOST}\n  User git\n  IdentityFile ~/.ssh/id_{XXX}\n  IdentitiesOnly yes\n\n// Add the key to Keychain\nssh-add --apple-use-keychain ~/.ssh/id_{XXX}"
     ]
   },
   {
