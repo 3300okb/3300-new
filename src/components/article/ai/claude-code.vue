@@ -11,7 +11,6 @@ import PreCodes from '@/components/PreCodes.vue'
 
 <template>
   <ArticleHeader title="claude code" :update-date="metadata.updateDate" />
-  test
   <PreCodes>
     <pre><b class="t01">claude</b>  <b class="t02">// Start session</b>
 <b class="t01">claude -c</b>  <b class="t02">// Resume the most recent session</b>
