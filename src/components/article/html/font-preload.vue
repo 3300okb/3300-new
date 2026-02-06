@@ -16,9 +16,9 @@ import PreCodes from '@/components/PreCodes.vue'
     <pre><code><b class="t02">// To prevent FOUT, preload the font in advance.</b>
 
 <b class="t01">&lt;link rel="preload"
-  href="</b>{/**/*.otf}<b class="t01">"
+  href="</b>{/**/*.woff2}<b class="t01">"
   as="font"
-  type="font/</b>{otf}<b class="t01">"
+  type="font/</b>{woff2}<b class="t01">"
   crossorigin="anonymous"
 /&gt;</b></code></pre>
   </PreCodes>

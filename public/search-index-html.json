@@ -38,7 +38,7 @@
     "articleName": "font-preload",
     "category": "html",
     "preBlocks": [
-      "// To prevent FOUT, preload the font in advance.\n\n<link rel=\"preload\"\n  href=\"{/**/*.otf}\"\n  as=\"font\"\n  type=\"font/{otf}\"\n  crossorigin=\"anonymous\"\n/>"
+      "// To prevent FOUT, preload the font in advance.\n\n<link rel=\"preload\"\n  href=\"{/**/*.woff2}\"\n  as=\"font\"\n  type=\"font/{woff2}\"\n  crossorigin=\"anonymous\"\n/>"
     ]
   },
   {
