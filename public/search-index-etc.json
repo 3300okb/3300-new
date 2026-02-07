@@ -23,7 +23,7 @@
     "articleName": "docker",
     "category": "etc",
     "preBlocks": [
-      "docker --version\n\ndocker run {XXX} // Make a container\ndocker run -d --name {XXX} alpine sh -c 'while true; do date; sleep 5; done' // Make a continuously moving container\n// -d : detached mode\n\ndocker images // Check images\n\ndocker ps -a // Check all (stopped, running) containers\ndocker ps // Check only running containers\n\ndocker logs --tail 5 {XXX} // Check the last five lines of the log\n\ndocker stop {XXX} // Stop a container\n\ndocker rm {XXX} // Remove a container"
+      "docker --version\n\ndocker run {XXX} // Make a container\ndocker run -d --name {XXX} alpine sh -c 'while true; do date; sleep 5; done' // Make a continuously moving container\n// -d : detached mode\n\ndocker start {XXX} // Start an existing container\ndocker exec {XXX} uname -a // Execute a command in a running container\n\ndocker images // Check images\n\ndocker ps -a // Check all (stopped, running) containers\ndocker ps // Check only running containers\n\ndocker logs --tail 5 {XXX} // Check the last five lines of the log\n\ndocker stop {XXX} // Stop a container\n\ndocker rm {XXX} // Remove a container"
     ]
   },
   {

@@ -19,6 +19,9 @@ import PreCodes from '@/components/PreCodes.vue'
 <b class="t01">docker run</b> <b class="t03">-d --name &#123;XXX&#125;</b> <b class="t01">alpine</b> <b class="t05">sh -c</b> <b class="t04">'while true; do date; sleep 5; done'</b> <b class="t02">// Make a continuously moving container</b>
 <b class="t02">// -d : detached mode</b>
 
+<b class="t01">docker start</b> <b class="t03">{XXX}</b> <b class="t02">// Start an existing container</b>
+<b class="t01">docker exec</b> <b class="t03">{XXX} uname -a</b> <b class="t02">// Execute a command in a running container</b>
+
 <b class="t01">docker images</b> <b class="t02">// Check images</b>
 
 <b class="t01">docker ps -a</b> <b class="t02">// Check all (stopped, running) containers</b>
