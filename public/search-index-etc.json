@@ -19,6 +19,15 @@
     ]
   },
   {
+    "articlePath": "etc/docker",
+    "articleName": "docker",
+    "category": "etc",
+    "preBlocks": [
+      "docker --version\ndocker run {XXX} // Make a container",
+      "docker images // Check images\ndocker ps -a // Check containers"
+    ]
+  },
+  {
     "articlePath": "etc/ds-store",
     "articleName": "ds-store",
     "category": "etc",
