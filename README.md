@@ -26,4 +26,3 @@ Personal notes for how I work on this repo. No extra guidance for other contribu
 - Use `<ArticleHeader ... :update-date="metadata.updateDate" />`.
 - Search index is built from `<pre>` blocks (HTML stripped).
 - Article IDs are fixed to `category/filename`, so keep paths stable.
-- test
