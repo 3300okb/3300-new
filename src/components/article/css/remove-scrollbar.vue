@@ -14,14 +14,12 @@ import CopyCode from '@/components/CopyCode.vue'
   <ArticleHeader title="remove-scrollbar" :update-date="metadata.updateDate" />
 
   <PreCodes>
-    <pre><code><CopyCode><b class="t01">overflow-x: scroll;
--ms-overflow-style: none;
-scrollbar-width: none;
-
-&::-webkit-scrollbar {
+    <pre><code><CopyCode><b class="t02">// Firefox</b>
+<b class="t01">scrollbar-width: none;</b>
+<b class="t02">// Chrome・Safari・Edge</b>
+<b class="t01">&amp;::-webkit-scrollbar &#123;
   display: none;
-}
-</b></CopyCode>
+&#125;</b></CopyCode>
 </code></pre>
   </PreCodes>
 </template>

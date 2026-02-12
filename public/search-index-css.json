@@ -121,7 +121,7 @@
     "articleName": "remove-scrollbar",
     "category": "css",
     "preBlocks": [
-      "overflow-x: scroll;\n-ms-overflow-style: none;\nscrollbar-width: none;\n\n&::-webkit-scrollbar {\n  display: none;\n}"
+      "// Firefox\nscrollbar-width: none;\n// Chrome・Safari・Edge\n&::-webkit-scrollbar {\n  display: none;\n}"
     ]
   },
   {
