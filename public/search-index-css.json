@@ -17,6 +17,14 @@
     "preBlocks": []
   },
   {
+    "articlePath": "css/custom-scrollbar",
+    "articleName": "custom-scrollbar",
+    "category": "css",
+    "preBlocks": [
+      "&::-webkit-scrollbar {\n  height: rem(6);\n}\n&::-webkit-scrollbar-track {\n  border-radius: 9999;\n  background-color: #fff;\n}\n&::-webkit-scrollbar-thumb {\n  border-radius: 9999;\n  background-color: #bcc4d2;\n}"
+    ]
+  },
+  {
     "articlePath": "css/darkmode",
     "articleName": "darkmode",
     "category": "css",
