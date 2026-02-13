@@ -177,21 +177,21 @@ watch(
     :update-date="metadata.updateDate"
   />
 
-  <section class="mx-auto mt-24 pb-20">
+  <section class="mx-auto mt-24 px-20 pb-20">
     <div class="rounded-md border border-gray-300 p-20">
       <label class="text-14 block">
         <h3 class="mb-8 block font-bold">One word</h3>
-        <div class="flex gap-10">
+        <div class="flex flex-col gap-10 sm:flex-row">
           <input
             v-model="oneTimeKeywordInput"
             type="text"
             placeholder="Input a word"
-            class="w-full rounded-md border border-gray-300 px-12 placeholder:text-gray-300"
+            class="w-full min-w-0 rounded-md border border-gray-300 px-12 py-10 placeholder:text-gray-300"
             @keydown.enter="onOneTimeKeywordEnter"
           />
           <button
             type="button"
-            class="text-14 cursor-pointer rounded-md bg-black px-16 py-10 text-white transition-all duration-200 hover:opacity-80 disabled:cursor-not-allowed"
+            class="text-14 w-full cursor-pointer rounded-md bg-black px-16 py-10 text-white transition-all duration-200 hover:opacity-80 disabled:cursor-not-allowed sm:w-auto"
             :disabled="!trimmedOneTimeKeyword"
             @click="openOneResearchTab"
           >
@@ -202,7 +202,7 @@ watch(
     </div>
   </section>
 
-  <section class="mx-auto">
+  <section class="mx-auto px-20">
     <div class="rounded-md border border-gray-300 p-20">
       <h3 class="text-14 block font-bold">Registered words</h3>
       <div class="flex items-center gap-12">
@@ -217,17 +217,17 @@ watch(
       </div>
 
       <label class="text-14 mt-20 block">
-        <div class="flex gap-10">
+        <div class="flex flex-col gap-10 sm:flex-row">
           <input
             v-model="keywordInput"
             type="text"
             placeholder="Register a word"
-            class="w-full rounded-md border border-gray-300 px-12 py-10 placeholder:text-gray-300"
+            class="w-full min-w-0 rounded-md border border-gray-300 px-12 py-10 placeholder:text-gray-300"
             @keydown.enter="onKeywordEnter"
           />
           <button
             type="button"
-            class="text-14 cursor-pointer rounded-md border border-gray-300 px-16 py-10 transition-all duration-200 hover:bg-gray-100 disabled:cursor-not-allowed disabled:opacity-40"
+            class="text-14 w-full cursor-pointer rounded-md border border-gray-300 px-16 py-10 transition-all duration-200 hover:bg-gray-100 disabled:cursor-not-allowed disabled:opacity-40 sm:w-auto"
             :disabled="!trimmedKeyword"
             @click="addKeyword"
           >
@@ -243,7 +243,7 @@ watch(
             :key="word"
             class="flex items-center justify-between rounded-md border border-gray-200 px-12 py-10"
           >
-            <span class="text-14">{{ word }}</span>
+            <span class="text-14 min-w-0 pr-10 break-all">{{ word }}</span>
             <button
               type="button"
               class="text-12 cursor-pointer rounded-md border border-gray-300 px-10 py-6 transition-all duration-200 hover:bg-gray-100"
