@@ -112,19 +112,14 @@ const openAllResearchTabs = () => {
 
   const currentWindow = window
   popupMessage.value = ''
-  const openedTabs: (Window | null)[] = keywords.value.map(() =>
-    window.open('', '_blank', 'noopener,noreferrer')
-  )
 
   let openedCount = 0
-  keywords.value.forEach((word, index) => {
-    const tab = openedTabs[index]
+  keywords.value.forEach((word) => {
+    const searchUrl = buildSearchUrl(word)
+    const tab = window.open(searchUrl, '_blank', 'noopener')
     if (!tab) {
       return
     }
-    const searchUrl = buildSearchUrl(word)
-    tab.opener = null
-    tab.location.href = searchUrl
     tab.blur()
     openedCount += 1
   })
@@ -135,7 +130,9 @@ const openAllResearchTabs = () => {
     popupMessage.value = `Opened ${openedCount} tabs.`
   }
 
-  currentWindow.focus()
+  window.setTimeout(() => {
+    currentWindow.focus()
+  }, 0)
 }
 
 onMounted(() => {
