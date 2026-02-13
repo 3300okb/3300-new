@@ -130,9 +130,9 @@ const openAllResearchTabs = () => {
     popupMessage.value = `Opened ${openedCount} tabs.`
   }
 
-  window.setTimeout(() => {
-    currentWindow.focus()
-  }, 0)
+  currentWindow.focus()
+  window.setTimeout(() => currentWindow.focus(), 50)
+  window.setTimeout(() => currentWindow.focus(), 200)
 }
 
 onMounted(() => {
