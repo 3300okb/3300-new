@@ -88,6 +88,12 @@
     ]
   },
   {
+    "articlePath": "etc/google-news-research",
+    "articleName": "google-news-research",
+    "category": "etc",
+    "preBlocks": []
+  },
+  {
     "articlePath": "etc/htaccess",
     "articleName": "htaccess",
     "category": "etc",

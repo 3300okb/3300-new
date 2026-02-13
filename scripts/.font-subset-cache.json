@@ -1,8 +1,8 @@
 {
-  "textHash": "e11aca873127289066ab6f906d4511e9f6151617c977a17e4ca84932b675af1e",
+  "textHash": "f6c0e4ae89c6c18c6457958ba8d33132129eae2d957470cb2437ef93bcb5ddd6",
   "contentHash": "a26b6f96e3af0f6216a2259ad65a8c0cd3b7a0553a4a49d117c4db8be882f83b",
   "fonts": {
-    "public/sample/font/LINESeedJP_OTF_Rg.otf": 1770866885111.659,
-    "public/sample/font/LINESeedJP_OTF_Bd.otf": 1770866885110.047
+    "public/sample/font/LINESeedJP_OTF_Rg.otf": 1769083322756.0115,
+    "public/sample/font/LINESeedJP_OTF_Bd.otf": 1769083322754.717
   }
 }

@@ -42,6 +42,12 @@
     "updateDate": "2025/11/17"
   },
   {
+    "articlePath": "etc/google-news-research",
+    "articleName": "google-news-research",
+    "category": "etc",
+    "updateDate": "2026/02/14"
+  },
+  {
     "articlePath": "etc/htaccess",
     "articleName": "htaccess",
     "category": "etc",
