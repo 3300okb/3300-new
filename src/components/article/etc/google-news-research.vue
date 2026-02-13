@@ -5,7 +5,7 @@ export const metadata = {
 </script>
 
 <script setup lang="ts">
-import { computed, onMounted, ref, watch } from 'vue'
+import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import ArticleHeader from '@/components/ArticleHeader.vue'
 
 const STORAGE_KEY = 'google-news-research-keywords'
@@ -16,9 +16,15 @@ const keywordInput = ref('')
 const oneTimeKeywordInput = ref('')
 const keywords = ref<string[]>([])
 const popupMessage = ref('')
+const isMobileView = ref(false)
 
 const trimmedKeyword = computed(() => keywordInput.value.trim())
 const trimmedOneTimeKeyword = computed(() => oneTimeKeywordInput.value.trim())
+let mediaQueryList: MediaQueryList | null = null
+
+const handleViewportChange = (event: MediaQueryListEvent | MediaQueryList) => {
+  isMobileView.value = event.matches
+}
 
 const buildSearchUrl = (word: string) =>
   `https://www.google.com/search?q=${encodeURIComponent(
@@ -140,6 +146,10 @@ onMounted(() => {
     return
   }
 
+  mediaQueryList = window.matchMedia('(max-width: 639px)')
+  handleViewportChange(mediaQueryList)
+  mediaQueryList.addEventListener('change', handleViewportChange)
+
   const raw = window.localStorage.getItem(STORAGE_KEY)
   if (!raw) {
     return
@@ -169,6 +179,13 @@ watch(
   },
   { deep: true }
 )
+
+onBeforeUnmount(() => {
+  if (!mediaQueryList) {
+    return
+  }
+  mediaQueryList.removeEventListener('change', handleViewportChange)
+})
 </script>
 
 <template>
@@ -205,7 +222,7 @@ watch(
   <section class="mx-auto px-20">
     <div class="rounded-md border border-gray-300 p-20">
       <h3 class="text-14 block font-bold">Registered words</h3>
-      <div class="flex items-center gap-12">
+      <div v-if="!isMobileView" class="flex items-center gap-12">
         <button
           type="button"
           class="text-14 mt-12 w-full cursor-pointer rounded-md bg-black px-16 py-10 text-white transition-all duration-200 hover:opacity-80 disabled:cursor-not-allowed"
@@ -256,6 +273,24 @@ watch(
         <p v-else class="text-13 mt-10 text-gray-500">
           There are no registered words yet.
         </p>
+      </div>
+
+      <div v-if="isMobileView && keywords.length > 0" class="mt-16">
+        <p class="text-13 text-gray-500">
+          Mobile mode: use the links below to open each search result.
+        </p>
+        <ul class="mt-10 space-y-8">
+          <li v-for="word in keywords" :key="`mobile-link-${word}`">
+            <a
+              :href="buildSearchUrl(word)"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="text-14 block rounded-md border border-gray-200 px-12 py-10 break-all underline"
+            >
+              {{ word }}
+            </a>
+          </li>
+        </ul>
       </div>
     </div>
 
