@@ -209,7 +209,7 @@ watch(
       <div class="flex items-center gap-12">
         <button
           type="button"
-          class="text-14 mt-12 w-full cursor-pointer rounded-md bg-black px-16 py-10 text-white transition-all duration-200 hover:opacity-80 disabled:cursor-not-allowed disabled:opacity-60"
+          class="text-14 mt-12 w-full cursor-pointer rounded-md bg-black px-16 py-10 text-white transition-all duration-200 hover:opacity-80 disabled:cursor-not-allowed"
           :disabled="keywords.length === 0"
           @click="openAllResearchTabs"
         >
