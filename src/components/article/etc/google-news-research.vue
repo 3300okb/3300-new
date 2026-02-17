@@ -283,13 +283,13 @@ onBeforeUnmount(() => {
           <ul class="mt-10 space-y-8">
             <li v-for="word in keywords" :key="`mobile-link-${word}`">
               <div
-                class="flex items-center justify-between rounded-md border border-gray-200 px-12 py-10"
+                class="flex items-center justify-between rounded-md border border-gray-200 px-12"
               >
                 <a
                   :href="buildSearchUrl(word)"
                   target="_blank"
                   rel="noopener noreferrer"
-                  class="text-14 min-w-0 pr-10 break-all underline"
+                  class="text-14 w-full min-w-0 pt-14 pr-10 pb-15 break-all"
                 >
                   {{ word }}
                 </a>
