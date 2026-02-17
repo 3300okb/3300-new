@@ -54,7 +54,9 @@
     "articlePath": "css/font-feature-settings",
     "articleName": "font-feature-settings",
     "category": "css",
-    "preBlocks": ["font-feature-settings: 'palt' on;"]
+    "preBlocks": [
+      "font-feature-settings: 'palt' on;"
+    ]
   },
   {
     "articlePath": "css/font-smoothing",

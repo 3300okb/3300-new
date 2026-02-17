@@ -194,7 +194,7 @@ onBeforeUnmount(() => {
     :update-date="metadata.updateDate"
   />
 
-  <section class="mx-auto mt-24 px-20 pb-20">
+  <section class="mx-auto mt-24 pb-20">
     <div class="rounded-md border border-gray-300 p-20">
       <label class="text-14 block">
         <h3 class="mb-8 block font-bold">One word</h3>
@@ -219,7 +219,7 @@ onBeforeUnmount(() => {
     </div>
   </section>
 
-  <section class="mx-auto px-20">
+  <section class="mx-auto">
     <div class="rounded-md border border-gray-300 p-20">
       <h3 class="text-14 block font-bold">Registered words</h3>
       <div v-if="!isMobileView" class="flex items-center gap-12">
@@ -253,7 +253,7 @@ onBeforeUnmount(() => {
         </div>
       </label>
 
-      <div class="mt-16">
+      <div v-if="!isMobileView" class="mt-16">
         <ul v-if="keywords.length > 0" class="mt-10 space-y-8">
           <li
             v-for="word in keywords"
@@ -275,22 +275,38 @@ onBeforeUnmount(() => {
         </p>
       </div>
 
-      <div v-if="isMobileView && keywords.length > 0" class="mt-16">
-        <p class="text-13 text-gray-500">
-          Mobile mode: use the links below to open each search result.
+      <div v-else class="mt-16">
+        <template v-if="keywords.length > 0">
+          <p class="text-13 text-gray-500">
+            Mobile mode: use the links below to open each search result.
+          </p>
+          <ul class="mt-10 space-y-8">
+            <li v-for="word in keywords" :key="`mobile-link-${word}`">
+              <div
+                class="flex items-center justify-between rounded-md border border-gray-200 px-12 py-10"
+              >
+                <a
+                  :href="buildSearchUrl(word)"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="text-14 min-w-0 pr-10 break-all underline"
+                >
+                  {{ word }}
+                </a>
+                <button
+                  type="button"
+                  class="text-12 shrink-0 cursor-pointer rounded-md border border-gray-300 px-10 py-6 transition-all duration-200 hover:bg-gray-100"
+                  @click="removeKeyword(word)"
+                >
+                  remove
+                </button>
+              </div>
+            </li>
+          </ul>
+        </template>
+        <p v-else class="text-13 mt-10 text-gray-500">
+          There are no registered words yet.
         </p>
-        <ul class="mt-10 space-y-8">
-          <li v-for="word in keywords" :key="`mobile-link-${word}`">
-            <a
-              :href="buildSearchUrl(word)"
-              target="_blank"
-              rel="noopener noreferrer"
-              class="text-14 block rounded-md border border-gray-200 px-12 py-10 break-all underline"
-            >
-              {{ word }}
-            </a>
-          </li>
-        </ul>
       </div>
     </div>
 
