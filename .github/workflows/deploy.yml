@@ -1,4 +1,4 @@
-name: Deploy Vite dist to Lolipop (rsync)
+name: Deploy Vite dist to Server (rsync)
 
 on:
   push:
@@ -6,7 +6,7 @@ on:
   workflow_dispatch:
 
 concurrency:
-  group: deploy-lolipop
+  group: deploy-server
   cancel-in-progress: true
 
 jobs:
@@ -30,18 +30,18 @@ jobs:
       - name: Setup SSH
         run: |
           mkdir -p ~/.ssh
-          echo "${{ secrets.LOLIPOP_SSH_KEY }}" > ~/.ssh/id_ed25519
+          echo "${{ secrets.SERVER_SSH_KEY }}" > ~/.ssh/id_ed25519
           chmod 600 ~/.ssh/id_ed25519
-          ssh-keyscan -p ${{ secrets.LOLIPOP_SSH_PORT }} ${{ secrets.LOLIPOP_SSH_HOST }} >> ~/.ssh/known_hosts
+          ssh-keyscan -p ${{ secrets.SERVER_SSH_PORT }} ${{ secrets.SERVER_SSH_HOST }} >> ~/.ssh/known_hosts
 
       - name: Check dist changes
         id: dist_check
         run: |
           set -e
           CHANGES=$(rsync -avz --delete --dry-run --itemize-changes \
-            -e "ssh -p ${{ secrets.LOLIPOP_SSH_PORT }}" \
+            -e "ssh -p ${{ secrets.SERVER_SSH_PORT }}" \
             dist/ \
-            ${{ secrets.LOLIPOP_SSH_USER }}@${{ secrets.LOLIPOP_SSH_HOST }}:${{ secrets.LOLIPOP_TARGET }})
+            ${{ secrets.SERVER_SSH_USER }}@${{ secrets.SERVER_SSH_HOST }}:${{ secrets.SERVER_TARGET }})
           if [ -n "$CHANGES" ]; then
             echo "changed=true" >> "$GITHUB_OUTPUT"
             echo "$CHANGES"
@@ -54,6 +54,6 @@ jobs:
         if: steps.dist_check.outputs.changed == 'true'
         run: |
           rsync -avz --delete \
-            -e "ssh -p ${{ secrets.LOLIPOP_SSH_PORT }}" \
+            -e "ssh -p ${{ secrets.SERVER_SSH_PORT }}" \
             dist/ \
-            ${{ secrets.LOLIPOP_SSH_USER }}@${{ secrets.LOLIPOP_SSH_HOST }}:${{ secrets.LOLIPOP_TARGET }}
+            ${{ secrets.SERVER_SSH_USER }}@${{ secrets.SERVER_SSH_HOST }}:${{ secrets.SERVER_TARGET }}
