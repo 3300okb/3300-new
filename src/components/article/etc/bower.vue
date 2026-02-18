@@ -10,6 +10,7 @@ import PreCodes from '@/components/PreCodes.vue'
 </script>
 
 <template>
+  a
   <ArticleHeader title="bower" :update-date="metadata.updateDate" />
 
   <PreCodes>
