@@ -1,6 +1,6 @@
 <script lang="ts">
 export const metadata = {
-  updateDate: '2026/02/22',
+  updateDate: '2026/02/21',
 }
 </script>
 
