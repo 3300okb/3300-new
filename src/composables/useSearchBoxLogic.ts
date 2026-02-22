@@ -11,6 +11,7 @@ export interface SearchResult {
   preIndex: number
   searchQuery: string
   isFileNameMatch?: boolean
+  updateDate: string
 }
 
 export type SearchBoxEmit = {
@@ -110,9 +111,11 @@ export const useSearchBoxLogic = (emit: SearchBoxEmit) => {
           preIndex: 0,
           searchQuery: capturedQuery,
           isFileNameMatch: true,
+          updateDate: entry.updateDate,
         })
       }
     }
+    fileNameResults.sort((a, b) => b.updateDate.localeCompare(a.updateDate))
     return fileNameResults
   }
 
@@ -121,8 +124,12 @@ export const useSearchBoxLogic = (emit: SearchBoxEmit) => {
     capturedQuery: string,
     fileNameResults: SearchResult[]
   ): Promise<SearchResult[]> => {
-    const results: SearchResult[] = [...fileNameResults]
+    const articleIndex = await loadArticleIndexAll()
+    const dateMap = new Map(
+      articleIndex.map((e) => [e.articlePath, e.updateDate])
+    )
     const searchIndex = await loadSearchIndexAll()
+    const contentResults: SearchResult[] = []
 
     // 次にコンテンツマッチを検索
     for (const entry of searchIndex) {
@@ -148,7 +155,7 @@ export const useSearchBoxLogic = (emit: SearchBoxEmit) => {
               .join('\n')
               .trim()
 
-            results.push({
+            contentResults.push({
               articlePath: entry.articlePath,
               articleName: entry.articleName,
               category: entry.category,
@@ -157,13 +164,15 @@ export const useSearchBoxLogic = (emit: SearchBoxEmit) => {
               preIndex: preIndex,
               searchQuery: capturedQuery,
               isFileNameMatch: false,
+              updateDate: dateMap.get(entry.articlePath) ?? '',
             })
           }
         })
       })
     }
 
-    return results
+    contentResults.sort((a, b) => b.updateDate.localeCompare(a.updateDate))
+    return [...fileNameResults, ...contentResults]
   }
 
   const updateIntermediateResults = (
