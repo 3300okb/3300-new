@@ -6,14 +6,8 @@
     "updateDate": "2026/01/30"
   },
   {
-    "articlePath": "ai/make-agents-md-prompt",
-    "articleName": "make-agents-md-prompt",
-    "category": "ai",
-    "updateDate": "2026/02/21"
-  },
-  {
-    "articlePath": "ai/make-claude-md-prompt",
-    "articleName": "make-claude-md-prompt",
+    "articlePath": "ai/make-md-prompt",
+    "articleName": "make-md-prompt",
     "category": "ai",
     "updateDate": "2026/02/22"
   },

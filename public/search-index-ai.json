@@ -9,19 +9,12 @@
     ]
   },
   {
-    "articlePath": "ai/make-agents-md-prompt",
-    "articleName": "make-agents-md-prompt",
+    "articlePath": "ai/make-md-prompt",
+    "articleName": "make-md-prompt",
     "category": "ai",
     "preBlocks": [
-      "プロジェクトを解析して、 AGENTS.md と .AGENTS_DOCS/ を作りましょう。\nCLAUDE.md と .CLAUDE_DOCS/ が存在する場合は、それらを読んではいけません。\n利用時は、最初に AGENTS.md を読み、段階的開示で、必要な時に .AGENTS_DOCS/ 内の必要なものだけ読むようにしましょう。\npackage.json に実コマンドが存在する場合は、コマンドに関するmdファイル（例 .AGENTS_DOCS/COMMANDS.md）は具体化しましょう。\n他の子mdファイルも必要に応じて、実プロジェクト準拠・実装準拠・実コード準拠・実運用準拠 で具体化しましょう。\n最後に AGENTS.md の「ドキュメント配置」節へ、各ファイルの用途を1行ずつ補強して入口品質を上げましょう。"
-    ]
-  },
-  {
-    "articlePath": "ai/make-claude-md-prompt",
-    "articleName": "make-claude-md-prompt",
-    "category": "ai",
-    "preBlocks": [
-      "プロジェクトを解析して、 CLAUDE.md と .CLAUDE_DOCS/ を作りましょう。\nAGENTS.md と .AGENTS_DOCS/ が存在する場合は、それらを読んではいけません。\n利用時は、最初に CLAUDE.md を読み、段階的開示で、必要な時に .CLAUDE_DOCS/ 内の必要なものだけ読むようにしましょう。\npackage.json に実コマンドが存在する場合は、コマンドに関するmdファイル（例 .CLAUDE_DOCS/COMMANDS.md）は具体化しましょう。\n他の子mdファイルも必要に応じて、実プロジェクト準拠・実装準拠・実コード準拠・実運用準拠 で具体化しましょう。\n最後に CLAUDE.md の「ドキュメント配置」節へ、各ファイルの用途を1行ずつ補強して入口品質を上げましょう。"
+      "// CLAUDE.md\n      プロジェクトを解析して、 CLAUDE.md と .CLAUDE_DOCS/ を作りましょう。\nAGENTS.md と .AGENTS_DOCS/ が存在する場合は、それらを読んではいけません。\n利用時は、最初に CLAUDE.md を読み、段階的開示で、必要な時に .CLAUDE_DOCS/ 内の必要なものだけ読むようにしましょう。\npackage.json に実コマンドが存在する場合は、コマンドに関するmdファイル（例 .CLAUDE_DOCS/COMMANDS.md）は具体化しましょう。\n他の子mdファイルも必要に応じて、実プロジェクト準拠・実装準拠・実コード準拠・実運用準拠 で具体化しましょう。\n最後に CLAUDE.md の「ドキュメント配置」節へ、各ファイルの用途を1行ずつ補強して入口品質を上げましょう。",
+      "// AGENTS.md\n      プロジェクトを解析して、 AGENTS.md と .AGENTS_DOCS/ を作りましょう。\nCLAUDE.md と .CLAUDE_DOCS/ が存在する場合は、それらを読んではいけません。\n利用時は、最初に AGENTS.md を読み、段階的開示で、必要な時に .AGENTS_DOCS/ 内の必要なものだけ読むようにしましょう。\npackage.json に実コマンドが存在する場合は、コマンドに関するmdファイル（例 .AGENTS_DOCS/COMMANDS.md）は具体化しましょう。\n他の子mdファイルも必要に応じて、実プロジェクト準拠・実装準拠・実コード準拠・実運用準拠 で具体化しましょう。\n最後に AGENTS.md の「ドキュメント配置」節へ、各ファイルの用途を1行ずつ補強して入口品質を上げましょう。"
     ]
   },
   {
