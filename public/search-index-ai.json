@@ -17,6 +17,14 @@
     ]
   },
   {
+    "articlePath": "ai/claude-md",
+    "articleName": "claude-md",
+    "category": "ai",
+    "preBlocks": [
+      "プロジェクトのルートにCLAUDE.md と .CLAUDE_DOCS/ を作りましょう。\n段階的開示を実現し、必要な時に必要のものだけ読むようにしましょう。\npackage.json に実コマンドが存在する場合は、コマンドに関するmdファイル（例 .CLAUDE_DOCS/COMMANDS.md）は具体化しましょう。\n他の子mdファイルも必要に応じて、実プロジェクト準拠・実装準拠・実コード準拠・実運用準拠 で具体化しましょう。\n最後に CLAUDE.md の「ドキュメント配置」節へ、各ファイルの用途を1行ずつ補強して入口品質を上げましょう。"
+    ]
+  },
+  {
     "articlePath": "ai/translation",
     "articleName": "translation",
     "category": "ai",
