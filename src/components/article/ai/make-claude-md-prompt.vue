@@ -11,11 +11,14 @@ import CopyCode from '@/components/CopyCode.vue'
 </script>
 
 <template>
-  <ArticleHeader title="CLAUDE.md" :update-date="metadata.updateDate" />
+  <ArticleHeader
+    title="Make CLAUDE.md prompt"
+    :update-date="metadata.updateDate"
+  />
 
   <PreCodes>
-    <pre><code><CopyCode>プロジェクトのルートにCLAUDE.md と .CLAUDE_DOCS/ を作りましょう。
-プロジェクトのルートに、.claude/worktrees/**/ を作ってソースをコピーして重複させることは避けてください。
+    <pre><code><CopyCode>プロジェクトを解析して、 CLAUDE.md と .CLAUDE_DOCS/ を作りましょう。
+AGENTS.md と .AGENTS_DOCS/ が存在する場合は、それらを読んではいけません。
 利用時は、最初に CLAUDE.md を読み、段階的開示で、必要な時に .CLAUDE_DOCS/ 内の必要なものだけ読むようにしましょう。
 package.json に実コマンドが存在する場合は、コマンドに関するmdファイル（例 .CLAUDE_DOCS/COMMANDS.md）は具体化しましょう。
 他の子mdファイルも必要に応じて、実プロジェクト準拠・実装準拠・実コード準拠・実運用準拠 で具体化しましょう。

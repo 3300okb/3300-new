@@ -11,11 +11,15 @@ import CopyCode from '@/components/CopyCode.vue'
 </script>
 
 <template>
-  <ArticleHeader title="AGENTS.md" :update-date="metadata.updateDate" />
+  <ArticleHeader
+    title="Make AGENTS.md prompt"
+    :update-date="metadata.updateDate"
+  />
 
   <PreCodes>
-    <pre><code><CopyCode>AGENTS.md を作りましょう。
-.AGENTS_DOCS フォルダも作って、段階的開示を実現し、必要な時に必要のものだけ読むようにしましょう。
+    <pre><code><CopyCode>プロジェクトを解析して、 AGENTS.md と .AGENTS_DOCS/ を作りましょう。
+CLAUDE.md と .CLAUDE_DOCS/ が存在する場合は、それらを読んではいけません。
+利用時は、最初に AGENTS.md を読み、段階的開示で、必要な時に .AGENTS_DOCS/ 内の必要なものだけ読むようにしましょう。
 package.json に実コマンドが存在する場合は、コマンドに関するmdファイル（例 .AGENTS_DOCS/COMMANDS.md）は具体化しましょう。
 他の子mdファイルも必要に応じて、実プロジェクト準拠・実装準拠・実コード準拠・実運用準拠 で具体化しましょう。
 最後に AGENTS.md の「ドキュメント配置」節へ、各ファイルの用途を1行ずつ補強して入口品質を上げましょう。</CopyCode>

@@ -1,19 +1,19 @@
 [
   {
-    "articlePath": "ai/agents-md",
-    "articleName": "agents-md",
-    "category": "ai",
-    "updateDate": "2026/02/21"
-  },
-  {
     "articlePath": "ai/claude-code",
     "articleName": "claude-code",
     "category": "ai",
     "updateDate": "2026/01/30"
   },
   {
-    "articlePath": "ai/claude-md",
-    "articleName": "claude-md",
+    "articlePath": "ai/make-agents-md-prompt",
+    "articleName": "make-agents-md-prompt",
+    "category": "ai",
+    "updateDate": "2026/02/21"
+  },
+  {
+    "articlePath": "ai/make-claude-md-prompt",
+    "articleName": "make-claude-md-prompt",
     "category": "ai",
     "updateDate": "2026/02/22"
   },
