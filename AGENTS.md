@@ -40,16 +40,19 @@ npm run lint
 ## コマンドリファレンス
 
 ### 開発サーバー
+
 ```bash
 npm run dev
 ```
 
 ### ビルド
+
 ```bash
 npm run build
 ```
 
 ### テスト
+
 ```bash
 # 自動テストコマンドは package.json に未定義（2026-02-23 時点）
 # 代替の総合チェック:
@@ -57,6 +60,7 @@ npm run check
 ```
 
 ### Lint / フォーマット
+
 ```bash
 npm run lint
 npm run lint:fix
@@ -90,6 +94,7 @@ npm run prettier:check
 ```
 
 ### 主要ディレクトリ
+
 - `src/components/article/`: 記事コンテンツ（`category/filename` が記事IDとして扱われる）
 - `scripts/`: インデックス生成やフォントサブセットなどの運用スクリプト
 - `public/`: 実行時に fetch される検索インデックス JSON を含む配信対象
@@ -100,23 +105,27 @@ npm run prettier:check
 ## コーディング規約
 
 ### 命名規則
+
 - TypeScript は `camelCase`（関数・変数）を使用
 - Vue コンポーネントファイルは `PascalCase.vue` を基本とする
 - composable は `useXxx.ts` 形式（例: `useSearchIndex.ts`）
 - 記事ファイルは kebab-case 相当の名前を使用し、`category/filename` を不変IDとして扱う
 
 ### ファイル・フォルダ構成のルール
+
 - 画面のエントリは `src/main.ts` と `src/App.vue`
 - 汎用UIは `src/components/`、状態や取得ロジックは `src/composables/` に分離
 - 新規記事はカテゴリ配下 (`src/components/article/<category>/`) に追加
 - 記事メタ情報として `metadata.updateDate` をエクスポートする
 
 ### コメント・ドキュメントのルール
+
 - コメントは「なぜそうするか（Why）」を書く。「何をするか（What）」はコードが語る
 - 既存コメントは日本語が中心のため、追加コメントも文脈に合わせる
 - README と記事作法（`updateDate` 等）に矛盾する仕様変更をしない
 
 ### 禁止事項
+
 - `.env` ファイルをコミットしない
 - `console.log` などのデバッグ出力を残したままコミットしない
 - DOMPurify なしの `v-html` を追加しない（ESLint でも原則禁止）
@@ -127,17 +136,21 @@ npm run prettier:check
 ## テスト方針
 
 ### テストフレームワーク
+
 - 未確認 - 要記入（少なくとも `package.json` 上は単体テスト実行スクリプト未定義）
 
 ### テストファイルの配置
+
 - 未確認 - 要記入（`tests/`、`__tests__/`、`*.spec.*`、`*.test.*` は未検出）
 
 ### テストの実行方法
+
 ```bash
 npm run check
 ```
 
 ### テストを書く際の注意点
+
 - 実装変更時は対応するテストも必ず追加・修正する
 - 現状は静的検証中心のため、機能追加時はテスト基盤の導入も検討する
 
@@ -146,14 +159,17 @@ npm run check
 ## Git ワークフロー
 
 ### ブランチ戦略
+
 - `main` ブランチへの push でデプロイワークフローが起動する
 - 機能開発は `dev/...` や `codex/...` の作業ブランチで行い、PR 経由でマージする
 
 ### コミットメッセージ規則
+
 - 既存履歴は `feat(...)` と短い要約（`add ...`, `edit ...`, `rebuild` など）が混在
 - 推奨: 1行要約で変更意図を明確化し、必要に応じて `feat(scope): ...` 形式を使う
 
 ### PR / MR のルール
+
 - PR コメントに `@codex review` を含めると Codex review ワークフローが起動する
 - それ以外の必須テンプレート・レビュアー規則は未確認 - 要記入
 
@@ -162,10 +178,12 @@ npm run check
 ## 環境設定
 
 ### 必須環境変数
+
 - 未確認 - 要記入（`.env.example` は未検出）
 - デプロイ用 GitHub Secrets は `.github/workflows/deploy.yml` を参照
 
 ### ローカル開発環境のセットアップ
+
 ```bash
 npm ci
 npm run index:generate

@@ -27,3 +27,6 @@ dist
 
 # custom
 yarn.lock
+
+# VS Code
+*.code-workspace
