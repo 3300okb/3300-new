@@ -220,8 +220,10 @@ Phase 0 の調査結果（言語・フレームワーク・テスト有無など
 # ~/.codex/config.yaml
 # Codex CLI グローバル設定
 
-# 使用モデル（推奨: o4-mini または codex-mini-latest）
-model: o4-mini
+# 使用モデル
+# codex-mini-latest : Codex CLI 専用モデル（デフォルト、コーディングタスク向け）
+# o4-mini           : 汎用推論モデル（複雑な論理・設計タスクに強いがコスト高）
+model: codex-mini-latest
 
 # 承認モード
 # suggest    : 変更提案のみ（デフォルト、最も安全）
@@ -240,7 +242,7 @@ history:
   persistence: save_all  # save_all または disabled
   # max_size: 100        # 最大履歴数（省略時は無制限）
 
-# 推論設定（o4-mini など reasoning モデルを使う場合）
+# 推論設定（o4-mini など reasoning モデルに切り替えた場合のみ有効）
 # reasoning:
 #   effort: medium       # low / medium / high
 #   summary: auto        # auto / concise / detailed
