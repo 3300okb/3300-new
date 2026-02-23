@@ -471,20 +471,20 @@ CI設定・ブランチ構成・コミットメッセージの規則を記述す
 
 ---
 
-## Phase 4: .gitignore への追記
+## Phase 4: CLAUDE.md と .claude/ をバージョン管理に追加
 
-`.gitignore` に以下のエントリを追記してください。
-すでに同じ記載がある場合はスキップしてください。
+`CLAUDE.md` と `.claude/` はチームで共有するプロジェクト設定です。
+Anthropic の公式ドキュメントもコミットして共有することを前提としており、
+**バージョン管理に追加することが標準的な使い方**です。
 
+git 管理下になければ以下を実行してください：
+
+```bash
+git add CLAUDE.md .claude/
 ```
-# Claude AI configuration
-CLAUDE.md
-.claude/
-```
 
-> **補足**: `.claude/` および `CLAUDE.md` はリポジトリ固有の AI 設定であり、
-> プロジェクトによってはバージョン管理に含めたい場合もあります。
-> その場合はこの手順をスキップして構いません。
+> **補足**: 個人の作業スタイルや機密情報を含む場合など、
+> バージョン管理に含めたくないケースでは `.gitignore` に追記してください。
 
 ---
 
@@ -496,7 +496,7 @@ CLAUDE.md
 ## セットアップ完了
 
 ### 生成・更新ファイル一覧
-- CLAUDE.md
+- CLAUDE.md（git 管理に追加済み）
 - .claude/agents/researcher.md
 - .claude/agents/planner.md
 - .claude/agents/coder.md
@@ -506,8 +506,7 @@ CLAUDE.md
 - .claude/docs/CODING_STANDARDS.md
 - .claude/docs/TESTING.md
 - .claude/docs/GIT_WORKFLOW.md
-- .claude/docs/ENVIRONMENT.md
-- .gitignore（CLAUDE.md / .claude/ のエントリを追記）
+- .claude/docs/ENVIRONMENT.md（すべて git 管理に追加済み）
 
 ### プロジェクト調査サマリー
 （Phase 0 で把握した主要情報の要約）

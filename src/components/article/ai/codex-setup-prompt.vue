@@ -225,11 +225,11 @@ Phase 0 の調査結果（言語・フレームワーク・テスト有無など
 # o4-mini           : 汎用推論モデル（複雑な論理・設計タスクに強いがコスト高）
 model: codex-mini-latest
 
-# 承認モード
-# suggest    : 変更提案のみ（デフォルト、最も安全）
-# auto-edit  : ファイル編集は自動、シェルコマンドは承認が必要
-# full-auto  : すべて自動（サンドボックス内で実行）
-approval_mode: auto-edit
+# 承認モード（デフォルト: suggest）
+# suggest    : 変更提案のみ。最も安全で、すべての変更を確認できる
+# auto-edit  : ファイル編集は自動、シェルコマンドのみ承認が必要
+# full-auto  : すべて自動（macOS: Seatbelt / Linux: Docker でサンドボックス化）
+approval_mode: suggest
 
 # 長い stdout をすべて表示する
 full_stdout: false
@@ -264,7 +264,7 @@ history:
 ## セキュリティ
 - `.env` ファイルをコミットしない
 - API キーや認証情報をコードに直書きしない
-- `v-html` など XSS リスクがある操作は慎重に扱う
+- HTML を直接挿入する操作（innerHTML 相当）は XSS リスクに注意する
 
 ## 報告フォーマット
 作業完了時は以下の形式で報告する：
@@ -278,19 +278,20 @@ history:
 - lint: ✅ / ❌
 ```
 
-## Phase 4: .gitignore への追記
+## Phase 4: AGENTS.md をバージョン管理に追加
 
-`.gitignore` に以下のエントリを追記してください。
-すでに同じ記載がある場合はスキップしてください。
+`AGENTS.md` はチームで共有するプロジェクト指示ファイルです。
+openai/codex 公式リポジトリ自身も AGENTS.md を git 管理しており、
+**コミットして共有することが標準的な使い方**です。
 
+git 管理下になければ以下を実行してください：
+
+```bash
+git add AGENTS.md
 ```
-# Codex CLI configuration
-AGENTS.md
-```
 
-> **補足**: `AGENTS.md` はリポジトリ固有の AI 設定であり、
-> プロジェクトによってはバージョン管理に含めたい場合もあります。
-> その場合はこの手順をスキップして構いません。
+> **補足**: 個人の作業スタイルや機密情報を含む場合など、
+> バージョン管理に含めたくないケースでは `.gitignore` に追記してください。
 
 ## Phase 5: 完了報告
 
@@ -300,9 +301,8 @@ AGENTS.md
 ## セットアップ完了
 
 ### 生成・更新ファイル一覧
-- AGENTS.md（プロジェクトルート）
+- AGENTS.md（プロジェクトルート、git 管理に追加済み）
 - （作成したサブディレクトリ AGENTS.md のリスト、またはなし）
-- .gitignore（AGENTS.md のエントリを追記）
 
 ### ~/.codex/ 設定（ユーザーが手動で作成を推奨）
 - ~/.codex/config.yaml（上記の推奨設定を参照）
