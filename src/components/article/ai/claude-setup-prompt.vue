@@ -17,7 +17,7 @@ import CopyCode from '@/components/CopyCode.vue'
   />
 
   <PreCodes>
-    <pre><code><CopyCode>```
+    <pre><code><CopyCode top>```
 あなたはこのリポジトリの Claude 設定を行うセットアップエージェントです。
 以下の手順をすべて自律的に実行してください。途中で止まらず、最後まで完走してください。
 
