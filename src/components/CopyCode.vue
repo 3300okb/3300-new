@@ -1,6 +1,10 @@
 <script setup lang="ts">
 import { onBeforeUnmount, ref } from 'vue'
 
+defineProps<{
+  top?: boolean
+}>()
+
 const areaRef = ref<HTMLElement | null>(null)
 const copyButtonText = ref('コピー')
 let resetTimer: number | null = null
@@ -34,12 +38,13 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
+  <div class="flex flex-col gap-20" :class="{ 'flex-col-reverse': top }">
   <div ref="areaRef">
     <slot />
   </div>
   <button
     type="button"
-    class="mt-20 inline-flex h-44 w-44 cursor-pointer items-center justify-center rounded border-none bg-blue-500 text-white hover:bg-blue-600"
+    class="inline-flex h-44 w-44 cursor-pointer items-center justify-center rounded border-none bg-blue-500 text-white hover:bg-blue-600"
     @click="handleClick"
     :title="copyButtonText"
     :aria-label="copyButtonText"
@@ -72,4 +77,5 @@ onBeforeUnmount(() => {
       <polyline points="20 6 9 17 4 12"></polyline>
     </svg>
   </button>
+  </div>
 </template>
