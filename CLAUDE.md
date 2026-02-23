@@ -1,93 +1,104 @@
 # CLAUDE.md
 
-個人技術メモサイト **3300.cloud** のリポジトリ。
-Vue 3 + Vite + TypeScript + Tailwind CSS v4 で構築した SPA。
+このファイルは Claude（AI）がこのリポジトリで作業する際の行動指針です。
 
-## スタック
+## プロジェクト概要
 
-| 項目                 | 値                                                   |
-| -------------------- | ---------------------------------------------------- |
-| Node                 | 22.15.0 (`.nvmrc`)                                   |
-| パッケージマネージャ | npm (`npm ci` / `npm run *`)                         |
-| フレームワーク       | Vue 3 (Composition API, `<script setup>`)            |
-| ビルドツール         | Vite 7                                               |
-| 言語                 | TypeScript 5.9                                       |
-| CSS                  | Tailwind CSS v4 (`@tailwindcss/vite` プラグイン)     |
-| ルーティング         | Vue Router **なし** — URL クエリパラメータで状態管理 |
+**3300-new** - 個人技術ノートアプリ。Web フロントエンド技術（JS・CSS・HTML・AI 等）の記事を記録・検索できる SPA。
 
-## エントリポイント
+技術スタック: **Vue 3** + **Vite** + **TypeScript** + **Tailwind CSS 4**
+
+- UI エントリー: `src/App.vue`、アプリ起動: `src/main.ts`
+- 記事は `src/components/article/<category>/<name>.vue` に配置
+- カテゴリ: `ai`, `css`, `etc`, `html`, `js`, `photo`
+- 記事インデックス・検索インデックスは `public/` に自動生成され、ランタイムでフェッチ
+
+---
+
+## エージェント構成
+
+このリポジトリには `.claude/agents/` に4つのサブエージェントが定義されています。
+タスクの性質に応じて自律的に適切なエージェントを選択・連携させてください。
+
+| エージェント   | 役割       | 主な起動条件                       |
+| -------------- | ---------- | ---------------------------------- |
+| **researcher** | 調査・解析 | 情報不足・原因不明・影響範囲の把握 |
+| **planner**    | 設計・計画 | 実装方針の決定・ステップ分解       |
+| **coder**      | 実装       | コードの作成・修正・テスト         |
+| **reviewer**   | レビュー   | 実装完了後の品質確認               |
+
+### 標準フロー
 
 ```
-src/main.ts          → アプリ起動
-src/App.vue          → ルートコンポーネント（記事一覧 / 記事詳細を切り替え）
-src/assets/input.css → Tailwind CSS ソース
+タスク受信
+  → researcher（調査）
+  → planner（計画）
+  → coder（実装）
+  → reviewer（レビュー）
+  → 完了 or 差し戻し → coder（修正）
 ```
 
-## ディレクトリ構成（要点）
+シンプルなタスク（明確な1行修正など）は researcher/planner を省略して coder から開始してよい。
 
-```
-src/
-  components/
-    article/<category>/<name>.vue   ← 記事コンポーネント（全記事ここに置く）
-    ArticleContent.vue              ← 記事を動的インポートして表示
-    ArticleHeader.vue               ← 記事タイトル・更新日・sampleリンク
-    ArticleList.vue                 ← 記事一覧（更新日降順）
-    GlobalHeader.vue                ← ヘッダー（検索・カテゴリフィルタ）
-    PreCodes.vue                    ← <pre>ブロックのラッパー
-    CopyCode.vue                    ← コードコピーボタン
-    SearchBox.vue                   ← 検索UI
-    SwitchBox.vue                   ← トグルスイッチ
-  composables/
-    useArticleIndex.ts              ← 記事インデックスのフェッチ・キャッシュ
-    useSearchIndex.ts               ← 検索インデックスのフェッチ・キャッシュ
-    useGlobalHeaderLogic.ts         ← ヘッダーロジック（URLパラメータ・history）
-    useSearchBoxLogic.ts            ← 検索ロジック（デバウンス・ハイライト）
-  utils/
-    scrollToPreElement.ts           ← 検索結果からのスクロール先制御
-scripts/
-  generate-article-index.ts        ← 記事・検索インデックス JSON 生成
-  font-subset.ts                   ← フォントサブセット化（要 Python + fonttools）
-  markuplint-changed.ts            ← 変更済み .vue のみ markuplint 実行
-  check-title-mismatch.ts          ← ファイル名と ArticleHeader title の照合
-public/
-  article-index.json               ← カテゴリ一覧マニフェスト（生成物）
-  article-index-<category>.json    ← カテゴリ別記事リスト（生成物）
-  search-index.json                ← 検索用カテゴリマニフェスト（生成物）
-  search-index-<category>.json     ← カテゴリ別検索インデックス（生成物）
-  sample/                          ← デモ用 HTML / CSS / 画像 / 動画
+---
+
+## クイックリファレンス
+
+よく使うコマンド（詳細は `.claude/docs/COMMANDS.md` を参照）：
+
+```bash
+npm run dev              # 開発サーバー起動（index自動生成あり）
+npm run build            # プロダクションビルド（check + tsc + vite）
+npm run check            # lint + markuplint + prettier 一括チェック
+npm run fix              # lint:fix + format 一括修正
+npm run index:generate   # 記事インデックス再生成（記事追加・削除時は必須）
 ```
 
-## カテゴリ
+---
 
-固定順: `html` → `css` → `js` → `ai` → `photo` → `etc`
+## 作業前チェックリスト
 
-## 記事追加の最小手順
+- [ ] タスクの要件を正確に把握したか
+- [ ] 影響範囲を確認したか（researcher）
+- [ ] 実装方針を決めたか（planner）
+- [ ] 既存コードのスタイル・命名規則を確認したか
+- [ ] `npm run check` が通っているか確認したか
+
+---
+
+## 記事追加時の手順
 
 1. `src/components/article/<category>/<name>.vue` を作成
-2. ファイル名 = `<ArticleHeader title="...">` の値（完全一致必須）
-3. `npm run index:generate` でインデックス再生成（`npm run dev` の predev で自動実行）
+2. `export const metadata = { updateDate: 'YYYY/MM/DD' }` を含める
+3. `<ArticleHeader :update-date="metadata.updateDate" />` を使用
+4. `npm run index:generate` でインデックスを更新
+5. `npm run check` で品質チェック
 
-詳細 → `.CLAUDE_DOCS/ARTICLE_AUTHORING.md`
+---
 
-## よく使うコマンド（抜粋）
+## 禁止事項
 
-| コマンド                 | 用途                                                                  |
-| ------------------------ | --------------------------------------------------------------------- |
-| `npm run dev`            | 開発サーバー起動（predev でインデックス自動生成）                     |
-| `npm run build`          | 本番ビルド（prebuild でインデックス生成・フォントサブセット・format） |
-| `npm run check`          | lint + lint:markup + prettier:check を並列実行                        |
-| `npm run fix`            | lint:fix + format を並列実行                                          |
-| `npm run index:generate` | 記事・検索インデックス JSON を再生成                                  |
+- `.env` ファイルをコミットしない
+- `console.log` などのデバッグ出力を残したままコミットしない
+- `v-html` を DOMPurify なしで使用しない
+- `dist/` をコミットしない
+- 記事の `category/filename` パスを変更しない（検索インデックスが壊れる）
+- `main` ブランチに直接プッシュしない
 
-全コマンド詳細 → `.CLAUDE_DOCS/COMMANDS.md`
+---
 
 ## ドキュメント配置
 
-| ファイル                            | 用途                                                            |
-| ----------------------------------- | --------------------------------------------------------------- |
-| `CLAUDE.md`                         | 本ファイル。プロジェクト概要・最小知識の入口                    |
-| `.CLAUDE_DOCS/COMMANDS.md`          | npm scripts 全コマンドの詳細・実行タイミング・注意点            |
-| `.CLAUDE_DOCS/ARCHITECTURE.md`      | SPA の状態管理・URLパラメータ設計・コンポーネント間データフロー |
-| `.CLAUDE_DOCS/ARTICLE_AUTHORING.md` | 記事 .vue ファイルの作成・更新手順と制約                        |
-| `.CLAUDE_DOCS/LINTING.md`           | ESLint / Prettier / Markuplint のルール・設定・除外パターン     |
-| `.CLAUDE_DOCS/DEPLOY.md`            | GitHub Actions デプロイフロー・rsync・Secrets 一覧              |
+| ファイル                           | 用途                                           |
+| ---------------------------------- | ---------------------------------------------- |
+| `CLAUDE.md`                        | Claude の行動指針・全体概要（このファイル）    |
+| `.claude/agents/researcher.md`     | 調査・解析エージェントの定義と行動原則         |
+| `.claude/agents/planner.md`        | プランニングエージェントの定義と行動原則       |
+| `.claude/agents/coder.md`          | コーディングエージェントの定義と行動原則       |
+| `.claude/agents/reviewer.md`       | レビューエージェントの定義と行動原則           |
+| `.claude/docs/COMMANDS.md`         | ビルド・テスト・開発サーバーなど実コマンド一覧 |
+| `.claude/docs/ARCHITECTURE.md`     | ディレクトリ構成・モジュール・データフロー     |
+| `.claude/docs/CODING_STANDARDS.md` | 命名規則・コードスタイル・禁止事項             |
+| `.claude/docs/TESTING.md`          | テスト方針・品質チェック方法                   |
+| `.claude/docs/GIT_WORKFLOW.md`     | ブランチ戦略・コミット規則・CI/CD              |
+| `.claude/docs/ENVIRONMENT.md`      | 環境変数・ローカルセットアップ                 |
