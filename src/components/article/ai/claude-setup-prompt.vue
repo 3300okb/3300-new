@@ -471,14 +471,31 @@ CI設定・ブランチ構成・コミットメッセージの規則を記述す
 
 ---
 
-## Phase 4: 完了報告
+## Phase 4: .gitignore への追記
 
-すべての生成が完了したら、以下の形式で報告してください：
+`.gitignore` に以下のエントリを追記してください。
+すでに同じ記載がある場合はスキップしてください。
+
+```
+# Claude AI configuration
+CLAUDE.md
+.claude/
+```
+
+> **補足**: `.claude/` および `CLAUDE.md` はリポジトリ固有の AI 設定であり、
+> プロジェクトによってはバージョン管理に含めたい場合もあります。
+> その場合はこの手順をスキップして構いません。
+
+---
+
+## Phase 5: 完了報告
+
+すべての作業が完了したら、以下の形式で報告してください：
 
 ```
 ## セットアップ完了
 
-### 生成ファイル一覧
+### 生成・更新ファイル一覧
 - CLAUDE.md
 - .claude/agents/researcher.md
 - .claude/agents/planner.md
@@ -490,6 +507,7 @@ CI設定・ブランチ構成・コミットメッセージの規則を記述す
 - .claude/docs/TESTING.md
 - .claude/docs/GIT_WORKFLOW.md
 - .claude/docs/ENVIRONMENT.md
+- .gitignore（CLAUDE.md / .claude/ のエントリを追記）
 
 ### プロジェクト調査サマリー
 （Phase 0 で把握した主要情報の要約）
