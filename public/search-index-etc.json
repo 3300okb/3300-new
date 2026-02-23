@@ -114,7 +114,9 @@
     "articlePath": "etc/mac-hosts",
     "articleName": "mac-hosts",
     "category": "etc",
-    "preBlocks": ["sudo vi /private/etc/hosts"]
+    "preBlocks": [
+      "sudo vi /private/etc/hosts"
+    ]
   },
   {
     "articlePath": "etc/mamp",
@@ -128,7 +130,9 @@
     "articlePath": "etc/metasyntactic-variable",
     "articleName": "metasyntactic-variable",
     "category": "etc",
-    "preBlocks": ["1) foo\n2) bar\n3) baz\n4) qux\n5) quux\n6) foobar"]
+    "preBlocks": [
+      "1) foo\n2) bar\n3) baz\n4) qux\n5) quux\n6) foobar"
+    ]
   },
   {
     "articlePath": "etc/network",

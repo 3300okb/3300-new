@@ -39,43 +39,45 @@ onBeforeUnmount(() => {
 
 <template>
   <div class="flex flex-col gap-20" :class="{ 'flex-col-reverse': top }">
-  <div ref="areaRef">
-    <slot />
-  </div>
-  <button
-    type="button"
-    class="inline-flex h-44 w-44 cursor-pointer items-center justify-center rounded border-none bg-blue-500 text-white hover:bg-blue-600"
-    @click="handleClick"
-    :title="copyButtonText"
-    :aria-label="copyButtonText"
-  >
-    <svg
-      v-if="copyButtonText === 'コピー'"
-      width="20"
-      height="20"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      stroke-width="2"
-      stroke-linecap="round"
-      stroke-linejoin="round"
+    <div ref="areaRef">
+      <slot />
+    </div>
+    <button
+      type="button"
+      class="inline-flex h-44 w-44 cursor-pointer items-center justify-center rounded border-none bg-blue-500 text-white hover:bg-blue-600"
+      @click="handleClick"
+      :title="copyButtonText"
+      :aria-label="copyButtonText"
     >
-      <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
-      <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
-    </svg>
-    <svg
-      v-else
-      width="20"
-      height="20"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      stroke-width="2"
-      stroke-linecap="round"
-      stroke-linejoin="round"
-    >
-      <polyline points="20 6 9 17 4 12"></polyline>
-    </svg>
-  </button>
+      <svg
+        v-if="copyButtonText === 'コピー'"
+        width="20"
+        height="20"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      >
+        <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+        <path
+          d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"
+        ></path>
+      </svg>
+      <svg
+        v-else
+        width="20"
+        height="20"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      >
+        <polyline points="20 6 9 17 4 12"></polyline>
+      </svg>
+    </button>
   </div>
 </template>
