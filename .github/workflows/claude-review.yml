@@ -1,0 +1,42 @@
+name: Claude Code Review
+
+on:
+  issue_comment:
+    types: [created]
+  pull_request_review_comment:
+    types: [created]
+
+jobs:
+  claude-review:
+    if: |
+      (github.event_name == 'issue_comment' && github.event.issue.pull_request && contains(github.event.comment.body, '@claude-review')) ||
+      (github.event_name == 'pull_request_review_comment' && contains(github.event.comment.body, '@claude-review'))
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - name: Run Claude Code Review
+        uses: anthropics/claude-code-action@beta
+        with:
+          anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
+          model: claude-sonnet-4-6
+          direct_prompt: |
+            このリポジトリは Vue 3 + TypeScript + Tailwind CSS 4 で構築された技術ノートアプリです。
+
+            PR の変更内容をレビューしてください。以下の観点で確認してください：
+
+            1. **TypeScript の型安全性** — 型定義の適切さ、`any` の不必要な使用
+            2. **Vue 3 Composition API** — `<script setup>` の慣用的な書き方、リアクティビティの正しい使用
+            3. **コードスタイル** — ESLint・Prettier ルール準拠、命名規則（PascalCase コンポーネント、camelCase 変数）
+            4. **パフォーマンス** — 不要な再描画、重い処理
+            5. **セキュリティ** — `v-html` を DOMPurify なしで使用していないか、XSS リスク
+            6. **記事追加時のルール** — `metadata` の存在、`<ArticleHeader>` の使用、`console.log` の残留
+
+            問題がなければ「LGTM」とコメントしてください。
+            フィードバックは日本語で、具体的な改善提案とともに記述してください。
