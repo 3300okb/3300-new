@@ -109,6 +109,14 @@
     ]
   },
   {
+    "articlePath": "css/light-dark",
+    "articleName": "light-dark",
+    "category": "css",
+    "preBlocks": [
+      ":root {\n  color-scheme: light dark;\n}\n\n.box {\n  background: light-dark(#ffffff, #1a1b1c);\n  color: light-dark(#333435, #f5f6f7);\n}"
+    ]
+  },
+  {
     "articlePath": "css/line-clamp-ellipsis",
     "articleName": "line-clamp-ellipsis",
     "category": "css",

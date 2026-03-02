@@ -78,6 +78,12 @@
     "updateDate": "2021/09/09"
   },
   {
+    "articlePath": "css/light-dark",
+    "articleName": "light-dark",
+    "category": "css",
+    "updateDate": "2026/03/02"
+  },
+  {
     "articlePath": "css/line-clamp-ellipsis",
     "articleName": "line-clamp-ellipsis",
     "category": "css",

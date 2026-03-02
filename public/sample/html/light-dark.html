@@ -1,0 +1,57 @@
+<!doctype html>
+<title>light-dark</title>
+<meta charset="UTF-8" />
+<meta
+  name="viewport"
+  content="width=device-width, user-scalable=no, initial-scale=1, maximum-scale=1, viewport-fit=cover"
+/>
+<link rel="stylesheet" href="/sample/font-select.css" />
+
+<style>
+  :root {
+    color-scheme: light dark;
+  }
+
+  body {
+    margin: 0;
+    color: light-dark(#1f2937, #f3f4f6);
+    background: light-dark(#f9fafb, #0f172a);
+  }
+
+  .wrap {
+    width: min(680px, 100% - 32px);
+    margin: 40px auto;
+  }
+
+  .box {
+    padding: 20px;
+    border: 1px solid light-dark(#e5e7eb, #334155);
+    border-radius: 12px;
+    background: light-dark(#ffffff, #1a1b1c);
+    color: light-dark(#333435, #f5f6f7);
+  }
+
+  .label {
+    display: inline-block;
+    margin-bottom: 12px;
+    padding: 4px 10px;
+    border-radius: 999px;
+    font-size: 12px;
+    background: light-dark(#e5e7eb, #334155);
+    color: light-dark(#111827, #e5e7eb);
+  }
+</style>
+
+<body>
+  <main class="wrap">
+    <h1>light-dark() sample</h1>
+    <p>
+      Colors switch in a single line based on OS/browser light or dark mode.
+    </p>
+
+    <section class="box">
+      <p>background: light-dark(#ffffff, #1a1b1c)</p>
+      <p>color: light-dark(#333435, #f5f6f7)</p>
+    </section>
+  </main>
+</body>
