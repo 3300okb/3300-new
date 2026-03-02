@@ -7,6 +7,7 @@
 `package.json` に `test` スクリプトなし。`__tests__/`、`spec/`、`tests/` ディレクトリも存在しない。
 
 将来導入する場合の推奨候補:
+
 - ユニットテスト: **Vitest**（Vite と統合しやすい）
 - E2Eテスト: **Playwright** または **Cypress**（`e2e/` ディレクトリに配置）
 
@@ -22,6 +23,7 @@ npm run check
 ```
 
 内訳：
+
 1. **ESLint** (`npm run lint`): TypeScript・Vue の静的解析
 2. **markuplint** (`npm run lint:markup`): HTML/Vue マークアップの妥当性チェック
 3. **Prettier** (`npm run prettier:check`): フォーマットチェック

@@ -32,23 +32,25 @@ const SPACING_DESIGN_TOKENS = [
 module.exports = {
   content: ['./src/**/*.{vue,js,ts,jsx,tsx,html}'],
   theme: {
-    fontSize: {
-      /**
-       * Custom font style [font-size, line-height]
-       */
-      // l: [pxToRem(16), pxToRem(26)],
-      // m: [pxToRem(15), pxToRem(25)],
-      // s: [pxToRem(13), pxToRem(21)],
-      ...FONTSIZE_DESIGN_TOKENS.reduce((obj, token) => {
-        obj[`${token}`] = pxToRem(token)
-        return obj
-      }, {}),
-    },
-    spacing: {
-      ...SPACING_DESIGN_TOKENS.reduce((obj, token) => {
-        obj[`${token}`] = pxToRem(token)
-        return obj
-      }, {}),
+    extend: {
+      fontSize: {
+        /**
+         * Custom font style [font-size, line-height]
+         */
+        // l: [pxToRem(16), pxToRem(26)],
+        // m: [pxToRem(15), pxToRem(25)],
+        // s: [pxToRem(13), pxToRem(21)],
+        ...FONTSIZE_DESIGN_TOKENS.reduce((obj, token) => {
+          obj[`${token}`] = pxToRem(token)
+          return obj
+        }, {}),
+      },
+      spacing: {
+        ...SPACING_DESIGN_TOKENS.reduce((obj, token) => {
+          obj[`${token}`] = pxToRem(token)
+          return obj
+        }, {}),
+      },
     },
   },
 }

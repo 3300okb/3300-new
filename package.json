@@ -5,10 +5,11 @@
   "type": "module",
   "scripts": {
     "subset": "tsx scripts/font-subset.ts",
-    "prebuild": "npm run index:generate && npm run subset && npm run format",
-    "predev": "npm run index:generate",
+    "tailwind:sample": "tsx scripts/build-sample-tailwind.ts",
+    "prebuild": "tsx scripts/generate-article-index.ts && tsx scripts/font-subset.ts && tsx scripts/build-sample-tailwind.ts && prettier --write .",
+    "predev": "tsx scripts/generate-article-index.ts && tsx scripts/build-sample-tailwind.ts",
     "dev": "vite",
-    "build": "npm run check && vue-tsc -b && vite build",
+    "build": "npm-run-all check typecheck vite:build",
     "preview": "vite preview",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
@@ -18,6 +19,8 @@
     "check": "npm-run-all --parallel lint lint:markup prettier:check",
     "prettier:check": "prettier --check .",
     "index:generate": "tsx scripts/generate-article-index.ts",
+    "typecheck": "vue-tsc -b",
+    "vite:build": "vite build",
     "fix": "npm-run-all --parallel lint:fix format",
     "title": "npx tsx scripts/check-title-mismatch.ts"
   },

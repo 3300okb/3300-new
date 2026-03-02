@@ -6,14 +6,14 @@
 
 `.env.example` ファイルは存在しない。環境変数は CI/CD（GitHub Actions）でのみ使用され、GitHub Secrets で管理されている：
 
-| シークレット名 | 用途 |
-| --- | --- |
-| `SERVER_SSH_KEY` | 本番サーバーへの SSH 秘密鍵（デプロイ用） |
-| `SERVER_SSH_PORT` | 本番サーバーの SSH ポート番号 |
-| `SERVER_SSH_HOST` | 本番サーバーのホスト名 |
-| `SERVER_SSH_USER` | 本番サーバーの SSH ユーザー名 |
-| `SERVER_TARGET` | 本番サーバーのデプロイ先ディレクトリパス |
-| `OPENAI_API_KEY` | OpenAI Codex レビュー用 API キー |
+| シークレット名    | 用途                                      |
+| ----------------- | ----------------------------------------- |
+| `SERVER_SSH_KEY`  | 本番サーバーへの SSH 秘密鍵（デプロイ用） |
+| `SERVER_SSH_PORT` | 本番サーバーの SSH ポート番号             |
+| `SERVER_SSH_HOST` | 本番サーバーのホスト名                    |
+| `SERVER_SSH_USER` | 本番サーバーの SSH ユーザー名             |
+| `SERVER_TARGET`   | 本番サーバーのデプロイ先ディレクトリパス  |
+| `OPENAI_API_KEY`  | OpenAI Codex レビュー用 API キー          |
 
 ---
 
@@ -41,11 +41,11 @@ npm run dev
 
 ## 環境ごとの差異
 
-| 環境 | ビルド方法 | 備考 |
-| --- | --- | --- |
-| ローカル開発 | `npm run dev` | HMR あり、ソースマップあり |
-| ローカルプレビュー | `npm run build && npm run preview` | 本番相当の動作確認 |
-| 本番 | GitHub Actions `deploy.yml` が実行 | `npm run build` → rsync でサーバーに配置 |
+| 環境               | ビルド方法                         | 備考                                     |
+| ------------------ | ---------------------------------- | ---------------------------------------- |
+| ローカル開発       | `npm run dev`                      | HMR あり、ソースマップあり               |
+| ローカルプレビュー | `npm run build && npm run preview` | 本番相当の動作確認                       |
+| 本番               | GitHub Actions `deploy.yml` が実行 | `npm run build` → rsync でサーバーに配置 |
 
 ---
 

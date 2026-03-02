@@ -1,0 +1,31 @@
+<!doctype html>
+<title>starting style</title>
+<meta
+  name="viewport"
+  content="width=device-width, user-scalable=no, initial-scale=1, maximum-scale=1, viewport-fit=cover"
+/>
+<link rel="stylesheet" href="/sample/font-select.css" />
+<link rel="stylesheet" href="/sample/css/tailwind.css" />
+
+<div class="p-20">
+  <!-- 例1: opacity を starting-style で指定 -->
+  <div
+    class="text-3xl opacity-100 transition-opacity duration-1000 starting:opacity-0"
+  >
+    1
+  </div>
+
+  <!-- 例2: transform を starting-style で指定 -->
+  <div
+    class="scale-100 text-3xl transition-transform duration-1000 starting:scale-90"
+  >
+    2
+  </div>
+
+  <!-- 例3: translate を starting-style で指定 -->
+  <div
+    class="translate-y-0 text-3xl transition-all duration-1000 starting:-translate-y-1/2"
+  >
+    3
+  </div>
+</div>
