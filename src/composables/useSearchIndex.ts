@@ -56,10 +56,15 @@ export const loadSearchIndexAll = async () => {
 
   searchIndexPromise = (async () => {
     const manifest = await loadSearchIndexManifest()
-    const lists = await Promise.all(
+    const results = await Promise.allSettled(
       manifest.categories.map((category) => loadSearchIndexByCategory(category))
     )
-    searchIndexCache = lists.flat()
+    searchIndexCache = results
+      .filter(
+        (r): r is PromiseFulfilledResult<SearchIndexEntry[]> =>
+          r.status === 'fulfilled'
+      )
+      .flatMap((r) => r.value)
     return searchIndexCache
   })().finally(() => {
     searchIndexPromise = null

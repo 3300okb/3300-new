@@ -56,12 +56,17 @@ export const loadArticleIndexAll = async () => {
 
   indexAllPromise = (async () => {
     const manifest = await loadArticleIndexManifest()
-    const lists = await Promise.all(
+    const results = await Promise.allSettled(
       manifest.categories.map((category) =>
         loadArticleIndexByCategory(category)
       )
     )
-    indexCacheAll = lists.flat()
+    indexCacheAll = results
+      .filter(
+        (r): r is PromiseFulfilledResult<ArticleIndexEntry[]> =>
+          r.status === 'fulfilled'
+      )
+      .flatMap((r) => r.value)
     return indexCacheAll
   })().finally(() => {
     indexAllPromise = null
