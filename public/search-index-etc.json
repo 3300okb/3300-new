@@ -69,6 +69,20 @@
     ]
   },
   {
+    "articlePath": "etc/git-config",
+    "articleName": "git-config",
+    "category": "etc",
+    "preBlocks": [
+      "git config --global user.name 'username'",
+      "git config --global user.email 'username@example.com'",
+      "git config --global core.editor 'code --wait'",
+      "git config --global merge.tool 'code --wait \"$MERGED\"'",
+      "git config --global push.default simple",
+      "git config --global pull.rebase false",
+      "git config --global core.quotepath false"
+    ]
+  },
+  {
     "articlePath": "etc/git",
     "articleName": "git",
     "category": "etc",
