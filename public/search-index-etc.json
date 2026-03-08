@@ -73,13 +73,7 @@
     "articleName": "git-config",
     "category": "etc",
     "preBlocks": [
-      "git config --global user.name 'username'",
-      "git config --global user.email 'username@example.com'",
-      "git config --global core.editor 'code --wait'",
-      "git config --global merge.tool 'code --wait \"$MERGED\"'",
-      "git config --global push.default simple",
-      "git config --global pull.rebase false",
-      "git config --global core.quotepath false"
+      "git config --global user.name 'username'\ngit config --global user.email 'username@example.com'\n// Set VS Code as the default editor for commit messages\ngit config --global core.editor 'code --wait'\n// Set VS Code as the merge tool for conflict resolution\ngit config --global merge.tool 'code --wait \"$MERGED\"'\n// Push only the current branch to its upstream\ngit config --global push.default simple\n// Use merge (not rebase) when pulling\ngit config --global pull.rebase false\n// Disable quoting of non-ASCII characters in file paths\ngit config --global core.quotepath false"
     ]
   },
   {
