@@ -4,10 +4,9 @@
 
 ## プロジェクト概要
 
-**3300-new** — 個人技術ノートアプリ。Web フロントエンド技術（JS・CSS・HTML・AI 等）の記事を記録・検索できる SPA。
-記事は Vue コンポーネントとして管理され、ビルド時に検索インデックスが自動生成される。
+`3300-new` は、技術メモ記事をカテゴリ別の Vue コンポーネントとして管理し、一覧・検索インデックスを生成して配信するナレッジサイトです。
 
-技術スタック: **Vue 3** + **Vite** + **TypeScript** + **Tailwind CSS 4**
+技術スタック: Vue 3, Vite 7, TypeScript 5, Tailwind CSS 4, ESLint 9, Prettier 3, markuplint, Node.js 22
 
 ---
 
@@ -15,13 +14,14 @@
 
 タスクに応じて以下のファイルを参照してください。**必要なときだけ読み込んでください**（常に全部読む必要はありません）：
 
-| ファイル                     | 読むタイミング                           |
-| ---------------------------- | ---------------------------------------- |
-| `.codex/workflow.md`         | 作業開始時・タスクの進め方を確認するとき |
-| `.codex/coding-standards.md` | コードを書く・修正する前                 |
-| `.codex/testing.md`          | テストを書く・実行するとき               |
-| `.codex/git.md`              | コミット・ブランチ操作を行う前           |
-| `.codex/environment.md`      | 環境セットアップ・環境変数を扱うとき     |
+| ファイル                     | 読むタイミング                             |
+| ---------------------------- | ------------------------------------------ |
+| `.codex/workflow.md`         | 作業開始時・タスクの進め方を確認するとき   |
+| `.codex/coding-standards.md` | コードを書く・修正する前                   |
+| `.codex/testing.md`          | テストを書く・実行するとき                 |
+| `.codex/git.md`              | コミット・ブランチ操作を行う前             |
+| `.codex/environment.md`      | 環境セットアップ・環境変数を扱うとき       |
+| `.codex/agents/*.toml`       | サブエージェントの設定を変更・追加するとき |
 
 ---
 
@@ -30,48 +30,37 @@
 よく使うコマンド（詳細は `.codex/workflow.md` 参照）：
 
 ```bash
-npm run dev              # 開発サーバー起動（index 自動生成あり）
-npm run build            # プロダクションビルド（check + tsc + vite）
-npm run check            # lint + markuplint + prettier 一括チェック
-npm run fix              # lint:fix + format 一括修正
-npm run index:generate   # 記事インデックス再生成（記事追加・削除時は必須）
+npm run dev
+npm run build
+npm run check
+npm run index:generate
+npm run subset
 ```
 
 ---
 
 ## ディレクトリ構成
 
-```
-3300-new/
-├── src/
-│   ├── main.ts                    # アプリ起動エントリーポイント
-│   ├── App.vue                    # ルートコンポーネント（記事一覧/詳細切替）
-│   ├── assets/                    # グローバル CSS（Tailwind エントリー）
-│   ├── components/
-│   │   ├── ArticleContent.vue     # 記事詳細表示（動的インポート）
-│   │   ├── ArticleHeader.vue      # 記事ヘッダー（タイトル・更新日）
-│   │   ├── ArticleList.vue        # 記事一覧・カテゴリフィルター
-│   │   ├── GlobalHeader.vue       # グローバルヘッダー（検索ボックス含む）
-│   │   └── article/               # 記事コンポーネント（カテゴリ別）
-│   │       ├── ai/
-│   │       ├── css/
-│   │       ├── etc/
-│   │       ├── html/
-│   │       ├── js/
-│   │       └── photo/
-│   ├── composables/               # Vue composables（useXxx 形式）
-│   └── utils/                     # ユーティリティ関数
-├── scripts/                       # ビルド補助スクリプト
-├── public/                        # 自動生成インデックス JSON
-├── .github/workflows/             # CI/CD（deploy, codex-review）
-├── vite.config.ts
-├── eslint.config.js
-└── package.json
+```text
+.
+├─ .github/workflows/
+├─ public/
+│  └─ sample/
+├─ scripts/
+├─ src/
+│  ├─ assets/
+│  ├─ components/
+│  │  └─ article/
+│  ├─ composables/
+│  └─ utils/
+├─ package.json
+└─ README.md
 ```
 
 ### 主要ディレクトリ
 
-- `src/components/article/`: 記事コンポーネント。`category/filename` パスが記事 ID に直結するため変更禁止
-- `src/composables/`: 記事インデックス・検索ロジックの Vue composables
-- `scripts/`: インデックス生成・フォントサブセット・lint ヘルパー
-- `public/`: ランタイムでフェッチされる JSON インデックス（`npm run index:generate` で生成）
+- `src/components/article/`: カテゴリ別の技術記事 Vue ファイル群
+- `src/components/`: 画面構成・UI コンポーネント
+- `src/composables/`: 検索・一覧・ヘッダーなどのロジック
+- `scripts/`: インデックス生成・フォントサブセット・lint 補助スクリプト
+- `public/`: 生成済みインデックス JSON と配信用静的アセット

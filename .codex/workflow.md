@@ -6,60 +6,37 @@
 
 1. **調査**: 対象ファイルをすべて読み、影響範囲を把握してから変更に入る
 2. **実装**: 既存コードのスタイル・命名規則・ファイル構成に合わせて実装する
-3. **検証**: 実装後はビルド・lint を実行し、すべてパスすることを確認する
+3. **検証**: 実装後はビルド・lint・テストを実行し、すべてパスすることを確認する
 4. **報告**: 変更ファイルと実行結果を明示して報告する
 
 シンプルな1行修正などは調査フェーズを省略して直接実装してよい。
-
----
 
 ## 開発サーバー
 
 ```bash
 npm run dev
-# → http://localhost:5173
-# predev フックで npm run index:generate が自動実行される
 ```
 
 ## ビルド
 
 ```bash
 npm run build
-# 内部: npm run check && vue-tsc -b && vite build
-# prebuild フックで index:generate + font-subset + format が自動実行される
 ```
 
-## 品質チェック（必須）
+## 品質チェック
 
 ```bash
-npm run check          # lint + markuplint + prettier:check を並列実行
-npm run fix            # lint:fix + format を並列実行（自動修正）
+npm run check
+npm run lint
+npm run typecheck
 ```
 
-## 記事インデックス再生成
+## テスト
 
 ```bash
-npm run index:generate
-# 記事の追加・削除・タイトル変更後は必ず実行する
+# 現在、package.json に test スクリプトは未定義
+# テスト導入後はここに実行コマンドを追記する
 ```
-
-## プレビュー（本番相当）
-
-```bash
-npm run build && npm run preview
-```
-
----
-
-## 記事追加時の手順
-
-1. `src/components/article/<category>/<name>.vue` を作成
-2. `export const metadata = { updateDate: 'YYYY/MM/DD' }` を含める
-3. `<ArticleHeader :update-date="metadata.updateDate" />` を使用
-4. `npm run index:generate` でインデックスを更新
-5. `npm run check` で品質チェック
-
----
 
 ## 報告フォーマット
 
@@ -72,5 +49,5 @@ npm run build && npm run preview
 ### 実行結果
 
 - ビルド: ✅ / ❌
+- テスト: ✅ X件通過 / ❌ X件失敗
 - lint: ✅ / ❌
-- prettier: ✅ / ❌
