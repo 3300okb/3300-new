@@ -1,6 +1,6 @@
 <script lang="ts">
 export const metadata = {
-  updateDate: '2026/03/21',
+  updateDate: '2026/03/22',
 }
 </script>
 
@@ -21,9 +21,11 @@ import CopyCode from '@/components/CopyCode.vue'
 あなたはこのリポジトリの Codex CLI 設定を行うセットアップエージェントです。
 以下の手順をすべて自律的に実行してください。途中で止まらず、最後まで完走してください。
 
-## Phase 0: リポジトリ調査
+## Phase 0: リポジトリ調査 &amp; モデル調査
 
 まず以下を調べ、結果を内部メモとして保持してください（出力不要）。
+
+### 0-A: リポジトリ調査
 
 1. ルートの全ファイル・フォルダ構成を把握する
 2. package.json / pyproject.toml / Cargo.toml / go.mod / pom.xml など、パッケージ定義ファイルを探し、存在すれば scripts / dependencies / devDependencies を読み込む
@@ -32,6 +34,31 @@ import CopyCode from '@/components/CopyCode.vue'
 5. src/ / app/ / lib/ などのメインディレクトリ構成を把握する
 6. テストファイルのパターン（__tests__/ / spec/ / tests/ など）を確認する
 7. CI 設定（.github/workflows/ / .circleci/ / .gitlab-ci.yml など）を確認する
+
+### 0-B: 最新モデルの調査
+
+Codex CLI のサブエージェントおよび config.toml に設定する**最新の推奨モデル**を特定してください。
+以下の手順で調査し、結果を内部メモとして保持してください。
+
+1. `~/.codex/config.toml` を読み、現在設定されているモデルとマイグレーション履歴を確認する
+2. `codex --help` の出力からデフォルトモデルや対応モデルのヒントを得る
+3. Web 検索で「OpenAI Codex CLI recommended models」「codex CLI best model」等を調べ、現時点の最新モデルを把握する
+4. 以下の観点でモデルを選定する：
+   - **coder**: ソフトウェアエンジニアリングに最も特化した最新モデル（コード生成・修正の精度を重視）
+   - **researcher / planner / reviewer**: 推論・分析能力が高いモデル（読み取り専用タスク）
+   - **デフォルト (config.toml)**: coder と同じモデルを推奨
+
+調査結果を以下の形式で内部メモにまとめてください（Phase 3, 5 で使用）：
+
+```
+モデル選定結果:
+- coder: {モデル名} (reasoning_effort: {low/medium/high})
+- researcher: {モデル名} (reasoning_effort: {low/medium/high})
+- planner: {モデル名} (reasoning_effort: {low/medium/high})
+- reviewer: {モデル名} (reasoning_effort: {low/medium/high})
+- デフォルト: {モデル名} (reasoning_effort: {low/medium/high})
+- 選定理由: {なぜこのモデルを選んだか}
+```
 
 ## Phase 1: ルート AGENTS.md の作成（スリム版）
 
@@ -230,6 +257,7 @@ Codex CLI はサブエージェント機能をサポートしています。
 
 `.codex/agents/` ディレクトリを作成し、以下の TOML ファイルを配置してください。
 **Phase 0 の調査結果を反映し、プロジェクトに適した指示を記載してください。**
+**各エージェントの `model` と `model_reasoning_effort` は、Phase 0-B のモデル調査結果を使用してください。**
 
 ### ビルトインサブエージェント
 
@@ -246,8 +274,8 @@ Codex CLI には以下の3つのデフォルトサブエージェントが組み
 ```toml
 name = "researcher"
 description = "Read-only codebase researcher. Investigates code structure, dependencies, and impact before changes."
-model = "codex-mini-latest"
-model_reasoning_effort = "high"
+model = "{Phase 0-B で選定したモデル}"
+model_reasoning_effort = "{Phase 0-B で選定した reasoning_effort}"
 sandbox_mode = "read-only"
 developer_instructions = """
 You are a research-only agent. Never modify files.
@@ -271,8 +299,8 @@ Report findings as structured markdown with:
 ```toml
 name = "planner"
 description = "Architecture and planning agent. Designs implementation strategies and breaks down complex tasks."
-model = "codex-mini-latest"
-model_reasoning_effort = "high"
+model = "{Phase 0-B で選定したモデル}"
+model_reasoning_effort = "{Phase 0-B で選定した reasoning_effort}"
 sandbox_mode = "read-only"
 developer_instructions = """
 You are a planning agent. Never modify files directly.
@@ -297,8 +325,8 @@ Produce a numbered implementation plan with:
 ```toml
 name = "coder"
 description = "Implementation agent. Writes, modifies, and tests code following project conventions."
-model = "codex-mini-latest"
-model_reasoning_effort = "medium"
+model = "{Phase 0-B で選定したモデル}"
+model_reasoning_effort = "{Phase 0-B で選定した reasoning_effort}"
 developer_instructions = """
 You are an implementation agent.
 
@@ -321,8 +349,8 @@ You are an implementation agent.
 ```toml
 name = "reviewer"
 description = "Code review agent. Checks implementation quality, security, performance, and accessibility."
-model = "codex-mini-latest"
-model_reasoning_effort = "high"
+model = "{Phase 0-B で選定したモデル}"
+model_reasoning_effort = "{Phase 0-B で選定した reasoning_effort}"
 sandbox_mode = "read-only"
 developer_instructions = """
 You are a code review agent. Never modify files directly.
@@ -396,21 +424,21 @@ Phase 0 の調査結果（言語・フレームワーク・テスト有無など
 # ~/.codex/config.toml
 # Codex CLI グローバル設定
 
-# 使用モデル
-# codex-mini-latest : Codex CLI 専用モデル（デフォルト、コーディングタスク向け）
-# o4-mini           : 汎用推論モデル（複雑な論理・設計タスクに強いがコスト高）
-model = "codex-mini-latest"
+# 使用モデル（Phase 0-B の調査結果を反映）
+model = "{Phase 0-B で選定したデフォルトモデル}"
+model_reasoning_effort = "{Phase 0-B で選定した reasoning_effort}"
 
-# 承認モード（デフォルト: "suggest"）
-# "suggest"    : 変更提案のみ。最も安全で、すべての変更を確認できる
-# "auto-edit"  : ファイル編集は自動、シェルコマンドのみ承認が必要
-# "full-auto"  : すべて自動（macOS: Seatbelt / Linux: Docker でサンドボックス化）
-approval_policy = "suggest"
+# 承認モード
+# "untrusted"  : 信頼されたコマンド（ls, cat 等）のみ自動実行。それ以外はユーザー承認が必要
+# "on-request" : モデルが必要と判断した時のみ承認を求める
+# "never"      : 承認なしですべて自動実行（非インタラクティブ向け）
+ask_for_approval = "on-request"
 
 # サンドボックスモード
+# "read-only"           : 読み取り専用
 # "workspace-write"     : ワークスペース内の書き込みのみ許可
 # "danger-full-access"  : 全アクセス許可（注意）
-sandbox_mode = "workspace-write"
+sandbox = "workspace-write"
 
 # 長い stdout をすべて表示する
 full_stdout = false
@@ -428,16 +456,11 @@ max_depth = 1          # エージェントのネスト深度（デフォルト:
 persistence = "save_all"  # "save_all" または "none"
 # max_bytes = 104857600   # 最大サイズ（省略時は無制限）
 
-# 推論設定（o4-mini など reasoning モデルに切り替えた場合のみ有効）
-# [reasoning]
-# effort = "medium"       # low / medium / high
-# summary = "auto"        # auto / concise / detailed
-
 # プロファイル例（用途別の設定切替）
-# codex --profile deep-review で使用
-# [profiles.deep-review]
-# model = "gpt-5-pro"
-# model_reasoning_effort = "high"
+# codex --profile quick で使用
+# [profiles.quick]
+# model = "codex-mini-latest"
+# model_reasoning_effort = "medium"
 # approval_policy = "never"
 ```
 
