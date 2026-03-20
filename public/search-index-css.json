@@ -219,7 +219,7 @@
     "articleName": "starting-style",
     "category": "css",
     "preBlocks": [
-      "<!-- 例1: opacity を starting-style で指定 -->\n<div class=\"text-3xl opacity-100 transition-opacity duration-1000 starting:opacity-0\">\n  1\n</div>\n\n<!-- 例2: transform を starting-style で指定 -->\n<div class=\"scale-100 text-3xl transition-transform duration-1000 starting:scale-90\">\n  2\n</div>\n\n<!-- 例3: translate を starting-style で指定 -->\n<div\nclass=\"translate-y-0 text-3xl transition-all duration-1000 starting:-translate-y-1/2\"\n>\n  3\n</div>"
+      "<!-- Example 1: Specify opacity with starting-style -->\n<div class=\"text-3xl opacity-100 transition-opacity duration-1000 starting:opacity-0\">\n  1\n</div>\n\n<!-- Example 2: Specify transform with starting-style -->\n<div class=\"scale-100 text-3xl transition-transform duration-1000 starting:scale-90\">\n  2\n</div>\n\n<!-- Example 3: Specify translate with starting-style -->\n<div\nclass=\"translate-y-0 text-3xl transition-all duration-1000 starting:-translate-y-1/2\"\n>\n  3\n</div>"
     ]
   },
   {
