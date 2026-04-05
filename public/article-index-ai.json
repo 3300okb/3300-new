@@ -12,10 +12,22 @@
     "updateDate": "2026/02/23"
   },
   {
+    "articlePath": "ai/claude-skills",
+    "articleName": "claude-skills",
+    "category": "ai",
+    "updateDate": "2026/04/05"
+  },
+  {
     "articlePath": "ai/codex-setup-prompt",
     "articleName": "codex-setup-prompt",
     "category": "ai",
     "updateDate": "2026/03/23"
+  },
+  {
+    "articlePath": "ai/md-global",
+    "articleName": "md-global",
+    "category": "ai",
+    "updateDate": "2026/04/05"
   },
   {
     "articlePath": "ai/translation",
