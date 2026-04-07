@@ -1,9 +1,9 @@
 [
   {
-    "articlePath": "ai/claude-code",
-    "articleName": "claude-code",
+    "articlePath": "ai/claude-commands",
+    "articleName": "claude-commands",
     "category": "ai",
-    "updateDate": "2026/01/30"
+    "updateDate": "2026/04/07"
   },
   {
     "articlePath": "ai/claude-setup-prompt",
