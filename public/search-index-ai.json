@@ -1,11 +1,13 @@
 [
   {
-    "articlePath": "ai/claude-code",
-    "articleName": "claude-code",
+    "articlePath": "ai/claude-commands",
+    "articleName": "claude-commands",
     "category": "ai",
     "preBlocks": [
       "claude  // Start session\nclaude -c  // Resume the most recent session\nclaude -r  // Resume a specific session\n\n// CLI Reference\nhttps://code.claude.com/docs/ja/cli-reference",
-      "shift + tab  // Change modes during a session\nesc  // Interrupt thinking\n\n/init  // Remember the project's structure\n\n// Interactive mode Reference\nhttps://code.claude.com/docs/ja/interactive-mode"
+      "shift + tab  // Change modes during a session\nesc  // Interrupt thinking\n\n// Interactive mode Reference\nhttps://code.claude.com/docs/ja/interactive-mode",
+      "/help  // Show available commands\n/init  // Generate CLAUDE.md interactively\n/clear  // Clear conversation history\n/compact  // Compress context and continue\n/cost  // Show token usage for the session\n/model  // Switch AI model\n/memory  // Edit CLAUDE.md memory file\n/permissions  // View or change tool permissions\n/config  // View or change settings\n/status  // Show account and system status\n/doctor  // Diagnose Claude Code configuration\n/review  // Run code review\n/pr-review  // Run PR review\n/terminal-setup  // Set up Shift+Enter keybinding\n/vim  // Toggle Vim mode\n/login  // Switch to Anthropic account\n/logout  // Log out\n/bug  // Submit a bug report to GitHub",
+      "/btw  // Ask a side question without polluting conversation history\n/rewind  // Rewind code and conversation independently\n/insights  // Generate usage analytics report for the past month\n/model opusplan  // Auto-switch between Opus for reasoning and Sonnet for coding\n/simplify  // Review code quality with 3 parallel agents\n/branch  // Fork the current conversation into a new session\n/loop  // Run a task on a recurring interval\n/remote-control  // Control local execution remotely from a phone\n/export  // Export the entire conversation to a Markdown file"
     ]
   },
   {
