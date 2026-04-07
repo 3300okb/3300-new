@@ -2,25 +2,7 @@
  * sample/html/ 用のフォント指定
  */
 
-@font-face {
-  font-family: 'LINE Seed Sans JP';
-  src:
-    url('/sample/font/LINESeedJP_OTF_Rg.woff2') format('woff2'),
-    url('/sample/font/LINESeedJP_OTF_Rg.otf') format('opentype');
-  font-weight: 400;
-  font-style: normal;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: 'LINE Seed Sans JP';
-  src:
-    url('/sample/font/LINESeedJP_OTF_Bd.woff2') format('woff2'),
-    url('/sample/font/LINESeedJP_OTF_Bd.otf') format('opentype');
-  font-weight: 700;
-  font-style: normal;
-  font-display: swap;
-}
+@import url('https://fonts.googleapis.com/css2?family=LINE+Seed+JP:wght@400;700&display=swap');
 
 body,
 p,
@@ -33,5 +15,5 @@ input,
 select,
 textarea,
 button {
-  font-family: 'LINE Seed Sans JP', sans-serif;
+  font-family: 'LINE Seed JP', sans-serif;
 }
