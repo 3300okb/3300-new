@@ -4,9 +4,8 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "subset": "tsx scripts/font-subset.ts",
     "tailwind:sample": "tsx scripts/build-sample-tailwind.ts",
-    "prebuild": "tsx scripts/generate-article-index.ts && tsx scripts/font-subset.ts && tsx scripts/build-sample-tailwind.ts && prettier --write .",
+    "prebuild": "tsx scripts/generate-article-index.ts && tsx scripts/build-sample-tailwind.ts && prettier --write .",
     "predev": "tsx scripts/generate-article-index.ts && tsx scripts/build-sample-tailwind.ts",
     "dev": "vite",
     "build": "npm-run-all check typecheck vite:build",
