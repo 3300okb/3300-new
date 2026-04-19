@@ -4,10 +4,10 @@
     "articleName": "claude-commands",
     "category": "ai",
     "preBlocks": [
-      "claude  // Start session\nclaude -c  // Resume the most recent session\nclaude -r  // Resume a specific session\n\n// CLI Reference\nhttps://code.claude.com/docs/ja/cli-reference",
-      "shift + tab  // Change modes during a session\nesc  // Interrupt thinking\n\n// Interactive mode Reference\nhttps://code.claude.com/docs/ja/interactive-mode",
-      "/help  // Show available commands\n/init  // Generate CLAUDE.md interactively\n/clear  // Clear conversation history\n/compact  // Compress context and continue\n/cost  // Show token usage for the session\n/model  // Switch AI model\n/memory  // Edit CLAUDE.md memory file\n/permissions  // View or change tool permissions\n/config  // View or change settings\n/status  // Show account and system status\n/doctor  // Diagnose Claude Code configuration\n/review  // Run code review\n/pr-review  // Run PR review\n/terminal-setup  // Set up Shift+Enter keybinding\n/vim  // Toggle Vim mode\n/login  // Switch to Anthropic account\n/logout  // Log out\n/bug  // Submit a bug report to GitHub",
-      "/btw  // Ask a side question without polluting conversation history\n/rewind  // Rewind code and conversation independently\n/insights  // Generate usage analytics report for the past month\n/model opusplan  // Auto-switch between Opus for reasoning and Sonnet for coding\n/simplify  // Review code quality with 3 parallel agents\n/branch  // Fork the current conversation into a new session\n/loop  // Run a task on a recurring interval\n/remote-control  // Control local execution remotely from a phone\n/export  // Export the entire conversation to a Markdown file"
+      "claude  // セッション開始\nclaude -c  // 最近のセッションを再開\nclaude -r  // 特定のセッションを再開\n\n// CLI リファレンス\nhttps://code.claude.com/docs/ja/cli-reference",
+      "shift + tab  // セッション中にモードを切替\nesc  // 思考を中断\n\n// インタラクティブモード リファレンス\nhttps://code.claude.com/docs/ja/interactive-mode",
+      "/help  // 利用可能なコマンドを表示\n/init  // CLAUDE.md を対話形式で生成\n/clear  // 会話履歴をクリア\n/compact  // コンテキストを圧縮して継続\n/cost  // セッションのトークン使用量を表示\n/model  // AI モデルを切替\n/memory  // CLAUDE.md メモリファイルを編集\n/permissions  // ツール権限を表示・変更\n/config  // 設定を表示・変更\n/status  // アカウントとシステム状態を表示\n/doctor  // Claude Code の設定を診断\n/review  // コードレビューを実行\n/pr-review  // PR レビューを実行\n/terminal-setup  // Shift+Enter キーバインドを設定\n/vim  // Vim モードを切替\n/login  // Anthropic アカウントに切替\n/logout  // ログアウト\n/bug  // GitHub にバグレポートを送信",
+      "/btw  // 会話履歴を汚さずにサイドクエスチョンを尋ねる\n/rewind  // コードと会話を個別に巻き戻す\n/insights  // 過去1ヶ月の使用状況レポートを生成\n/model opusplan  // 推論は Opus、コーディングは Sonnet に自動切替\n/simplify  // 3つの並列エージェントでコード品質をレビュー\n/branch  // 現在の会話を新しいセッションにフォーク\n/loop  // 定期的にタスクを繰り返す\n/remote-control  // スマートフォンからローカル実行をリモート操作\n/export  // 会話全体を Markdown ファイルにエクスポート"
     ]
   },
   {
