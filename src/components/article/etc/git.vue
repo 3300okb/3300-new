@@ -207,8 +207,6 @@ git <b class="t01">revert --abort</b>
 
 git <b class="t01">rebase</b> [parent branch]
 <b class="t02">// 親ブランチの更新分を作業ブランチ(current)に取り込む</b>
-git <b class="t01">stash</b>
-<b class="t02">// rebaseでconflictが起きたとき、問題箇所を確認する</b>
 git <b class="t01">rebase --continue</b>
 <b class="t02">// rebaseでconflictが起きたとき、conflictを解消してからこのコマンドを打って続行する</b>
 git <b class="t01">rebase --abort</b>
@@ -224,6 +222,8 @@ git <b class="t01">cherry-pick</b> [commit id]
 <b class="t02">// 指定コミットの内容をHEADに統合した新たなコミットを作る</b>
 <b class="t02">// 統合元の履歴は繋がない</b>
 
+git <b class="t01">stash -u</b>  <b class="t02">// 未コミット、未ステージングの変更内容を一時的に記録</b>
+git <b class="t01">stash pop</b>  <b class="t02">// stashを復元</b>
 
 // localで巻き戻したい時(remoteにまだコミットしていない内容に限る)
 
@@ -255,6 +255,20 @@ git <b class="t01">cherry-pick</b> [commit id]
 
 1) git <b class="t01">reset</b> [commit id]
 2) git <b class="t01">push</b>
+</code></pre>
+    </SwitchBox>
+
+    <SwitchBox title="worktree">
+      <pre><code>git <b class="t01">worktree add</b> ../[repository name]-[branch name] [branch name]  <b class="t02">// 既存のブランチを元にworktreeフォルダを作成</b>
+git <b class="t01">worktree add -b</b> [branch name] ../[repository name]-[branch name]  <b class="t02">// 新規のブランチと共にworktreeフォルダを作成</b>
+
+git <b class="t01">worktree list</b>  <b class="t02">// worktreeフォルダ一覧を表示</b>
+<b class="t01">cd</b> ../[repository name]-[branch name]  <b class="t02">// worktreeへ移動</b>
+
+git <b class="t01">worktree remove</b> ../[repository name]-[branch-name]  <b class="t02">// worktreeを削除し、コミット済みの内容が元フォルダにブランチとして残る</b>
+
+<b class="t02">// 通常、worktree上で add、commit、push してPR作成。元のフォルダに戻り、worktree削除する、という使い方</b>
+<b class="t02">// AIにやらせた時、/private や /private/tmp などの傘下にフォルダを作ることがあるが、これらは一時的なフォルダでPC再起動で消える恐れがあるので少し危険</b>
 </code></pre>
     </SwitchBox>
 
