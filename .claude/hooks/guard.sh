@@ -15,14 +15,15 @@ except Exception:
 
 [ -z "$cmd" ] && exit 0
 
-# Block renaming / moving article files (breaks search index)
-if printf '%s' "$cmd" | grep -qE '(mv|git[[:space:]]+mv)[[:space:]]+[^|;&]*src/components/article/'; then
+# Block renaming / moving article files (breaks search index).
+# Only match when mv/git mv is a real command (start of line or after ; && || |).
+if printf '%s' "$cmd" | grep -qE '(^|[;&|][[:space:]]*)(mv|git[[:space:]]+mv)[[:space:]]+[^"'"'"']*src/components/article/'; then
   echo "BLOCKED: do not rename/move article files — search index will break (CLAUDE.md)" >&2
   exit 2
 fi
 
-# Block deleting dist/ or public/index artifacts in a way that would commit damage
-if printf '%s' "$cmd" | grep -qE 'rm[[:space:]]+-[rRf]+[[:space:]]+(\./)?(dist|public/data)([[:space:]/]|$)'; then
+# Block deleting dist/ or public/data artifacts
+if printf '%s' "$cmd" | grep -qE '(^|[;&|][[:space:]]*)rm[[:space:]]+-[rRf]+[[:space:]]+(\./)?(dist|public/data)([[:space:]/]|$)'; then
   echo "BLOCKED: do not rm dist/ or public/data — these are generated outputs handled by build scripts" >&2
   exit 2
 fi
