@@ -24,6 +24,12 @@
     "updateDate": "2026/03/23"
   },
   {
+    "articlePath": "ai/karpathy-claude-md",
+    "articleName": "karpathy-claude-md",
+    "category": "ai",
+    "updateDate": "2026/05/24"
+  },
+  {
     "articlePath": "ai/md-global",
     "articleName": "md-global",
     "category": "ai",
