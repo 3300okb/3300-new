@@ -24,6 +24,9 @@ import CopyCode from '@/components/CopyCode.vue'
         class="t05 font-bold"
         >https://github.com/multica-ai/andrej-karpathy-skills/blob/main/CLAUDE.md</a></pre>
 
+    <pre><code><CopyCode top><b class="t01">/plugin marketplace add forrestchang/andrej-karpathy-skills</b></CopyCode>
+    <CopyCode top><b class="t01">/plugin install andrej-karpathy-skills@karpathy-skills</b></CopyCode></code></pre>
+
     <pre><code><CopyCode top># CLAUDE.md
 
 LLM がコーディングでよくやらかすミスを減らすための行動指針。プロジェクト固有の指示と組み合わせて使う。
