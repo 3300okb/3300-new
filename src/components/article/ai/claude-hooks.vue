@@ -78,8 +78,9 @@ case "$EVENT" in
 
     SAFE=(
       "npm run check" "npm run lint" "npm run build" "npm run fix"
-      "npm run index:generate" "npx prettier" "npx tsc"
-      "git status" "git diff" "git log"
+      "npm run index:generate" "npm run _stylelint"
+      "npx stylelint" "npx prettier" "npx tsc"
+      "git status" "git diff" "git log" "git worktree add"
     )
     for p in "${SAFE[@]}"; do
       if echo "$COMMAND" | grep -q "$p"; then

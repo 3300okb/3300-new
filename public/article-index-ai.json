@@ -24,6 +24,12 @@
     "updateDate": "2026/04/05"
   },
   {
+    "articlePath": "ai/codex-hooks",
+    "articleName": "codex-hooks",
+    "category": "ai",
+    "updateDate": "2026/06/11"
+  },
+  {
     "articlePath": "ai/codex-setup-prompt",
     "articleName": "codex-setup-prompt",
     "category": "ai",
