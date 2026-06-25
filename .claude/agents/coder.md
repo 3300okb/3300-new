@@ -8,7 +8,7 @@ description: |
   - バグ修正・機能追加・リファクタリングの実装作業のとき
   - テストコードの作成・修正のとき
   - ファイルの作成・削除・移動が必要なとき
-tools: read_file, write_file, create_file, list_directory, search_files, run_command
+tools: Read, Write, Edit, Glob, Grep, Bash
 ---
 
 # Coder Agent
