@@ -48,12 +48,15 @@ npm run index:generate   # 記事追加・削除時に必須
 
 ## 詳細ドキュメント（必要時に読み込む）
 
-- @.claude/docs/ARCHITECTURE.md — ディレクトリ構成・データフロー
-- @.claude/docs/CODING_STANDARDS.md — 命名規則・コードスタイル
-- @.claude/docs/COMMANDS.md — 実コマンド一覧
-- @.claude/docs/TESTING.md — テスト方針
-- @.claude/docs/GIT_WORKFLOW.md — ブランチ戦略・コミット規則
-- @.claude/docs/ENVIRONMENT.md — 環境変数・ローカルセットアップ
+> 以下は `@` インポートではなく単なるパス参照。
+> 毎セッションのコンテキスト消費を避けるため、関連タスク時にのみ Read で読み込む。
+
+- `.claude/docs/ARCHITECTURE.md` — ディレクトリ構成・データフロー
+- `.claude/docs/CODING_STANDARDS.md` — 命名規則・コードスタイル
+- `.claude/docs/COMMANDS.md` — 実コマンド一覧
+- `.claude/docs/TESTING.md` — テスト方針
+- `.claude/docs/GIT_WORKFLOW.md` — ブランチ戦略・コミット規則
+- `.claude/docs/ENVIRONMENT.md` — 環境変数・ローカルセットアップ
 
 ---
 
