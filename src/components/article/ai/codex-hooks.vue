@@ -23,6 +23,14 @@ type = "command"
 command = "bash /Users/tomokazuokubo/.codex/hooks/codex-hooks.sh"
 statusMessage = "Bash コマンドを検査中"
 
+[[hooks.PermissionRequest]]
+matcher = "Bash"
+
+[[hooks.PermissionRequest.hooks]]
+type = "command"
+command = "bash /Users/tomokazuokubo/.codex/hooks/codex-hooks.sh"
+statusMessage = "安全コマンドを自動承認中"
+
 [[hooks.PostToolUse]]
 matcher = "apply_patch|Edit|Write"
 
@@ -55,7 +63,7 @@ deny() {
 EVENT=$(json "d.get('hook_event_name','')")
 
 case "$EVENT" in
-  # ── ツール実行直前：危険コマンド拒否 / commit 前チェック / 安全コマンド自動承認 ──
+  # ── ツール実行直前：危険コマンド拒否 / commit 前チェック ──
   PreToolUse)
     COMMAND=$(json "d.get('tool_input',{}).get('command','')")
     [ -z "$COMMAND" ] &amp;&amp; exit 0
@@ -86,6 +94,12 @@ case "$EVENT" in
         deny "npm run check が失敗しています。修正してからコミットしてください。"
       fi
     fi
+    ;;
+
+  # ── 承認要求時：安全コマンドを自動承認（プロンプトをスキップ） ──
+  PermissionRequest)
+    COMMAND=$(json "d.get('tool_input',{}).get('command','')")
+    [ -z "$COMMAND" ] &amp;&amp; exit 0
 
     SAFE=(
       "npm run check" "npm run lint" "npm run build" "npm run fix"
@@ -95,7 +109,7 @@ case "$EVENT" in
     )
     for p in "${SAFE[@]}"; do
       if echo "$COMMAND" | grep -q "$p"; then
-        echo '{"hookSpecificOutput":{"hookEventName":"PreToolUse","permissionDecision":"allow"}}'
+        echo '{"hookSpecificOutput":{"hookEventName":"PermissionRequest","decision":{"behavior":"allow"}}}'
         exit 0
       fi
     done
