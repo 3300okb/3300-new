@@ -1,6 +1,6 @@
 <script lang="ts">
 export const metadata = {
-  updateDate: '2026/06/07',
+  updateDate: '2026/06/25',
 }
 </script>
 
@@ -63,16 +63,19 @@ case "$EVENT" in
     DANGEROUS=("rm -rf" "DROP TABLE" "git push --force" "git push -f")
     for p in "${DANGEROUS[@]}"; do
       if echo "$COMMAND" | grep -qi "$p"; then
-        echo "{\"decision\":\"block\",\"reason\":\"危険なコマンドをブロックしました: $p\"}"
+        echo "{\"hookSpecificOutput\":{\"hookEventName\":\"PreToolUse\",\"permissionDecision\":\"deny\",\"permissionDecisionReason\":\"危険なコマンドをブロックしました: $p\"}}"
         exit 0
       fi
     done
 
-    # git commit 前に品質チェック（このプロジェクトは test 無し → npm run check）
+    # git commit 前に品質チェック（check スクリプトを持つプロジェクトでのみ実行）
+    # グローバルフックなので、package.json に check が無いリポジトリでは誤爆させない
     if echo "$COMMAND" | grep -q "^git commit"; then
-      if ! npm run check >/dev/null 2>&amp;1; then
-        echo '{"decision":"block","reason":"npm run check が失敗しています。修正してからコミットしてください。"}'
-        exit 0
+      if [ -f package.json ] &amp;&amp; grep -qE '"check"[[:space:]]*:' package.json; then
+        if ! npm run check >/dev/null 2>&amp;1; then
+          echo '{"hookSpecificOutput":{"hookEventName":"PreToolUse","permissionDecision":"deny","permissionDecisionReason":"npm run check が失敗しています。修正してからコミットしてください。"}}'
+          exit 0
+        fi
       fi
     fi
 
@@ -84,7 +87,7 @@ case "$EVENT" in
     )
     for p in "${SAFE[@]}"; do
       if echo "$COMMAND" | grep -q "$p"; then
-        echo '{"decision":"approve"}'
+        echo '{"hookSpecificOutput":{"hookEventName":"PreToolUse","permissionDecision":"allow","permissionDecisionReason":"安全なコマンドを自動承認しました"}}'
         exit 0
       fi
     done
@@ -104,20 +107,35 @@ case "$EVENT" in
   Stop)
     WEBHOOK_FILE="$HOME/.claude/slack-webhook"
     [ -f "$WEBHOOK_FILE" ] || exit 0
-    MESSAGE=$(echo "$INPUT" | python3 -c "
-import json,sys
-d = json.load(sys.stdin)
-for m in reversed(d.get('messages',[])):
-    if m.get('role') == 'assistant':
-        c = m.get('content','')
-        if isinstance(c, list):
-            for part in c:
-                if part.get('type') == 'text':
-                    print(part['text'][:100]); break
-        else:
-            print(str(c)[:100])
-        break
-" 2>/dev/null)
+    # Stop の入力に messages は無い。会話は transcript_path（JSONL）から読む
+    TRANSCRIPT=$(json "d.get('transcript_path','')")
+    [ -f "$TRANSCRIPT" ] || exit 0
+    MESSAGE=$(python3 -c "
+import json, sys
+text = ''
+try:
+    with open(sys.argv[1]) as f:
+        lines = f.readlines()
+    for line in reversed(lines):
+        try:
+            d = json.loads(line)
+        except Exception:
+            continue
+        msg = d.get('message') or {}
+        if d.get('type') == 'assistant' or msg.get('role') == 'assistant':
+            c = msg.get('content', '')
+            if isinstance(c, list):
+                for part in c:
+                    if isinstance(part, dict) and part.get('type') == 'text':
+                        text = part.get('text', ''); break
+            elif isinstance(c, str):
+                text = c
+            if text:
+                break
+except Exception:
+    pass
+print(text[:100])
+" "$TRANSCRIPT" 2>/dev/null)
     curl -s -X POST "$(cat "$WEBHOOK_FILE")" \
       -H "Content-Type: application/json" \
       -d "{\"text\": \"✅ Claude 作業完了: $MESSAGE\"}" >/dev/null

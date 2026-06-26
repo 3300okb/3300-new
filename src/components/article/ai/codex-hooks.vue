@@ -1,6 +1,6 @@
 <script lang="ts">
 export const metadata = {
-  updateDate: '2026/06/11',
+  updateDate: '2026/06/26',
 }
 </script>
 
@@ -88,10 +88,13 @@ case "$EVENT" in
       fi
     done
 
-    # git commit 前に品質チェック（このプロジェクトは test 無し → npm run check）
+    # git commit 前に品質チェック（check スクリプトを持つプロジェクトでのみ実行）
+    # グローバルフックなので、package.json に check が無いリポジトリでは誤爆させない
     if echo "$COMMAND" | grep -q "^git commit"; then
-      if ! npm run check >/dev/null 2>&amp;1; then
-        deny "npm run check が失敗しています。修正してからコミットしてください。"
+      if [ -f package.json ] &amp;&amp; grep -qE '"check"[[:space:]]*:' package.json; then
+        if ! npm run check >/dev/null 2>&amp;1; then
+          deny "npm run check が失敗しています。修正してからコミットしてください。"
+        fi
       fi
     fi
     ;;
@@ -146,15 +149,19 @@ for f in files:
     ;;
 
   # ── 応答終了時：Slack 通知（webhook 未設定なら何もしない） ──
+  # Stop は exit 0 時に stdout へ JSON が必須（プレーンテキスト・空出力は不可）
   Stop)
     WEBHOOK_FILE="$HOME/.codex/slack-webhook"
     [ -f "$WEBHOOK_FILE" ] || WEBHOOK_FILE="$HOME/.claude/slack-webhook"
-    [ -f "$WEBHOOK_FILE" ] || exit 0
-    MESSAGE=$(json "str(d.get('last_assistant_message','') or '')[:100]")
-    PAYLOAD=$(python3 -c "import json,sys; print(json.dumps({'text': '✅ Codex 作業完了: ' + sys.argv[1]}, ensure_ascii=False))" "$MESSAGE")
-    curl -s -X POST "$(cat "$WEBHOOK_FILE")" \
-      -H "Content-Type: application/json" \
-      -d "$PAYLOAD" >/dev/null
+    if [ -f "$WEBHOOK_FILE" ]; then
+      MESSAGE=$(json "str(d.get('last_assistant_message','') or '')[:100]")
+      PAYLOAD=$(python3 -c "import json,sys; print(json.dumps({'text': '✅ Codex 作業完了: ' + sys.argv[1]}, ensure_ascii=False))" "$MESSAGE")
+      curl -s -X POST "$(cat "$WEBHOOK_FILE")" \
+        -H "Content-Type: application/json" \
+        -d "$PAYLOAD" >/dev/null
+    fi
+    echo '{}'
+    exit 0
     ;;
 esac
 
