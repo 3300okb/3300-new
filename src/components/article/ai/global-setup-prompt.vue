@@ -51,7 +51,7 @@ import CopyCode from '@/components/CopyCode.vue'
 ## Phase 1: 正本 ~/.claude/CLAUDE.md の作成
 
 以下の内容で作成してください。セクション 1〜4 は汎用の行動原則（karpathy ガイドライン）、
-5〜7 はユーザー固有の指示です。5〜7 はユーザーの好みに合わせて調整して構いません。
+5 は security.md（Phase 3）の要点ダイジェストです。
 
 ```markdown
 # Agent Guidelines
@@ -117,26 +117,7 @@ For multi-step tasks, state a brief plan:
 
 Strong success criteria let you loop independently. Weak criteria ("make it work") require constant clarification.
 
-検証の実務ルール:
-- 実装後は build / lint / test を実行し、ログを提示する。動作を証明できるまで完了報告をしない
-- UI 変更はブラウザで実際に触って確認する
-
-## 5. 文体・出力フォーマット
-
-- 敬語（です/ます体）で統一。結論ファースト。前置き・挨拶・段階報告は省く
-- 絵文字は明示要望時のみ。デフォルトは使わない
-- 単純な質問は 1-2 文で答える。探索的な問いは「推奨 + トレードオフ」を 2-3 文で提示しユーザー判断を待つ。完了報告は 1-2 文
-- コード内コメントはデフォルト書かない。WHY が非自明なときのみ 1 行（WHAT は識別子で説明し、履歴情報は書かない）
-- 推測には「おそらく」「未確認」と明示する。記憶（memory）に依存した発言は現状を確認してから断定する
-
-## 6. ワークフロー
-
-- ブランチ: 既存 git リポジトリでは main から `dev/{YYYYMMDDHHMM}-{name}` を切る（Claude Code では dev-branch skill を使う）。main への直接プッシュ禁止
-- worktree は現在のフォルダと並列の位置（兄弟ディレクトリ）に作成する。`/private` `/tmp` などの一時フォルダは使わない
-- 3 ステップ以上のタスクは Plan モードで開始する。破壊的変更・複数ファイル横断は事前に計画を提示し合意を取る
-- リサーチ・調査・探索はサブエージェントに委譲する（1 エージェント 1 タスク）
-
-## 7. 破壊的操作・セキュリティ（要点）
+## 5. 破壊的操作・セキュリティ（要点）
 
 - 実行前に確認: `rm -rf`、`git reset --hard` / `push --force` / `branch -D` / `checkout .` / `restore`、DB の DROP / TRUNCATE、本番・ステージングへの変更
 - コミット禁止: `.env` 等の機密ファイル、API キー・トークン、ビルド成果物
@@ -163,7 +144,7 @@ ln -sf ~/.claude/CLAUDE.md ~/.codex/AGENTS.md
 
 ## Phase 3: ~/.claude/policies/security.md の作成（強制の出典）
 
-破壊的操作の詳細方針です。CLAUDE.md セクション 7 の要点から参照される「出典」ファイルで、
+破壊的操作の詳細方針です。CLAUDE.md セクション 5 の要点から参照される「出典」ファイルで、
 hooks がブロック時のメッセージで引用する先でもあります。
 **冒頭の「強制の実体」は Phase 0 で確認した実態に合わせて記載し、未導入のものは「未導入」と明記してください。**
 
