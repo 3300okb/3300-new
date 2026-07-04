@@ -1,6 +1,6 @@
 <script lang="ts">
 export const metadata = {
-  updateDate: '2026/06/25',
+  updateDate: '2026/07/04',
 }
 </script>
 
@@ -20,6 +20,8 @@ import CopyCode from '@/components/CopyCode.vue'
     <pre><code><CopyCode top>```
 あなたはこのリポジトリの Claude Code 設定を行うセットアップエージェントです。
 以下の手順をすべて自律的に実行してください。途中で止まらず、最後まで完走してください。
+既存の CLAUDE.md / .claude/ がある場合は黙って上書きせず、既存内容を読み込んで本構成にマージし、
+置き換え・移動した箇所を完了報告に列挙してください。
 
 このセットアップは Anthropic「Steering Claude Code」のベストプラクティスに従い、
 **各制御手段を「ロード時機・コンテキストコスト・強制力」で使い分ける**ことを原則とします。
@@ -33,12 +35,14 @@ import CopyCode from '@/components/CopyCode.vue'
 | Rules | `.claude/rules/` | パス一致時のみ | 特定ディレクトリ限定の制約 | `paths:` で適用範囲を絞る |
 | Skills | `.claude/skills/` | 呼び出し時に本体ロード | 手続き型ワークフロー | 手順は skill へ。CLAUDE.md は事実用 |
 | Subagents | `.claude/agents/` | 委譲時に別コンテキスト | 独立・分離タスク | 最終サマリーのみ親に返る |
+| Permissions | `.claude/settings.json` | ツール実行時に常時判定 | ファイル・ツール単位の許可 / 禁止 | 機密ファイルの読み取り禁止は deny 1行。hooks より先に検討 |
 | Hooks | `.claude/hooks/` + `settings.json` | ライフサイクルイベント | 決定論的な自動実行・ガードレール | 「毎回必ず」「絶対しない」はここで強制 |
 | Output styles / 追加システムプロンプト | 設定 / CLI | 適用時 | 大きな役割変更・起動時の補足 | 既定のコーディング指示を消さない（任意） |
 
 **よくあるアンチパターンと是正**:
 - 「編集後は必ず lint」と散文で書く → 守られない。**PostToolUse hook** で実行する
 - 「絶対に X しない」と散文で書く → 守られない。**PreToolUse hook で exit 2** してブロックする
+- 「.env は読まない」と散文で書く → 守られない。**permissions の deny**（`Read(./.env)`）で拒否する
 - 30行の手順を CLAUDE.md に書く → コンテキストを浪費。**skill** に切り出す（呼び出し時のみロード）
 - API 専用ルールをスコープなしで常時ロード → 無駄。**path-scoped rule** にする
 
@@ -47,19 +51,20 @@ import CopyCode from '@/components/CopyCode.vue'
 ## Phase 0: リポジトリ調査
 
 まず以下を調べ、結果を内部メモとして保持してください（出力不要）。
-特に 8〜10 は後続の hooks / rules / skills の材料になるため重点的に。
+特に 9〜12 は後続の permissions / hooks / rules / skills の材料になるため重点的に。
 
-1. ルートの全ファイル・フォルダ構成を把握する
-2. package.json / pyproject.toml / Cargo.toml / go.mod / pom.xml など、パッケージ定義ファイルを探し、存在すれば scripts / dependencies / devDependencies を読み込む
-3. README.md が存在すれば読む
-4. .env.example / docker-compose.yml / Makefile / Dockerfile が存在すれば読む
-5. src/ / app/ / lib/ などのメインディレクトリ構成を把握する
-6. テストファイルのパターン（__tests__/ / spec/ / tests/ など）を確認する
-7. CI 設定（.github/workflows/ / .circleci/ / .gitlab-ci.yml など）を確認する
-8. **lint / format / test の実コマンド**を特定する（PostToolUse hook の材料）
-9. **壊すと困る不変条件**を洗い出す（生成物ディレクトリ、リネーム禁止パス、機密ファイルなど。PreToolUse hook の材料）
-10. **パス単位で異なる規約**を探す（例: API 層の入力検証、UI 層のアクセシビリティ。path-scoped rule の材料）
-11. **繰り返し行う複数ステップの手順**を探す（例: リリース、機能追加フロー。skill の材料）
+1. 既存の CLAUDE.md / .claude/ の有無を確認し、あれば内容を読み込む（後続 Phase でマージするため）
+2. ルートの全ファイル・フォルダ構成を把握する
+3. package.json / pyproject.toml / Cargo.toml / go.mod / pom.xml など、パッケージ定義ファイルを探し、存在すれば scripts / dependencies / devDependencies を読み込む
+4. README.md が存在すれば読む
+5. .env.example / docker-compose.yml / Makefile / Dockerfile が存在すれば読む
+6. src/ / app/ / lib/ などのメインディレクトリ構成を把握する
+7. テストファイルのパターン（__tests__/ / spec/ / tests/ など）を確認する
+8. CI 設定（.github/workflows/ / .circleci/ / .gitlab-ci.yml など）を確認する
+9. **lint / format / test の実コマンド**を特定する（PostToolUse hook の材料）
+10. **機密ファイルと壊すと困る不変条件**を洗い出す（.env などの機密、生成物ディレクトリ、リネーム禁止パスなど。permissions / PreToolUse hook の材料）
+11. **パス単位で異なる規約**を探す（例: API 層の入力検証、UI 層のアクセシビリティ。path-scoped rule の材料）
+12. **繰り返し行う複数ステップの手順**を探す（例: リリース、機能追加フロー。skill の材料）
 
 ---
 
@@ -67,7 +72,7 @@ import CopyCode from '@/components/CopyCode.vue'
 
 リポジトリルートに `CLAUDE.md` を生成してください。
 **ここには常に必要な「事実」とポインタだけを書きます。** 手続き・禁止リスト・チェックリストの散文は書かず、
-それぞれ Phase 2〜5 の rules / skills / hooks へ委譲してください。
+それぞれ Phase 2〜5 の rules / skills / permissions / hooks へ委譲してください。
 **Phase 0 の調査結果を必ず反映し、プロジェクト名・技術スタック・コマンドは実際のものを記載してください。**
 
 ```markdown
@@ -92,6 +97,7 @@ import CopyCode from '@/components/CopyCode.vue'
 
 標準フロー: researcher → planner → coder → reviewer
 明確な 1 行修正などは researcher / planner を省略して coder から開始してよい。
+（表とフローは Phase 4 で実際に採用したエージェントに合わせて調整する）
 
 ## クイックリファレンス
 
@@ -101,11 +107,15 @@ import CopyCode from '@/components/CopyCode.vue'
 
 - 手続き（リリース・レビュー等）: `.claude/skills/`
 - パス限定の規約: `.claude/rules/`
-- 機械的な強制（禁止操作・編集後フォーマット）: `.claude/hooks/` と `.claude/settings.json`
+- 機械的な強制（機密アクセス・禁止操作・編集後フォーマット）: `.claude/settings.json` の permissions / hooks
 - 詳細ドキュメント: `.claude/docs/`
 
-> 禁止事項を散文で列挙しても確率的にしか守られないため、本ファイルには書かず
-> hooks（PreToolUse）で決定論的に強制します。
+## 禁止事項
+
+（Phase 0 で洗い出した不変条件を短い箇条書きで。例: .env をコミットしない・dist/ を手で消さない）
+
+> 散文の禁止は確率的にしか守られないため、一覧はここに残しつつ、
+> 強制そのものは permissions / hooks（Phase 5）で決定論的に行います。
 ```
 
 200行を超えそうな場合は、内容を `.claude/docs/` / `.claude/skills/` / `.claude/rules/` に移し、
@@ -153,6 +163,7 @@ Phase 0 で見つかった手順から、実在するものだけ生成してく
 ---
 name: release
 description: リリース手順。タグ付け・CHANGELOG更新・デプロイ確認を行うときに使う。
+disable-model-invocation: true
 ---
 # リリース手順
 1. main が最新かつ CI が green であることを確認
@@ -161,14 +172,21 @@ description: リリース手順。タグ付け・CHANGELOG更新・デプロイ�
 4. デプロイを実行し、稼働を確認
 ```
 
+リリース・デプロイのような**勝手に実行されると困る手順**の skill には `disable-model-invocation: true` を付け、
+人間が明示的に呼び出したときだけ動くようにしてください。
+
 明確な手順が見当たらない場合も、最低限 `code-review` skill だけは作成してください。
 
 ---
 
 ## Phase 4: .claude/agents/ の作成（サブエージェント）
 
-`.claude/agents/` ディレクトリを作成し、以下の4つのサブエージェント定義ファイルを配置してください。
 サブエージェントは**分離したコンテキストで独立タスクを実行**し、最終サマリーのみを親に返します。
+価値の源泉はコンテキスト分離とツール制限であり、役割分担そのものではありません。
+Claude Code 組み込みの Plan mode / Explore と planner / researcher は役割が重なること、
+coder への委譲はメインスレッドが実装コンテキストを失うトレードオフがあることを踏まえ、
+以下の4定義から**このリポジトリに必要なものだけ**を選んで `.claude/agents/` に配置してください
+（迷ったら、read-only でリスクがなく費用対効果の高い reviewer だけでもよい）。
 各ファイルはフロントマター（---で囲まれたYAML）＋本文の形式で書いてください。
 
 ### .claude/agents/researcher.md
@@ -183,7 +201,7 @@ description: |
   - エラーの根本原因を特定するとき
   - 外部ライブラリ・APIの仕様を確認するとき
   - セキュリティリスク・パフォーマンスボトルネックを発見するとき
-tools: read_file, list_directory, search_files, run_command, web_search
+tools: Read, Glob, Grep, Bash, WebSearch
 ---
 
 # Researcher Agent
@@ -229,7 +247,7 @@ description: |
   - 大きなタスクをステップに分解する必要があるとき
   - 破壊的変更・リファクタリング・アーキテクチャ変更を行うとき
   - タスクの優先順位や依存関係を整理するとき
-tools: read_file, list_directory, search_files
+tools: Read, Glob, Grep
 ---
 
 # Planner Agent
@@ -279,7 +297,7 @@ description: |
   - バグ修正・機能追加・リファクタリングの実装作業のとき
   - テストコードの作成・修正のとき
   - ファイルの作成・削除・移動が必要なとき
-tools: read_file, write_file, create_file, list_directory, search_files, run_command
+tools: Read, Write, Edit, Glob, Grep, Bash
 ---
 
 # Coder Agent
@@ -291,7 +309,7 @@ tools: read_file, write_file, create_file, list_directory, search_files, run_com
 ## 行動原則
 - 既存コードのスタイル・命名規則・ファイル構成に合わせる
 - 変更前に対象ファイルを必ず読み、コンテキストを把握してから書く
-- 実装後は `run_command` でビルド・lint・テストを実行し、パスを確認する
+- 実装後は `Bash` でビルド・lint・テストを実行し、パスを確認する
 - テストが存在するなら必ず追加・修正する
 - 1ファイルずつ確実に実装し、動作確認してから次へ進む
 
@@ -330,7 +348,7 @@ description: |
   - プルリクエストやパッチのレビューを求められたとき
   - セキュリティ・パフォーマンス・アクセシビリティの観点で確認が必要なとき
   - コードの品質・保守性に懸念があるとき
-tools: read_file, list_directory, search_files, run_command
+tools: Read, Glob, Grep, Bash
 ---
 
 # Reviewer Agent
@@ -368,36 +386,48 @@ coder の実装を多角的な視点でレビューし、本番投入前の最�
 
 ---
 
-## Phase 5: .claude/hooks/ と settings.json の作成（決定論的ガードレール）
+## Phase 5: permissions と hooks の作成（決定論的ガードレール）
 
 「毎回必ず」「絶対しない」を散文に書く代わりに、ここで機械的に強制します。
-Phase 0 で洗い出した「壊すと困る不変条件」「lint / format コマンド」を反映してください。
+使い分け: **ファイル・ツール単位の静的な許可 / 禁止は permissions**、
+**コマンド内容を見た動的な判定や編集後の自動実行は hooks** です。
+Phase 0 で洗い出した「機密ファイル」「壊すと困る不変条件」「lint / format コマンド」を反映してください。
 該当する強制対象がない hook は作らなくて構いません。
 
 ### .claude/settings.json
 
 ```json
 {
+  "permissions": {
+    "deny": [
+      "Read(./.env)",
+      "Read(./.env.local)",
+      "Read(./secrets/**)"
+    ]
+  },
   "hooks": {
     "PreToolUse": [
       {
         "matcher": "Bash",
         "hooks": [
-          { "type": "command", "command": ".claude/hooks/guard.sh" }
+          { "type": "command", "command": "\"$CLAUDE_PROJECT_DIR\"/.claude/hooks/guard.sh" }
         ]
       }
     ],
     "PostToolUse": [
       {
-        "matcher": "Edit|Write|MultiEdit",
+        "matcher": "Edit|Write",
         "hooks": [
-          { "type": "command", "command": ".claude/hooks/post-edit.sh" }
+          { "type": "command", "command": "\"$CLAUDE_PROJECT_DIR\"/.claude/hooks/post-edit.sh" }
         ]
       }
     ]
   }
 }
 ```
+
+- `permissions.deny` は Phase 0 の機密ファイルに合わせて調整する（`.env.example` のような共有用の雛形まで塞がない）
+- hook のパスは cwd の移動に耐えるよう `$CLAUDE_PROJECT_DIR` 経由で指定する
 
 ### .claude/hooks/guard.sh（PreToolUse — exit 2 でブロック）
 
@@ -440,15 +470,16 @@ exit 0
 
 ## Phase 6: .claude/docs/ の作成（詳細リファレンス＝事実）
 
-`.claude/docs/` ディレクトリを作成し、以下のファイルを生成してください。
+`.claude/docs/` ディレクトリを作成し、以下の候補のうち **Phase 0 の調査で実質的な内容を書けるものだけ**を
+生成してください（rules / skills と同じ原則。書くことがない文書を雛形だけで作らない）。
 これらは CLAUDE.md から参照される"事実"で、必要時にオンデマンドで読まれます。
 **必ず Phase 0 の調査結果を反映し、実プロジェクトの内容で具体化してください。**
-調査で得られた情報がない節は「（未確認 - 要記入）」と記載してください。
+生成する文書の中で一部の節だけ情報が足りない場合は「（未確認 - 要記入）」と記載し、
+文書ごとスキップした場合は完了報告にその旨を記載してください。
 
 ### .claude/docs/COMMANDS.md
 
 package.json / Makefile / pyproject.toml などの実コマンドを列挙し、用途・実行タイミング・注意事項を記述する。
-存在しない場合は汎用テンプレートを記載する。
 
 ```
 # コマンドリファレンス
@@ -586,14 +617,39 @@ CI設定・ブランチ構成・コミットメッセージの規則を記述す
 
 ---
 
-## Phase 8: バージョン管理に追加
+## Phase 8: 動作確認（生成物の検証）
+
+生成しただけで終わらせず、設定が実際に機能することを確認してください。
+失敗した場合は該当 Phase に戻って修正し、再度確認します。
+
+```bash
+# settings.json が妥当な JSON か
+python3 -m json.tool .claude/settings.json > /dev/null &amp;&amp; echo "settings.json: OK"
+
+# hook スクリプトの構文チェック
+for f in .claude/hooks/*.sh; do bash -n "$f" &amp;&amp; echo "$f: OK"; done
+
+# PreToolUse hook の発火テスト（ブロック対象は guard.sh に実際に設定したコマンドに置き換える）
+echo '{"tool_input":{"command":"rm -rf dist"}}' | bash .claude/hooks/guard.sh; echo "exit=$?（2 なら成功）"
+echo '{"tool_input":{"command":"ls"}}' | bash .claude/hooks/guard.sh; echo "exit=$?（0 なら成功）"
+```
+
+agents / skills / rules のフロントマター（YAML）に構文エラーがないかも読み直して確認してください。
+作成していないファイルの確認はスキップして構いません。
+
+---
+
+## Phase 9: バージョン管理に追加
 
 `CLAUDE.md` と `.claude/` はチームで共有するプロジェクト設定です。
 バージョン管理に追加することが標準的な使い方です。git 管理下になければ以下を実行してください：
 
 ```bash
-git add CLAUDE.md .claude/
+# 実行ビットを index に記録させるため、chmod → git add の順で行う
 chmod +x .claude/hooks/*.sh 2>/dev/null || true
+# 個人設定はコミット対象から除外しておく
+grep -qxF '.claude/settings.local.json' .gitignore 2>/dev/null || echo '.claude/settings.local.json' >> .gitignore
+git add CLAUDE.md .claude/ .gitignore
 ```
 
 > **補足**: 個人の作業スタイルや機密情報を含む場合は `.gitignore` に追記してください。
@@ -601,7 +657,7 @@ chmod +x .claude/hooks/*.sh 2>/dev/null || true
 
 ---
 
-## Phase 9: 完了報告
+## Phase 10: 完了報告
 
 すべての作業が完了したら、以下の形式で報告してください：
 
@@ -610,24 +666,29 @@ chmod +x .claude/hooks/*.sh 2>/dev/null || true
 
 ### 生成・更新ファイル一覧
 - CLAUDE.md
+- .claude/settings.json（permissions / hooks）
 - .claude/rules/*（作成した場合）
 - .claude/skills/*（作成した場合）
-- .claude/agents/{researcher,planner,coder,reviewer}.md
-- .claude/hooks/*.sh と .claude/settings.json（作成した場合）
-- .claude/docs/{COMMANDS,ARCHITECTURE,CODING_STANDARDS,TESTING,GIT_WORKFLOW,ENVIRONMENT}.md
+- .claude/agents/*（採用したもの）
+- .claude/hooks/*.sh（作成した場合）
+- .claude/docs/*（作成したもの）
 
 ### 制御手段の割り当て（ベストプラクティス整合）
 - 事実 → CLAUDE.md / .claude/docs/
 - 手続き → どの skill に置いたか
+- ファイル・ツール単位の禁止 → permissions で何を deny したか
 - 機械的強制 → どの hook で何をブロック / 自動実行したか
 - パス限定の規約 → どの rule に置いたか（なければ「該当なし」）
-- 独立タスク → サブエージェント
+- 独立タスク → どのサブエージェントを採用したか・見送った理由
+
+### 動作確認結果（Phase 8）
+- settings.json / hooks / フロントマターの検証結果
 
 ### プロジェクト調査サマリー
 （Phase 0 で把握した主要情報の要約）
 
 ### 要確認・要補完の箇所
-（「未確認 - 要記入」と記載した箇所の一覧）
+（「未確認 - 要記入」と記載した箇所、既存設定とのマージで置き換えた箇所の一覧）
 ```
 
 以上をすべて実行してください。
