@@ -1,6 +1,6 @@
 <script lang="ts">
 export const metadata = {
-  updateDate: '2026/07/05',
+  updateDate: '2026/07/25',
 }
 </script>
 
@@ -22,6 +22,16 @@ import CopyCode from '@/components/CopyCode.vue'
 何もない状態からセットアップするエージェントです。
 以下の手順をすべて自律的に実行してください。途中で止まらず、最後まで完走してください。
 対象はリポジトリではなくホームディレクトリ（~/.claude / ~/.codex）です。
+Claude Code 側は **Claude Opus 5（`claude-opus-5`）で運用されることを前提**に校正します
+（後述の「Opus 5 向けの校正」）。
+
+### このセットアップ作業自体の進め方
+
+- 上記が完全な仕様です。要求されていない設定を推測で足さず、この範囲を最後まで仕上げてください。
+- サブエージェントへは委譲せず、調査からファイル生成までこのセッションで直接実行してください
+  （対象は数ファイルで、分離コンテキストの利点がありません）。
+- 実況は着手時に1文、方針が変わったときだけ追加。詳細は Phase 6 の完了報告にまとめてください。
+- ファイル数は少ないので `/effort high`（既定）で十分です。
 
 ## 設計原則
 
@@ -32,7 +42,31 @@ import CopyCode from '@/components/CopyCode.vue'
 - **二層構成**: 破壊的操作の方針は「文書（出典）」と「機械的強制（permissions / rules / hooks）」の
   二層で持つ。散文だけでは確率的にしか守られない
 - **グローバルにはツール非依存・プロジェクト非依存の内容だけ**: 特定リポジトリのエージェント構成や
-  コマンドはプロジェクト側の CLAUDE.md / AGENTS.md に置く
+  コマンドはプロジェクト側の CLAUDE.md / AGENTS.md に置く。
+  ツール固有の話題（subagents・effort など）を書く場合は、**どのツール向けか見出しで明示する**
+  （symlink で両ツールが同じ本文を読むため、無印だと Codex 側に無効な指示が混ざる）
+- **運用モデルの既定挙動に合わせて校正する**: 行動原則は「足りない指示を足す」より
+  「旧世代向けに書かれた指示を消す」ほうが効く。世代が変わったら書き足す前に読み直す
+
+---
+
+## Opus 5 向けの校正（前提とするモデル挙動）
+
+Claude Opus 5 は Opus 4.8 から既定の挙動が変わっています。
+グローバルの行動原則で効くのは以下の 6 点です。
+
+| Opus 5 の挙動 | 旧世代向けによく書かれた指示 | 本セットアップでの扱い |
+|--------------|------------------------|--------------------|
+| 指示なしで自己検証・自己修正する | 「最後に必ず検証する」「ダブルチェックしてから答える」 | 書かない。検証は test / lint / hooks の決定論的ゲートに寄せる（セクション 4） |
+| 曖昧さは自分で解釈して進む | 「不明なら必ず聞く」「判断に迷ったら止まる」 | 「判断が変わるときだけ聞く」に校正（セクション 1） |
+| タスクの範囲を自分で広げがち・早期に完了と言いがち | （なし） | スコープ固定と完遂の指示を明記（セクション 2・3） |
+| 応答も書き出す文書も長め | （なし） | 簡潔さ・文書長・実況頻度を明記（セクション 5） |
+| 自己訂正の説明が長め | （なし） | 訂正は判断が変わるときだけ（セクション 5） |
+| サブエージェントに委譲しやすい | 「積極的に委譲する」 | 委譲の下限と並列の上限を明記（セクション 6） |
+
+**注意**: 「応答が長い」を effort で抑えようとしないこと。effort が配分するのは思考量で、
+可視の出力長は散文で明示的に指示するしかありません。
+逆に「必ず / 絶対」の類は散文では守られないので、hooks と permissions で強制します（Phase 3・4）。
 
 ---
 
@@ -41,7 +75,12 @@ import CopyCode from '@/components/CopyCode.vue'
 1. `~/.claude/CLAUDE.md` / `~/.codex/AGENTS.md` / `~/.claude/policies/` の有無と内容を確認する
 2. 既存ファイルがあれば `~/.claude/backups/global-mds-{YYYYMMDD}/` に退避してから進める
    （黙って上書きしない。退避一覧は完了報告に記載する）
-3. 機械的強制の導入状況を確認する（Phase 3 の「強制の実体」の記載材料）：
+3. 既存の md に**旧世代向けの指示**が残っていないか洗い出す（Phase 1 で引き継がずに削除する材料）：
+   - 検証の強制（「最後に必ず検証」「ダブルチェック」「サブエージェントに検証させる」）
+   - 質問の強制（「不明なら必ず聞く」「迷ったら止まる」）
+   - 委譲の推奨（「積極的にサブエージェントを使う」）
+   削除した行は完了報告に列挙する（消したこと自体が変更点なので黙って消さない）
+4. 機械的強制の導入状況を確認する（Phase 3 の「強制の実体」の記載材料）：
    - `~/.claude/settings.json` の permissions / hooks
    - `~/.claude/hooks/` のスクリプト
    - `~/.codex/config.toml` の `[[hooks.*]]` と `~/.codex/rules/*.rules`
@@ -50,14 +89,16 @@ import CopyCode from '@/components/CopyCode.vue'
 
 ## Phase 1: 正本 ~/.claude/CLAUDE.md の作成
 
-以下の内容で作成してください。セクション 1〜4 は汎用の行動原則（karpathy ガイドライン）、
-5 は security.md（Phase 3）の要点ダイジェストです。
+以下の内容で作成してください。セクション 1〜5 は汎用の行動原則
+（karpathy ガイドラインを Opus 5 の既定挙動に合わせて校正したもの）、
+6 は Claude Code 固有、7 は security.md（Phase 3）の要点ダイジェストです。
 
 ```markdown
 # Agent Guidelines
 
 Behavioral guidelines to reduce common LLM coding mistakes. Merge with project-specific instructions as needed.
 （正本はこのファイル。`~/.codex/AGENTS.md` は symlink で同内容を共有）
+（Claude Code は Claude Opus 5 前提で校正。セクション 6 のみ Claude Code 固有）
 
 **Tradeoff:** These guidelines bias toward caution over speed. For trivial tasks, use judgment.
 
@@ -65,13 +106,15 @@ Behavioral guidelines to reduce common LLM coding mistakes. Merge with project-s
 
 ## 1. Think Before Coding
 
-**Don't assume. Don't hide confusion. Surface tradeoffs.**
+**Assume reasonably. Surface tradeoffs. Ask only when the answer changes the work.**
 
 Before implementing:
-- State your assumptions explicitly. If uncertain, ask.
-- If multiple interpretations exist, present them - don't pick silently.
-- If a simpler approach exists, say so. Push back when warranted.
-- If something is unclear, stop. Name what's confusing. Ask.
+- State your assumptions explicitly, then proceed under them.
+- Interpret ambiguity the way a careful colleague would: make routine judgment calls yourself,
+  and check in only when different readings would lead to materially different work.
+- If a simpler approach exists, say so in a sentence or two - then deliver what was asked.
+- Stop and ask only when proceeding under any assumption would be unsafe,
+  or would make the work useless if the assumption turns out wrong.
 
 ## 2. Simplicity First
 
@@ -81,19 +124,25 @@ Before implementing:
 - No abstractions for single-use code.
 - No "flexibility" or "configurability" that wasn't requested.
 - No error handling for impossible scenarios.
+- No extra scripts, wrappers, or write-ups that weren't requested.
 - If you write 200 lines and it could be 50, rewrite it.
 
 Ask yourself: "Would a senior engineer say this is overcomplicated?" If yes, simplify.
 
 ## 3. Surgical Changes
 
-**Touch only what you must. Clean up only your own mess.**
+**Touch only what you must. Finish what you started. Clean up only your own mess.**
 
 When editing existing code:
 - Don't "improve" adjacent code, comments, or formatting.
 - Don't refactor things that aren't broken.
 - Match existing style, even if you'd do it differently.
 - If you notice unrelated dead code, mention it - don't delete it.
+
+Scope and completion:
+- Deliver the requested scope at the requested granularity. Don't quietly narrow, widen, or transform it.
+- Finish the whole task, not just the easy part. Report completion only when it is actually done;
+  if part of it is blocked, finish everything else and state plainly what is missing and why.
 
 When your changes create orphans:
 - Remove imports/variables/functions that YOUR changes made unused.
@@ -103,7 +152,7 @@ The test: Every changed line should trace directly to the user's request.
 
 ## 4. Goal-Driven Execution
 
-**Define success criteria. Loop until verified.**
+**Define success criteria. Prefer gates something other than your own judgment can check.**
 
 Transform tasks into verifiable goals:
 - "Add validation" → "Write tests for invalid inputs, then make them pass"
@@ -117,9 +166,30 @@ For multi-step tasks, state a brief plan:
 3. [Step] → verify: [check]
 ```
 
-Strong success criteria let you loop independently. Weak criteria ("make it work") require constant clarification.
+Run the project's own gates (tests, lint, build) and report their output as it is.
+Don't stack extra review passes or verifier agents on top of them.
 
-## 5. 破壊的操作・セキュリティ（要点）
+## 5. Output Length
+
+**Concise responses, right-sized documents, minimal correction narration.**
+
+- Keep responses concise: short preamble and caveats, most of the length on the answer itself.
+- While working, one sentence up front, then updates only for load-bearing findings
+  or a change of direction. Lead the final message with the outcome.
+- Documents written to disk (reports, summaries, md files) cover the substance
+  without filler sections, redundant summaries, or boilerplate.
+- Correct an earlier statement only when the error changes the user's decisions.
+  Otherwise fix it silently and move on - no apologies, no tally of past mistakes.
+
+## 6. Claude Code 固有: 委譲と effort
+
+- サブエージェントは**独立していて規模の大きい作業**に限る（広範囲の多ファイル調査など）。
+  数回のツール呼び出しで終わる作業、および自分の作業の検証には使わない。1つで足りるなら1つ。
+- 並列で走らせるのは本当に独立したトラックのみ。1つの小さなタスクを分割して複数に投げない。
+- 委譲したら結果を信頼する。同じ作業を自分でやり直さない。
+- effort は既定 `high`。重い実装は `xhigh`、手順が決まった定型作業は `low` / `medium` に落とす。
+
+## 7. 破壊的操作・セキュリティ（要点）
 
 - 実行前に確認: `rm -rf`、`git reset --hard` / `push --force` / `branch -D` / `checkout .` / `restore`、DB の DROP / TRUNCATE、本番・ステージングへの変更
 - コミット禁止: `.env` 等の機密ファイル、API キー・トークン、ビルド成果物
@@ -127,8 +197,20 @@ Strong success criteria let you loop independently. Weak criteria ("make it work
 
 ---
 
-**These guidelines are working if:** fewer unnecessary changes in diffs, fewer rewrites due to overcomplication, and clarifying questions come before implementation rather than after mistakes.
+**These guidelines are working if:** fewer unnecessary changes in diffs, fewer rewrites due to overcomplication, and clarifying questions arrive only for decisions that actually change the work.
 ```
+
+セクション 1・3・5・6 が Opus 5 向けの校正部分です。
+常時ロードされる散文に置く価値があるのは、**モデルの既定挙動とズレる数行だけ**と考えてください。
+
+> **ここに書いてはいけないこと**: 「最後に必ず検証する」「ダブルチェックしてから答える」
+> 「サブエージェントに検証させる」といった検証・再確認の指示。
+> Opus 5 はこれらを指示なしで行うため、書くと二重になり過剰検証でトークンだけ増えます。
+> 検証を確実に走らせたいなら散文ではなく hooks で決定論的に実行してください
+> （hooks 自体の導入は本手順の対象外。Phase 4 の注記を参照）。
+
+Codex CLI も symlink 経由で同じ本文を読みます。セクション 1〜5 の校正はどちらのツールでも
+無害に働きますが、セクション 6 は Claude Code 固有の機能に触れるため見出しで対象を明示しています。
 
 ---
 
@@ -282,12 +364,19 @@ head -1 ~/.codex/AGENTS.md
 ### 退避したファイル
 - ~/.claude/backups/global-mds-{YYYYMMDD}/ の一覧（なければ「なし」）
 
+### 削除した旧世代向けの指示（Phase 0-3 の洗い出し結果）
+- 検証・質問・委譲の強制で、Opus 5 向けに引き継がなかった行（なければ「なし」）
+
 ### 機械的強制の状態
 - 導入済み: （permissions / hooks / rules の実態）
 - 未導入: （あれば列挙し、導入を推奨）
 
 ### 反映タイミング
 - 新しい CLAUDE.md / AGENTS.md は次のセッションから有効（起動中のセッションには反映されない）
+
+### 前提モデル
+- Claude Code 側は Claude Opus 5 前提で校正済み。モデル世代が変わったら
+  セクション 1・3・5・6 を読み直す（書き足す前に、旧世代向けになった行を消す）
 ```
 
 以上をすべて実行してください。
