@@ -61,6 +61,7 @@ deny() {
 # 自動承認してよいコマンド（先頭一致）。連結・置換・リダイレクトを含むものは対象外
 SAFE=(
   "npm run check" "npm run lint" "npm run build" "npm run fix"
+  "npm run typecheck" "npm test" "npm run test"
   "npm run index:generate" "npm run _stylelint"
   "npx stylelint" "npx prettier" "npx tsc"
   "git status" "git diff" "git log" "git worktree add"
@@ -124,13 +125,29 @@ case "$EVENT" in
     fi
     ;;
 
-  # ── 応答終了時：Slack 通知（webhook 未設定なら何もしない） ──
+  # ── 応答終了時：完了ゲート → Slack 通知 ──
+  # 未コミットの変更があるのに check が落ちていたら、止めずに修正を続けさせる（exit 2 + stderr）。
+  # 続行させるのは 1 回だけ（stop_hook_active が True の 2 回目は止める）。
   Stop)
+    CWD=$(json "d.get('cwd','')")
+    [ -n "$CWD" ] &amp;&amp; cd "$CWD"
+    STATUS="✅"
+    if [ -f package.json ] &amp;&amp; grep -qE '"check"[[:space:]]*:' package.json \
+      &amp;&amp; [ -n "$(git status --porcelain 2>/dev/null)" ]; then
+      if ! npm run check >/dev/null 2>&amp;1; then
+        if [ "$(json "d.get('stop_hook_active', False)")" != "True" ]; then
+          echo "npm run check が失敗しています。原因を直して再実行してから終えてください。直せない場合は、何が残っているかを報告して終えてください。" >&amp;2
+          exit 2
+        fi
+        STATUS="⚠️ check 未通過のまま"
+      fi
+    fi
+
     WEBHOOK_FILE="$HOME/.claude/slack-webhook"
     [ -f "$WEBHOOK_FILE" ] || exit 0
     MESSAGE=$(json "str(d.get('last_assistant_message','') or '')[:100]")
     # 本文に " や改行が含まれても壊れないよう、JSON は python で組み立てる
-    PAYLOAD=$(python3 -c "import json,sys; print(json.dumps({'text': '✅ Claude 作業完了: ' + sys.argv[1]}, ensure_ascii=False))" "$MESSAGE")
+    PAYLOAD=$(python3 -c "import json,sys; print(json.dumps({'text': sys.argv[1] + ' Claude 作業完了: ' + sys.argv[2]}, ensure_ascii=False))" "$STATUS" "$MESSAGE")
     curl -s -X POST "$(cat "$WEBHOOK_FILE")" \
       -H "Content-Type: application/json" \
       -d "$PAYLOAD" >/dev/null
