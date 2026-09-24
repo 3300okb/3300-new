@@ -1,6 +1,6 @@
 <script lang="ts">
 export const metadata = {
-  updateDate: '2026/07/05',
+  updateDate: '2026/09/24',
 }
 </script>
 
@@ -25,6 +25,17 @@ import CopyCode from '@/components/CopyCode.vue'
 
 このセットアップは**各制御手段を「ロード時機・コンテキストコスト・強制力」で使い分ける**ことを原則とします。
 1つの巨大な AGENTS.md にすべてを詰め込まず、目的に応じて配置先を分けてください。
+生成物は **GPT-6 Astra（`gpt-6-astra`）で運用されることを前提**に校正します（後述の「GPT-6 Astra 向けの校正」）。
+
+### このセットアップ作業自体の進め方
+
+- 上記が完全な仕様です。要求されていない設定を推測で足さず、この範囲を最後まで仕上げてください。
+- 完了条件は「Phase 9 の動作確認がすべて通り、Phase 11 の完了報告を出したこと」です。それまで途中報告で止まらないでください。
+- リポジトリ内のファイル読み取り、`AGENTS.md` / `.codex/` / `.agents/` 配下の作成・編集、Phase 9 の検証コマンドは
+  本番環境に触れないため、各ステップで承認を求めずに実行してください。
+  止まって確認するのは、既存ファイルの削除と `~/.codex/` 配下（個人設定）への書き込みだけです（Phase 8 は提案にとどめる）。
+- サブエージェントへは委譲せず、このセッションで直接実行してください（数十回のツール呼び出しで終わる作業です）。
+- reasoning effort は `high` で流すと安定します（Codex CLI の既定は `medium`）。
 
 ## 制御手段の使い分け（設計原則）
 
@@ -47,10 +58,29 @@ import CopyCode from '@/components/CopyCode.vue'
 - 「絶対に X しない」と散文で書く → 守られない。**rules の `decision = "forbidden"`** か **PreToolUse hook** でブロックする
 - 30行の手順を AGENTS.md に書く → コンテキストを浪費。**skill** に切り出す（呼び出し時のみロード）
 - ディレクトリ限定の規約をルート AGENTS.md に書く → 無駄。**ネスト AGENTS.md** に置く
+- 「編集前に必ず architecture.md を読む」と書く → 毎回の読み込みで浪費。**どの作業のときにどの文書を読むか**をトリガーで示す
+- 「実装後は必ずテストを実行」を複数の文書に書く → GPT-6 Astra は自分でテストを回す。
+  **確認なしで回してよいゲートと完了条件**を 1 か所に書く
 
 ---
 
-## Phase 0: リポジトリ調査 &amp; モデル調査
+## GPT-6 Astra 向けの校正（前提とするモデル挙動）
+
+GPT-6 Astra は前世代より自律的で、足場（scaffolding）が少ないほど良く動きます。
+**旧世代向けの手取り足取りの指示を消し、「完了条件」と「確認なしで進めてよい範囲」だけを明示する**のが要点です。
+
+| GPT-6 Astra の挙動 | 旧世代向けによく書かれた指示 | 本セットアップでの扱い |
+|-------------------|------------------------|--------------------|
+| 指示なしでテストを実行し、自分で検証する | 「実装後は必ずビルド・lint・テスト」を各文書で繰り返す | 繰り返さない。確認なしで回してよいゲートとして workflow.md に 1 回だけ書く（Phase 2） |
+| 足場がなくても動く | 「編集前に毎回ドキュメントを読む」「小さな変更でもリポジトリ全体を確認」 | 書かない。文書は読むタイミング（トリガー）付きで示す（Phase 1） |
+| 完了条件が曖昧だと早めに止まる | （なし） | 完了条件を明記（Phase 1・2・3） |
+| 安全と明示されない操作は許可待ちで止まる | （なし） | 確認なしで進めてよい操作を明記（Phase 1・2） |
+| 意図を汲んで自分で判断できる | 「不明点は必ず確認」 | 「成果物が変わるときだけ確認し、それ以外は意図を推測して進む」 |
+| 細かいレシピがなくても手順を組める。広い description の skill は関係の薄い話題でも発動する | 広い description、細かい手順のレシピ | description は具体的な操作をトリガーにし、要件と制約だけ残してレシピは削る（Phase 5） |
+
+---
+
+## Phase 0: リポジトリ調査 &amp; モデル確認
 
 まず以下を調べ、結果を内部メモとして保持してください（出力不要）。
 
@@ -71,29 +101,30 @@ import CopyCode from '@/components/CopyCode.vue'
 11. **ディレクトリ単位で異なる規約**を探す（例: API 層の入力検証、UI 層のアクセシビリティ。ネスト AGENTS.md の材料）
 12. **繰り返し行う複数ステップの手順**を探す（例: リリース、機能追加フロー。skill の材料）
 
-### 0-B: 最新モデルの調査
+### 0-B: モデルの利用可否確認
 
-Codex CLI のサブエージェントおよび config.toml に設定する**最新の推奨モデル**を特定してください。
-以下の手順で調査し、結果を内部メモとして保持してください。
+前提モデルは **GPT-6 Astra（`gpt-6-astra`）**です。アカウントで使えるかを確認し、
+サブエージェントと config.toml に設定するモデルと reasoning effort を決めて内部メモに保持してください。
 
-1. `~/.codex/config.toml` を読み、現在設定されているモデルとマイグレーション履歴を確認する
-2. `codex --help` の出力からデフォルトモデルや対応モデルのヒントを得る
-3. Web 検索で「OpenAI Codex CLI recommended models」「codex CLI best model」等を調べ、現時点の最新モデルを把握する
-4. 以下の観点でモデルを選定する：
-   - **coder**: ソフトウェアエンジニアリングに最も特化した最新モデル（コード生成・修正の精度を重視）
-   - **researcher / planner / reviewer**: 推論・分析能力が高いモデル（読み取り専用タスク）
-   - **デフォルト (config.toml)**: coder と同じモデルを推奨
+1. `~/.codex/config.toml` を読み、現在設定されているモデルと reasoning effort を確認する
+2. `gpt-6-astra` が利用可能か確認する（`/model` の一覧に出るか、`codex exec -m gpt-6-astra` が通るか）。
+   Astra は段階的に提供されているため、使えない場合は一覧にある最上位モデルに置き換え、完了報告に記載する
+3. 以下の観点でモデルと reasoning effort（`low` / `medium` / `high` / `xhigh` / `max`。Codex CLI の既定は `medium`）を決める：
+   - **coder / デフォルト (config.toml)**: `gpt-6-astra`、`medium`（重い実装が中心なら `high`）
+   - **reviewer / planner**: `gpt-6-astra`、`high`（読み取り専用で判断の質を重視）
+   - **researcher**: 軽量モデル（例: `gpt-6-luna`）を `low` 〜 `medium` で。2 で確認した一覧にない場合は Astra の `low`
+   - `xhigh` / `max` は、効果を確かめた難しい設計判断やデバッグに限る
 
-調査結果を以下の形式で内部メモにまとめてください（Phase 3, 8 で使用）：
+結果を以下の形式で内部メモにまとめてください（Phase 3, 8 で使用）：
 
 ```
 モデル選定結果:
-- coder: {モデル名} (reasoning_effort: {low/medium/high})
-- researcher: {モデル名} (reasoning_effort: {low/medium/high})
-- planner: {モデル名} (reasoning_effort: {low/medium/high})
-- reviewer: {モデル名} (reasoning_effort: {low/medium/high})
-- デフォルト: {モデル名} (reasoning_effort: {low/medium/high})
-- 選定理由: {なぜこのモデルを選んだか}
+- coder: {モデル名} (reasoning_effort: {low〜max})
+- researcher: {モデル名} (reasoning_effort: {low〜max})
+- planner: {モデル名} (reasoning_effort: {low〜max})
+- reviewer: {モデル名} (reasoning_effort: {low〜max})
+- デフォルト: {モデル名} (reasoning_effort: {low〜max})
+- 選定理由: {なぜこのモデル・effort にしたか。Astra を使えなかった場合はその旨}
 ```
 
 ---
@@ -124,17 +155,28 @@ Codex CLI は以下の順序で AGENTS.md を自動的に読み込みます：
 
 ## ドキュメント参照
 
-タスクに応じて以下のファイルを参照してください。**必要なときだけ読み込んでください**
-（Phase 2 で実際に作成した文書だけを表に載せる）：
+以下のファイルは、表のタイミングに当てはまるときだけ読んでください。
+毎回の編集前に読む必要はありません（Phase 2 で実際に作成した文書だけを表に載せる）：
 
 | ファイル | 読むタイミング |
 | --- | --- |
-| `.codex/project-baseline.md` | 共通品質・セキュリティ基準を確認するとき |
-| `.codex/workflow.md` | 作業開始時・タスクの進め方を確認するとき |
-| `.codex/coding-standards.md` | コードを書く・修正する前 |
-| `.codex/testing.md` | テストを書く・実行するとき |
-| `.codex/git.md` | コミット・ブランチ操作を行う前 |
+| `.codex/project-baseline.md` | 認証・入力値・機密情報を扱うコードを変更するとき |
+| `.codex/workflow.md` | 開発サーバー・ビルドのコマンドや報告フォーマットを確認するとき |
+| `.codex/coding-standards.md` | 新しいファイル・モジュールを追加する、または命名・配置を決めるとき |
+| `.codex/testing.md` | テストを追加する、またはテスト・lint の実行方法を確認するとき |
+| `.codex/git.md` | コミット・ブランチ・PR を作成するとき |
 | `.codex/environment.md` | 環境セットアップ・環境変数を扱うとき |
+
+---
+
+## 作業の進め方
+
+- 依頼の意図を文脈から推測して進める。確認するのは、解釈によって成果物が変わるときだけ。
+- 頼まれていない改善・リファクタを足さない。気づいた別の問題は報告に書く。
+- 完了条件: 依頼された変更がすべて入り、関連するテスト・lint・ビルドが通っていること。
+  満たすまで途中報告で止まらない。一部がブロックされたら残りを仕上げ、何が足りないかを書く。
+- ローカルのテスト・lint・ビルド・型チェックは本番環境に触れない。
+  実行し、自分の変更で落ちたものは直して再実行する。各ステップで承認を求めない。
 
 ---
 
@@ -197,9 +239,8 @@ Codex CLI は以下の順序で AGENTS.md を自動的に読み込みます：
 - `~/.codex/AGENTS.md` が存在しない環境でも、プロジェクト内のルールだけで運用できるようにする
 
 ## 基本方針
-- 変更前に対象ファイルを必ず読み、既存スタイルに合わせる
-- 実装後はビルド・lint・テストを実行して動作を確認する
-- lint やテストが未導入の場合は「未導入」と明記し、代替の検証コマンド（例: ビルド、型チェック）を必ず実行する
+- 既存スタイルに合わせる
+- lint やテストが未導入の場合は「未導入」と明記し、代替の検証（例: ビルド、型チェック）が通ることを完了条件にする
 - 型・インターフェースを明示する（型のある言語の場合）
 - マジックナンバーは定数化する
 - エラーハンドリングを省略しない
@@ -218,21 +259,12 @@ Codex CLI は以下の順序で AGENTS.md を自動的に読み込みます：
 
 ### .codex/workflow.md
 
-作業フロー・手順・報告フォーマットを記載します。
+開発コマンドと報告フォーマットを記載します。
+進め方と完了条件はルート AGENTS.md の「作業の進め方」にだけ置き、ここに「調査 → 実装 → 検証」のような
+固定の手順は書きません（GPT-6 Astra は手順を自分で組み立て、テストも自分で回すため）。
 
 ```markdown
-# workflow.md — 作業フロー
-
-## 作業手順
-
-タスクに取り組む際は以下の手順を守ってください：
-
-1. **調査**: 対象ファイルをすべて読み、影響範囲を把握してから変更に入る
-2. **実装**: 既存コードのスタイル・命名規則・ファイル構成に合わせて実装する
-3. **検証**: 実装後はビルド・lint・テストを実行し、すべてパスすることを確認する（未導入の項目は「未導入」と明記し、代替検証を実施）
-4. **報告**: 変更ファイルと実行結果を明示して報告する
-
-シンプルな1行修正などは調査フェーズを省略して直接実装してよい。
+# workflow.md — 開発コマンドと報告
 
 ## 開発サーバー
 ```bash
@@ -372,13 +404,15 @@ Codex CLI には以下の3つのサブエージェントが組み込まれてい
 
 以下の4定義から必要なものだけを `.codex/agents/` に配置してください。
 **Phase 0 の調査結果を反映し、プロジェクトに適した指示を記載してください。**
-**各エージェントの `model` と `model_reasoning_effort` は、Phase 0-B のモデル調査結果を使用してください。**
+**各エージェントの `model` と `model_reasoning_effort` は、Phase 0-B のモデル確認結果を使用してください。**
+`description` には起動条件だけでなく**委譲に値する規模の下限**を、`developer_instructions` には**完了条件**を含めてください
+（GPT-6 Astra は完了条件が曖昧だと早めに止まるため）。
 
 ### .codex/agents/researcher.toml
 
 ```toml
 name = "researcher"
-description = "Read-only codebase researcher. Investigates code structure, dependencies, and impact before changes."
+description = "Read-only codebase researcher. Use only for investigations that span many files; do not delegate lookups that take a few tool calls."
 model = "{Phase 0-B で選定したモデル}"
 model_reasoning_effort = "{Phase 0-B で選定した reasoning_effort}"
 sandbox_mode = "read-only"
@@ -403,7 +437,7 @@ Report findings as structured markdown with:
 
 ```toml
 name = "planner"
-description = "Architecture and planning agent. Designs implementation strategies and breaks down complex tasks."
+description = "Architecture and planning agent. Use only for tasks that will span multiple commits or need a choice between approaches."
 model = "{Phase 0-B で選定したモデル}"
 model_reasoning_effort = "{Phase 0-B で選定した reasoning_effort}"
 sandbox_mode = "read-only"
@@ -429,7 +463,7 @@ Produce a numbered implementation plan with:
 
 ```toml
 name = "coder"
-description = "Implementation agent. Writes, modifies, and tests code following project conventions."
+description = "Implementation agent. Use only for specified changes that span multiple files; implement small fixes directly."
 model = "{Phase 0-B で選定したモデル}"
 model_reasoning_effort = "{Phase 0-B で選定した reasoning_effort}"
 developer_instructions = """
@@ -439,10 +473,14 @@ You are an implementation agent.
 - Implement code changes following the plan from the planner agent
 - Match existing code style, naming conventions, and file structure
 - Write or update tests for all changes
-- Run build, lint, and tests after implementation
+
+## Done means
+- Every step of the plan is implemented, with no stubs or TODOs left behind
+- The related tests, lint, and build pass. They have no production access:
+  run them, fix failures your change caused, and rerun without asking at each step
+- Improvements outside the plan are listed in the report, not implemented
 
 ## Rules
-- Read target files before modifying them
 - Never leave debug output (console.log, print, etc.) in committed code
 - Never commit .env files or secrets
 - Follow the coding standards in .codex/coding-standards.md
@@ -453,7 +491,7 @@ You are an implementation agent.
 
 ```toml
 name = "reviewer"
-description = "Code review agent. Checks implementation quality, security, performance, and accessibility."
+description = "Code review agent. Use when a review is requested or for a PR-sized diff, not to double-check your own small edits."
 model = "{Phase 0-B で選定したモデル}"
 model_reasoning_effort = "{Phase 0-B で選定した reasoning_effort}"
 sandbox_mode = "read-only"
@@ -466,6 +504,9 @@ You are a code review agent. Never modify files directly.
 - Performance: N+1 queries, unnecessary re-renders, memory leaks
 - Maintainability: Naming, complexity, duplication
 - Test coverage: Are edge cases covered?
+
+Report every issue you find with its severity label. Don't filter down to critical ones only;
+the human decides what to fix.
 
 ## Output format
 Use this structure:
@@ -527,6 +568,13 @@ frontmatter の `name` / `description` は起動時にロードされ、本体�
 `description` には**いつ使うか**を具体的に書くとトリガー精度が上がります
 （明示呼び出しは `/skills` または `$` メンション、暗黙呼び出しは description とのマッチで発動）。
 
+GPT-6 Astra 向けには、skill を次の方針で書いてください：
+- **description は具体的な操作をトリガーにする**（「タグを打つ・CHANGELOG を更新するとき」など）。
+  「リリースに関すること全般」のような広い description は、関係の薄い話題でも発動する
+- **本体は要件と制約を残し、固定のレシピは削る**。Astra は手順を自分で組み立てられるため、
+  守るべき条件（順序が意味を持つ箇所・触ってはいけないもの・完了条件）だけを書く
+- 詳細が長くなる場合は本体を短く保ち、補足ファイルに分けて必要なときだけ読ませる
+
 Phase 0 で見つかった手順から、実在するものだけ生成してください（例）:
 - `release` — リリース / デプロイ手順
 - `code-review` — レビュー観点チェックリスト
@@ -537,13 +585,19 @@ Phase 0 で見つかった手順から、実在するものだけ生成してく
 ```markdown
 ---
 name: release
-description: リリース手順。タグ付け・CHANGELOG更新・デプロイ確認を行うときに使う。ユーザーが明示的にリリースを指示したときのみ実行する。
+description: バージョンタグを打つ・CHANGELOG を更新する・本番デプロイを行うときに使う。ユーザーが明示的にリリースを指示したときのみ実行する。
 ---
-# リリース手順
-1. main が最新かつ CI が green であることを確認
-2. バージョンを bump し CHANGELOG を更新
-3. タグを打つ
-4. デプロイを実行し、稼働を確認
+# リリース
+
+## 前提条件
+- main が最新で CI が green であること。満たさなければ中断して報告する
+
+## 制約
+- バージョン bump と CHANGELOG 更新は、タグより前に同じコミットで行う
+- タグは main 上のコミットにだけ打つ
+
+## 完了条件
+- デプロイ後の稼働確認まで済んでいること
 ```
 
 リリース・デプロイのような**勝手に実行されると困る手順**は、description に
@@ -582,6 +636,8 @@ prefix_rule(
 
 - `pattern` はコマンドのプレフィックス一致（要素は文字列、または `["a", "b"]` 形式の選択肢）
 - `match` / `not_match` はロード時に検証されるテストケース。必ず書く
+- Phase 0 で特定した test / lint / build コマンドも `allow` にする。GPT-6 Astra は安全と明示されない操作で
+  承認待ちになりやすいため、確認なしで回してよいゲートを rules でも宣言しておく（AGENTS.md「作業の進め方」と揃える）
 - プレフィックス一致で拾えない表記ゆれ（`rm -fr` / `rm -r -f` など）は Phase 7 の PreToolUse hook で補完する
 
 該当する不変条件がなければこの Phase はスキップし、完了報告にその旨を記載してください。
@@ -680,8 +736,9 @@ exit 0
 ```toml
 # ~/.codex/config.toml（提案 — ユーザーが手動で反映）
 
-# 使用モデル（Phase 0-B の調査結果を反映）
+# 使用モデル（Phase 0-B の確認結果を反映。通常は gpt-6-astra）
 model = "{Phase 0-B で選定したデフォルトモデル}"
+# low / medium（既定）/ high / xhigh / max。xhigh・max は効果を確かめた難しい作業に限る
 model_reasoning_effort = "{Phase 0-B で選定した reasoning_effort}"
 
 # 承認ポリシー
@@ -713,24 +770,13 @@ persistence = "save-all"  # "save-all" または "none"
 # approval_policy = "never"
 ```
 
-また、グローバル指示ファイル `~/.codex/AGENTS.md` についても以下の作成を推奨してください：
+グローバル指示ファイル `~/.codex/AGENTS.md` には触れず、状態だけを確認して案内してください：
 
-```markdown
-# ~/.codex/AGENTS.md
-# 全プロジェクト共通のグローバル指示
-
-## 基本方針
-- 変更前に対象ファイルを必ず読み、既存スタイルに合わせる
-- 実装後はビルド・lint・テストを実行して動作を確認する
-- 型・インターフェースを明示する（型のある言語の場合）
-- マジックナンバーは定数化する
-- エラーハンドリングを省略しない
-
-## セキュリティ
-- `.env` ファイルをコミットしない
-- API キーや認証情報をコードに直書きしない
-- HTML を直接挿入する操作（innerHTML 相当）は XSS リスクに注意する
-```
+- `~/.claude/CLAUDE.md` への symlink になっている → global-setup-prompt で管理済み。案内不要
+- 実ファイルがある → 「毎回テストを実行」「編集前に必ずドキュメントを読む」「不明点は必ず確認」のような
+  旧世代向けの指示が含まれていれば、該当行を完了報告で指摘する（削除はユーザーが判断）
+- 存在しない → global-setup-prompt での作成を案内する
+  （本セットアップのプロジェクト内ファイルだけでも品質基準は自己完結している）
 
 ---
 
@@ -815,7 +861,13 @@ trust_level = "trusted"
 （上記の trust 方法を記載。trust するまでプロジェクト設定・hooks・rules は無効であることを明記）
 
 ### ~/.codex/ 個人設定の提案（ユーザーが手動で反映）
-- ~/.codex/config.toml / ~/.codex/AGENTS.md（Phase 8 の内容を再掲）
+- ~/.codex/config.toml（Phase 8 の内容を再掲）
+- ~/.codex/AGENTS.md の状態と、指摘した旧世代向けの行（なければ「なし」）
+
+### GPT-6 Astra 向けの校正
+- 使用モデルと reasoning effort（Astra を使えなかった場合はその旨と代替モデル）
+- AGENTS.md「作業の進め方」に書いた完了条件と、確認なしで回してよいゲート（rules の allow と対応）
+- 既存設定から削除した旧世代向けの指示（毎回のテスト指示・毎回のドキュメント読み込み・固定レシピなど。なければ「該当なし」）
 
 ### 動作確認結果（Phase 9）
 - TOML / rules / hooks の検証結果
