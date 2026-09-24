@@ -78,7 +78,7 @@ Claude Opus 5.5 では Opus 5 向けのプロンプトがそのまま機能し�
 | 思考は常時オン（無効化不可）。量は effort で決まる | 「よく考えてから答える」「推論を書き出す」 | 書かない。思考量は effort で配分（Phase 3・4・5） |
 | effort の既定が `medium`。`medium` で Opus 5 の `high` 相当以上。同じ段階なら Opus 5 より多く考える | `effortLevel: xhigh` の固定運用 | `medium` を基準に、重い作業だけ `high`。`xhigh` / `max` は効果を確かめた作業に限る |
 | トップレベルの `effortLevel` が効かない | `settings.json` の `"effortLevel"` | 変えるなら `modelSettings."claude-opus-5-5".effortLevel`（Phase 5） |
-| 作業報告が明快。長い作業では途中報告だけで手を止めることがある | 実況の細かい指定 | 頻度の指定は短く残し、「要約だけ書いて止まらない」を明記（Phase 1） |
+| 作業報告が明快。長い作業では途中報告だけで手を止めることがある | 実況の細かい指定 | 頻度の指定は短く残し、「要約だけ書いて止まらない」を明記（Phase 1）。検証が落ちたままの停止は Stop hook で止める（Phase 5） |
 | タスクの範囲を自分で広げがち（Opus 5 から継続） | （なし） | スコープ固定の指示を明記（Phase 1） |
 | 並列サブエージェントでの長時間作業が得意 | 「積極的に委譲する」 | 小さな作業まで投げないよう、委譲の下限・上限は維持（Phase 1・4） |
 | コードレビューで見つけるバグが増え、誤検知が減った | 「重大な問題だけ」「保守的に指摘」 | 全件を深刻度付きで報告させる（Phase 3・4） |
@@ -102,7 +102,7 @@ Claude Opus 5.5 では Opus 5 向けのプロンプトがそのまま機能し�
 6. src/ / app/ / lib/ などのメインディレクトリ構成を把握する
 7. テストファイルのパターン（__tests__/ / spec/ / tests/ など）を確認する
 8. CI 設定（.github/workflows/ / .circleci/ / .gitlab-ci.yml など）を確認する
-9. **lint / format / test の実コマンド**を特定する（PostToolUse hook の材料）
+9. **lint / format / test の実コマンド**を特定する（PostToolUse hook と Stop の完了ゲートの材料）
 10. **機密ファイルと壊すと困る不変条件**を洗い出す（.env などの機密、生成物ディレクトリ、リネーム禁止パスなど。permissions / PreToolUse hook の材料）
 11. **パス単位で異なる規約**を探す（例: API 層の入力検証、UI 層のアクセシビリティ。path-scoped rule の材料）
 12. **繰り返し行う複数ステップの手順**を探す（例: リリース、機能追加フロー。skill の材料）
@@ -484,8 +484,8 @@ effort: high
 
 「毎回必ず」「絶対しない」を散文に書く代わりに、ここで機械的に強制します。
 使い分け: **ファイル・ツール単位の静的な許可 / 禁止は permissions**、
-**コマンド内容を見た動的な判定や編集後の自動実行は hooks** です。
-Phase 0 で洗い出した「機密ファイル」「壊すと困る不変条件」「lint / format コマンド」を反映してください。
+**コマンド内容を見た動的な判定や編集後の自動実行、止める前の検証は hooks** です。
+Phase 0 で洗い出した「機密ファイル」「壊すと困る不変条件」「lint / format / test コマンド」を反映してください。
 該当する強制対象がない hook は作らなくて構いません。
 
 ### .claude/settings.json
@@ -513,6 +513,13 @@ Phase 0 で洗い出した「機密ファイル」「壊すと困る不変条件
         "matcher": "Edit|Write",
         "hooks": [
           { "type": "command", "command": "\"$CLAUDE_PROJECT_DIR\"/.claude/hooks/post-edit.sh" }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          { "type": "command", "command": "\"$CLAUDE_PROJECT_DIR\"/.claude/hooks/stop-gate.sh" }
         ]
       }
     ]
@@ -561,6 +568,30 @@ file=$(printf '%s' "$input" | python3 -c 'import json,sys; print(json.load(sys.s
 # 実プロジェクトの format コマンドに置き換える
 npx prettier --write "$file" >/dev/null 2>&amp;1 || true
 exit 0
+```
+
+### .claude/hooks/stop-gate.sh（Stop — 完了ゲート）
+
+「最後に必ず検証する」を散文で書く代わりに、止まる直前に検証を決定論的に走らせます。
+Opus 5.5 は長い作業の途中で報告だけ書いてターンを終えることがあるため、検証が落ちたままの停止をここで止めます。
+変更がないときは何もせず、続行させるのは 1 回だけです（`stop_hook_active` で無限ループを防ぐ）。
+検証コマンドは Phase 0 の lint / 型チェックなど**数十秒以内で終わるもの**にしてください（止まるたびに走るため、
+時間のかかる全テストは入れない）。該当するコマンドがなければこの hook は作らないでください。
+
+```bash
+#!/bin/bash
+# exit 2 + stderr = 止めずに続けさせる, exit 0 = 止めてよい
+input=$(cat)
+cd "${CLAUDE_PROJECT_DIR:-.}" || exit 0
+# 変更がなければ検証しない（質問への回答だけのターンなどで毎回走らせない）
+[ -z "$(git status --porcelain 2>/dev/null)" ] &amp;&amp; exit 0
+# 実プロジェクトの検証コマンドに置き換える（lint / 型チェックなど、数十秒以内で終わるもの）
+npm run check >/dev/null 2>&amp;1 &amp;&amp; exit 0
+# 続行させるのは 1 回だけ。2 回目の Stop（stop_hook_active が true）は止める
+active=$(printf '%s' "$input" | python3 -c 'import json,sys; print(json.load(sys.stdin).get("stop_hook_active", False))' 2>/dev/null)
+[ "$active" = "True" ] &amp;&amp; exit 0
+echo "npm run check が失敗しています。原因を直して再実行してから終えてください。直せない場合は、何が残っているかを報告して終えてください。" >&amp;2
+exit 2
 ```
 
 作成した hook スクリプトには実行権限を付与してください（`chmod +x .claude/hooks/*.sh`）。
@@ -732,6 +763,9 @@ for f in .claude/hooks/*.sh; do bash -n "$f" &amp;&amp; echo "$f: OK"; done
 # PreToolUse hook の発火テスト（ブロック対象は guard.sh に実際に設定したコマンドに置き換える）
 echo '{"tool_input":{"command":"rm -rf dist"}}' | bash .claude/hooks/guard.sh; echo "exit=$?（2 なら成功）"
 echo '{"tool_input":{"command":"ls"}}' | bash .claude/hooks/guard.sh; echo "exit=$?（0 なら成功）"
+
+# Stop hook のループ防止（2 回目の Stop は常に止めてよい）
+echo '{"stop_hook_active":true}' | bash .claude/hooks/stop-gate.sh; echo "exit=$?（0 なら成功）"
 ```
 
 agents / skills / rules のフロントマター（YAML）に構文エラーがないかも読み直して確認してください。

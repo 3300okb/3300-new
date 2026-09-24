@@ -73,7 +73,7 @@ GPT-6 Astra は前世代より自律的で、足場（scaffolding）が少ない
 |-------------------|------------------------|--------------------|
 | 指示なしでテストを実行し、自分で検証する | 「実装後は必ずビルド・lint・テスト」を各文書で繰り返す | 繰り返さない。確認なしで回してよいゲートとして workflow.md に 1 回だけ書く（Phase 2） |
 | 足場がなくても動く | 「編集前に毎回ドキュメントを読む」「小さな変更でもリポジトリ全体を確認」 | 書かない。文書は読むタイミング（トリガー）付きで示す（Phase 1） |
-| 完了条件が曖昧だと早めに止まる | （なし） | 完了条件を明記（Phase 1・2・3） |
+| 完了条件が曖昧だと早めに止まる | （なし） | 完了条件を明記（Phase 1・2・3）。検証が落ちたままの停止は Stop hook で止める（Phase 7） |
 | 安全と明示されない操作は許可待ちで止まる | （なし） | 確認なしで進めてよい操作を明記（Phase 1・2） |
 | 意図を汲んで自分で判断できる | 「不明点は必ず確認」 | 「成果物が変わるときだけ確認し、それ以外は意図を推測して進む」 |
 | 細かいレシピがなくても手順を組める。広い description の skill は関係の薄い話題でも発動する | 広い description、細かい手順のレシピ | description は具体的な操作をトリガーにし、要件と制約だけ残してレシピは削る（Phase 5） |
@@ -96,7 +96,7 @@ GPT-6 Astra は前世代より自律的で、足場（scaffolding）が少ない
 6. src/ / app/ / lib/ などのメインディレクトリ構成を把握する
 7. テストファイルのパターン（__tests__/ / spec/ / tests/ など）を確認する
 8. CI 設定（.github/workflows/ / .circleci/ / .gitlab-ci.yml など）を確認する
-9. **lint / format / test の実コマンド**を特定する（PostToolUse hook の材料）
+9. **lint / format / test の実コマンド**を特定する（PostToolUse hook と Stop の完了ゲートの材料）
 10. **機密ファイルと壊すと困る不変条件**を洗い出す（.env などの機密、生成物ディレクトリ、危険コマンドなど。rules / PreToolUse hook の材料）
 11. **ディレクトリ単位で異なる規約**を探す（例: API 層の入力検証、UI 層のアクセシビリティ。ネスト AGENTS.md の材料）
 12. **繰り返し行う複数ステップの手順**を探す（例: リリース、機能追加フロー。skill の材料）
@@ -648,7 +648,7 @@ prefix_rule(
 
 Codex CLI は PreToolUse / PermissionRequest / PostToolUse / SessionStart / Stop などの
 ライフサイクル hooks をサポートします（command 型）。
-rules で表現できない**コマンド内容を見た動的な判定**と、**編集後の自動実行**（format 等）をここで行います。
+rules で表現できない**コマンド内容を見た動的な判定**、**編集後の自動実行**（format 等）、**止める前の検証**をここで行います。
 Phase 0 の lint / format 実コマンドを反映し、該当する強制対象がない hook は作らないでください。
 
 ### .codex/config.toml（プロジェクト設定）
@@ -671,6 +671,13 @@ matcher = "apply_patch|Edit|Write"
 type = "command"
 command = 'bash "$(git rev-parse --show-toplevel)/.codex/hooks/post-edit.sh"'
 statusMessage = "フォーマット中"
+
+[[hooks.Stop]]
+
+[[hooks.Stop.hooks]]
+type = "command"
+command = 'bash "$(git rev-parse --show-toplevel)/.codex/hooks/stop-gate.sh"'
+statusMessage = "完了前の検証中"
 ```
 
 - hook のパスは **git root 基準**で解決する（Codex がサブディレクトリから起動されても壊れない、公式推奨の書き方）
@@ -723,6 +730,31 @@ while IFS= read -r f; do
   npx prettier --write "$f" >/dev/null 2>&amp;1 || true
 done &lt;&lt;&lt; "$FILES"
 exit 0
+```
+
+### .codex/hooks/stop-gate.sh（Stop — 完了ゲート）
+
+GPT-6 Astra は完了条件が曖昧だと早めに止まるため、止まる直前に検証を決定論的に走らせ、
+検証が落ちたままの停止を止めます（exit 2 と stderr の理由で作業を続けさせる）。
+変更がないときは何もせず、続行させるのは 1 回だけです（`stop_hook_active` で無限ループを防ぐ）。
+Stop は exit 0 のとき stdout に JSON が必須なので、`{}` を返します。
+検証コマンドは Phase 0 の lint / 型チェックなど**数十秒以内で終わるもの**にしてください。
+該当するコマンドがなければこの hook は作らないでください。
+
+```bash
+#!/usr/bin/env bash
+# exit 2 + stderr = 止めずに続けさせる。exit 0 のときは stdout に JSON（{}）が必須
+INPUT=$(cat)
+cd "$(git rev-parse --show-toplevel 2>/dev/null || echo .)" || { echo '{}'; exit 0; }
+# 変更がなければ検証しない（質問への回答だけのターンなどで毎回走らせない）
+[ -z "$(git status --porcelain 2>/dev/null)" ] &amp;&amp; { echo '{}'; exit 0; }
+# 実プロジェクトの検証コマンドに置き換える（lint / 型チェックなど、数十秒以内で終わるもの）
+npm run check >/dev/null 2>&amp;1 &amp;&amp; { echo '{}'; exit 0; }
+# 続行させるのは 1 回だけ。2 回目の Stop（stop_hook_active が true）は止める
+ACTIVE=$(printf '%s' "$INPUT" | python3 -c 'import json,sys; print(json.load(sys.stdin).get("stop_hook_active", False))' 2>/dev/null)
+[ "$ACTIVE" = "True" ] &amp;&amp; { echo '{}'; exit 0; }
+echo "npm run check が失敗しています。原因を直して再実行してから終えてください。直せない場合は、何が残っているかを報告して終えてください。" >&amp;2
+exit 2
 ```
 
 ---
@@ -797,9 +829,13 @@ codex execpolicy check --pretty --rules .codex/rules/project.rules -- rm -rf dis
 # hook の発火テスト（ブロック対象は guard.sh に実際に設定したコマンドに置き換える）
 echo '{"tool_input":{"command":"rm -rf dist"}}' | bash .codex/hooks/guard.sh
 echo '{"tool_input":{"command":"ls"}}' | bash .codex/hooks/guard.sh
+
+# Stop hook のループ防止（2 回目の Stop は常に止めてよい）
+echo '{"stop_hook_active":true}' | bash .codex/hooks/stop-gate.sh; echo " exit=$?"
 ```
 
 - guard.sh は deny 時に `permissionDecision: "deny"` を含む JSON を出力すること（2つ目は何も出力せず exit 0）
+- stop-gate.sh は `{}` を出力して exit 0 で終わること
 - rules は `match` / `not_match` がロード時にも自動検証される
 - SKILL.md / AGENTS.md の frontmatter（YAML）に構文エラーがないかも読み直して確認する
 - 作成していないファイルの確認はスキップして構わない
