@@ -12,14 +12,15 @@
 
 ## エージェント構成
 
-標準フロー: researcher → planner → coder → reviewer
-単純な 1 行修正は researcher/planner を省略可。
+`.claude/agents/` に researcher / planner / coder / reviewer がある。
+使うのは、ユーザーが指示したときか、独立した大きな作業（広範囲の調査など）のときだけ。
 
 ---
 
 ## クイックリファレンス
 
 - `npm run index:generate` は記事の追加・削除時に必須。
+- 完了の検証ゲート: `npm run check` と `npm run build`（build は check・typecheck・vite build を含む）。テストは未導入。
 
 ---
 
@@ -39,11 +40,10 @@
 
 ## 禁止事項
 
-- `.env` をコミットしない
 - `console.log` などのデバッグ出力を残してコミットしない
 - `v-html` を DOMPurify なしで使わない
 - `dist/` をコミットしない
 - 記事の `category/filename` パスを変更しない（検索インデックスが壊れる）
-- `main` ブランチへの直接プッシュ禁止
 
-> 機械的な強制は `.claude/hooks/guard.sh` で実施。
+> 記事の mv、`dist/`・`public/data` の rm は `.claude/hooks/guard.sh`（`.claude/settings.json` の PreToolUse）でブロック。
+> `.env` のコミット・main への直接 push はグローバルの hooks でブロック。
