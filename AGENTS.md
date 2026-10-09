@@ -21,15 +21,15 @@
 
 必要なときだけ読み込むこと。常に全部読む必要はありません。
 
-| ファイル                     | 読むタイミング                           |
-| ---------------------------- | ---------------------------------------- |
-| `.codex/project-baseline.md` | 品質・セキュリティ基準を確認するとき     |
-| `.codex/workflow.md`         | 作業手順や報告形式を確認するとき         |
-| `.codex/coding-standards.md` | Vue/TypeScript/記事を修正する前          |
-| `.codex/testing.md`          | テスト・検証方針を決めるとき             |
-| `.codex/git.md`              | ブランチ・コミット・PR を扱うとき        |
-| `.codex/environment.md`      | 環境変数・セットアップを扱うとき         |
-| `.codex/agents/*.toml`       | サブエージェント設定を変更・追加するとき |
+| ファイル                     | 内容                                      |
+| ---------------------------- | ----------------------------------------- |
+| `.codex/project-baseline.md` | 品質・セキュリティ基準                    |
+| `.codex/workflow.md`         | 作業手順・報告形式                        |
+| `.codex/coding-standards.md` | Vue / TypeScript / 記事のコーディング規約 |
+| `.codex/testing.md`          | 検証方針（テストは未導入）                |
+| `.codex/git.md`              | ブランチ・コミット・PR                    |
+| `.codex/environment.md`      | 環境変数・セットアップ                    |
+| `.codex/agents/*.toml`       | サブエージェント設定                      |
 
 ## 主要コマンド
 

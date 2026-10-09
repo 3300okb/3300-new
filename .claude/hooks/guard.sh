@@ -22,8 +22,8 @@ if printf '%s' "$cmd" | grep -qE '(^|[;&|][[:space:]]*)(mv|git[[:space:]]+mv)[[:
   exit 2
 fi
 
-# Block deleting dist/ or public/data artifacts
-if printf '%s' "$cmd" | grep -qE '(^|[;&|][[:space:]]*)rm[[:space:]]+-[rRf]+[[:space:]]+(\./)?(dist|public/data)([[:space:]/]|$)'; then
+# Block deleting dist/ or public/data artifacts (also split flags such as rm -r -f)
+if printf '%s' "$cmd" | grep -qE '(^|[;&|][[:space:]]*)rm[[:space:]]+(-[a-zA-Z]+[[:space:]]+){1,3}(\./)?(dist|public/data)([[:space:]/]|$)'; then
   echo "BLOCKED: do not rm dist/ or public/data — these are generated outputs handled by build scripts" >&2
   exit 2
 fi
