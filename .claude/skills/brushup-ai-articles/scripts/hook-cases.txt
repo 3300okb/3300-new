@@ -24,3 +24,8 @@ git add .env.example
 git add .env.example .env
 git commit -m 'x'
 psql -c "drop table users"
+git push origin HEAD:main
+git push origin main:main
+git push origin dev:refs/heads/main
+git push origin +feat
+git push origin feat:main-fix

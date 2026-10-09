@@ -1,6 +1,6 @@
 <script lang="ts">
 export const metadata = {
-  updateDate: '2026/09/24',
+  updateDate: '2026/10/09',
 }
 </script>
 
@@ -20,7 +20,7 @@ matcher = "Bash"
 
 [[hooks.PreToolUse.hooks]]
 type = "command"
-command = "bash /Users/tomokazuokubo/.codex/hooks/codex-hooks.sh"
+command = "bash ~/.codex/hooks/codex-hooks.sh"
 statusMessage = "Bash コマンドを検査中"
 
 [[hooks.PermissionRequest]]
@@ -28,7 +28,7 @@ matcher = "Bash"
 
 [[hooks.PermissionRequest.hooks]]
 type = "command"
-command = "bash /Users/tomokazuokubo/.codex/hooks/codex-hooks.sh"
+command = "bash ~/.codex/hooks/codex-hooks.sh"
 statusMessage = "安全コマンドを自動承認中"
 
 [[hooks.PostToolUse]]
@@ -36,14 +36,14 @@ matcher = "apply_patch|Edit|Write"
 
 [[hooks.PostToolUse.hooks]]
 type = "command"
-command = "bash /Users/tomokazuokubo/.codex/hooks/codex-hooks.sh"
+command = "bash ~/.codex/hooks/codex-hooks.sh"
 statusMessage = "Prettier で整形中"
 
 [[hooks.Stop]]
 
 [[hooks.Stop.hooks]]
 type = "command"
-command = "bash /Users/tomokazuokubo/.codex/hooks/codex-hooks.sh"</CopyCode></code></pre>
+command = "bash ~/.codex/hooks/codex-hooks.sh"</CopyCode></code></pre>
 
     <pre><b class="t01">~/.codex/hooks/codex-hooks.sh</b></pre>
     <pre><code><CopyCode top>#!/usr/bin/env bash
@@ -88,7 +88,11 @@ case "$EVENT" in
     if printf '%s' "$COMMAND" | grep -qE 'git[[:space:]]+push([[:space:]].*)?[[:space:]](--force|--force-with-lease|-f)([[:space:]=]|$)'; then
       deny "force push は禁止です (policies/security.md)"
     fi
-    if printf '%s' "$COMMAND" | grep -qE 'git[[:space:]]+push[[:space:]]+[^;&amp;|]*[[:space:]](main|master)([[:space:]]|$)'; then
+    # refspec 先頭の + も force push（例: git push origin +feat）
+    if printf '%s' "$COMMAND" | grep -qE 'git[[:space:]]+push[[:space:]]+[^;&amp;|]*[[:space:]]\+[^[:space:]]'; then
+      deny "force push は禁止です (policies/security.md)"
+    fi
+    if printf '%s' "$COMMAND" | grep -qE 'git[[:space:]]+push[[:space:]]+[^;&amp;|]*[[:space:]:+](refs/heads/)?(main|master)([[:space:]]|$)'; then
       deny "main/master への直接 push は禁止です。PR を作成してください (policies/security.md)"
     fi
     # .env.example など共有用の雛形は対象外
@@ -104,7 +108,8 @@ case "$EVENT" in
 
     # git commit 前に品質チェック（check スクリプトを持つプロジェクトでのみ実行）
     # グローバルフックなので、package.json に check が無いリポジトリでは誤爆させない
-    if echo "$COMMAND" | grep -q "^git commit"; then
+    # git add ... &amp;&amp; git commit のような連結も対象にする
+    if printf '%s' "$COMMAND" | grep -qE '(^|[;&amp;|][[:space:]]*)git[[:space:]]+commit([[:space:]]|$)'; then
       if [ -f package.json ] &amp;&amp; grep -qE '"check"[[:space:]]*:' package.json; then
         if ! npm run check >/dev/null 2>&amp;1; then
           deny "npm run check が失敗しています。修正してからコミットしてください。"
