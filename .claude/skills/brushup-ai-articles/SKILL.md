@@ -1,9 +1,9 @@
 ---
-name: brushup-setup-prompts
-description: 新しい Claude / OpenAI モデルに合わせて、このリポジトリの AI セットアップ記事（global-setup-prompt・claude-setup-prompt・codex-setup-prompt）と hooks 記事（claude-hooks・codex-hooks）をブラッシュアップし、PR 作成 → マージ後の同期 → このPC のグローバル設定（~/.claude・~/.codex）への反映 → ブランチ削除までを一通り行う。「Opus X 向けにセットアップ記事を更新して」「GPT-X 対応でプロンプト記事をブラッシュアップ」「新モデルが出たので CLAUDE.md / AGENTS.md の記事を見直したい」「hooks 記事も新モデル向けに直して」など、モデル更新に伴って setup-prompt / hooks 記事やグローバル設定を見直す依頼では、記事名やスキル名が明示されていなくても使うこと。
+name: brushup-ai-articles
+description: 新しい Claude / OpenAI モデルに合わせて、このリポジトリの AI 記事 7 本（セットアップ記事 global-setup-prompt・claude-setup-prompt・codex-setup-prompt、hooks 記事 claude-hooks・codex-hooks、一覧記事 claude-commands・claude-skills）をブラッシュアップし、PR 作成 → マージ後の同期 → このPC のグローバル設定（~/.claude・~/.codex）への反映 → ブランチ削除までを一通り行う。「Opus X 向けにセットアップ記事を更新して」「GPT-X 対応でプロンプト記事をブラッシュアップ」「新モデルが出たので CLAUDE.md / AGENTS.md の記事を見直したい」「hooks 記事も新モデル向けに直して」「claude commands / skills の記事を最新にして」など、モデル更新に伴って setup-prompt / hooks / commands / skills 記事やグローバル設定を見直す依頼では、記事名やスキル名が明示されていなくても使うこと。
 ---
 
-# セットアップ記事・hooks の新モデル向けブラッシュアップ
+# AI 記事（セットアップ・hooks・commands・skills）の新モデル向けブラッシュアップ
 
 新しいモデルが出たときに、次の流れを通しで行うスキルです。
 
@@ -11,12 +11,13 @@ description: 新しい Claude / OpenAI モデルに合わせて、このリポ�
 2. 新モデルの挙動の変化を一次情報で調べる（Phase 1）
 3. セットアップ記事 3 本を校正して PR（Phase 2）
 4. hooks 記事を見直し、不具合修正と新モデル向けの追加を別々の PR に（Phase 3）
-5. マージ後にセットアップ記事と hooks 記事の食い違いを揃える（Phase 4）
-6. このPC のグローバル設定に反映する（Phase 5）
-7. 作業ブランチを削除する（Phase 6）
+5. commands・skills 記事を新しい Claude Code とモデルに合わせて PR（Phase 4）
+6. マージ後にセットアップ記事と hooks 記事の食い違いを揃える（Phase 5）
+7. このPC のグローバル設定に反映する（Phase 6）
+8. 作業ブランチを削除する（Phase 7）
 
 PR のマージはユーザーが行います。PR を出したら URL を伝えて待ち、「マージした」の連絡で次へ進んでください。
-Phase 5（ホームディレクトリの書き換え）と Phase 6（ブランチ削除）は、着手前にユーザーの了承を取ってください。
+Phase 6（ホームディレクトリの書き換え）と Phase 7（ブランチ削除）は、着手前にユーザーの了承を取ってください。
 どちらも作業リポジトリの外に影響し、元に戻す手間が大きいためです。
 
 対象ファイル:
@@ -25,6 +26,8 @@ Phase 5（ホームディレクトリの書き換え）と Phase 6（ブラン�
 - `src/components/article/ai/claude-setup-prompt.vue` — リポジトリ単位の Claude Code 設定を作るプロンプト
 - `src/components/article/ai/codex-setup-prompt.vue` — リポジトリ単位の Codex CLI 設定を作るプロンプト
 - `src/components/article/ai/claude-hooks.vue` / `codex-hooks.vue` — グローバル hooks の設定とスクリプト
+- `src/components/article/ai/claude-commands.vue` — Claude Code のコマンド早見表
+- `src/components/article/ai/claude-skills.vue` — おすすめスキルの `npx skills add` 一覧
 
 同梱スクリプト（`scripts/`）:
 
@@ -48,7 +51,7 @@ AskUserQuestion で次をまとめて聞いてください。
    - 自由入力は「Other」で受ける
 2. **Codex CLI 側の対象モデル**（同じ形）
 3. **今回の範囲**（multiSelect）
-   - セットアップ記事、hooks 記事、このPC のグローバル設定への反映
+   - セットアップ記事、hooks 記事、commands・skills 記事、このPC のグローバル設定への反映
 
 両方「変更なし」なら、モデル校正はせず、選ばれた範囲の見直しだけを行います。
 
@@ -67,6 +70,10 @@ AskUserQuestion で次をまとめて聞いてください。
 - **hooks の仕様:**
   - `https://code.claude.com/docs/en/hooks`
   - `https://learn.chatgpt.com/docs/hooks`
+- **Claude Code のコマンドと組み込みスキル**（commands・skills 記事用）:
+  - `https://code.claude.com/docs/en/slash-commands`、`cli-reference`、`interactive-mode`
+  - Claude Code の CHANGELOG（`https://github.com/anthropics/claude-code/blob/main/CHANGELOG.md`）。記事の `updateDate` 以降の版を読む
+  - 手元の `claude --version` / `claude --help`
 - **サードパーティのブログは参考程度にとどめる。** config のキーや hooks の書式が公式と食い違うことがあった。
   WebFetch の要約モデルが JSON の形を取り違えることもあるので、スキーマに依存する実装は両ツール共通で確実な形を選ぶ（例: Stop の続行は exit 2 + stderr）。
 
@@ -146,7 +153,7 @@ hooks 記事は、読者の環境で実際に動くスクリプトです。見�
 1. 記事から今のスクリプトを取り出し、修正前の判定を記録する
 
    ```bash
-   S=.claude/skills/brushup-setup-prompts/scripts
+   S=.claude/skills/brushup-ai-articles/scripts
    python3 $S/article_code.py extract src/components/article/ai/claude-hooks.vue --after 'claude-hooks.sh</b>' > "$SCRATCH/claude-hooks.sh"   # $SCRATCH はセッションの scratchpad
    bash $S/run_hook_cases.sh "$SCRATCH/claude-hooks.sh" PreToolUse        # Codex は PermissionRequest も
    ```
@@ -163,7 +170,36 @@ Claude / Codex で書式が違う点:
 - Codex の Stop は、exit 0 のとき stdout に JSON（`{}`）が必須
 - 両方とも Stop を exit 2 + stderr で終了すると作業を続けさせられる。`stop_hook_active` を見て、続行は 1 回までにする（無限ループ防止）
 
-## Phase 4: マージ後の整合
+## Phase 4: commands・skills 記事を見直す
+
+この 2 本はモデル向けのプロンプトではなく一覧記事です。
+新しい Claude Code・新モデルで「今も正しいか」「今も勧める価値があるか」を見直し、2 本まとめて 1 つの PR にします。
+どちらも「よく使うものの早見表」なので、公式一覧を丸ごと転記せず、主要なものだけを載せます。
+
+**claude-commands:**
+
+- 各行を Phase 1 の公式ドキュメント・CHANGELOG と照合し、廃止されたコマンドは消し、改名されたコマンドは新しい名前にする
+- モデル名を含む行（例: `/model opusplan` の「推論は〇〇、コーディングは〇〇」）を、新しいモデルの組み合わせに合わせる
+- 新しい版で追加された主要なコマンドを足す（例: effort の切り替え、新モデルで使い方が変わったもの）
+- 書式（`<b class="t01">コマンド</b>  <b class="t02">// 説明</b>`）と、`<pre>` ごとのグループ分けは既存に合わせる
+
+**claude-skills:**
+
+- 各行のリポジトリとスキル名がまだ有効かを確かめる
+
+  ```bash
+  gh api repos/<owner>/<repo> --jq '.archived'
+  gh api 'repos/<owner>/<repo>/git/trees/HEAD?recursive=1' --jq '.tree[].path' | grep 'SKILL.md$'
+  ```
+
+- 新しい Claude Code の組み込み（`/simplify`、`/code-review`、`/security-review` など）や、新モデルの既定挙動と重なるスキルは、外す候補にする
+- 外すスキルとその理由は PR 本文に書く（理由が「新モデルでは不要」なら、Phase 1 の出典も添える）
+- 追加は `anthropics/skills` など公式を優先する。サードパーティのスキルは候補として示し、記事に載せる前にユーザーに確認する（読者がそのまま自分の環境に入れるため）
+- `CopyCode` の書式は既存の行に合わせる
+
+各記事の `updateDate` を今日の日付にし、Phase 2 と同じゲートを通して PR を出します（コミット例: `refresh claude-commands and claude-skills articles for <model>`）。
+
+## Phase 5: マージ後の整合
 
 - **積んだ PR がコンフリクトしたら:**
   - 原因は、土台の PR が squash マージされたことです
@@ -182,7 +218,7 @@ Claude / Codex で書式が違う点:
   - 追加する設定例（settings.json / config.toml）が正しく読めることも確かめる
   - macOS 標準の python3 には `tomllib` がないので、TOML は `uv run --no-project --python 3.12` などで確認する
 
-## Phase 5: このPC のグローバル設定に反映する（着手前に了承を取る）
+## Phase 6: このPC のグローバル設定に反映する（着手前に了承を取る）
 
 global-setup-prompt の手順に沿って進めます。
 
@@ -203,11 +239,12 @@ global-setup-prompt の手順に沿って進めます。
    - インストールしたスクリプトで `run_hook_cases.sh` と `stop_gate_test.sh` を流す
 5. **触らないもの:**
    - `~/.codex/config.toml` のモデル・effort、`~/.claude/settings.json` のモデル・effort は個人設定
+   - `~/.claude/skills` のインストール済みスキル（`ls ~/.claude/skills` と claude-skills 記事を比べ、記事から外したもの・記事にあって未導入のものを報告するだけにする）
    - 記事の推奨とずれていれば、報告で指摘するだけにする
 
 hooks の反映はこのセッションからすぐ効き、CLAUDE.md / AGENTS.md は次のセッションから有効になります。
 
-## Phase 6: 作業ブランチを削除する（着手前に了承を取る）
+## Phase 7: 作業ブランチを削除する（着手前に了承を取る）
 
 - 削除前に、各ブランチの PR がマージ済みであることを確かめる
 
