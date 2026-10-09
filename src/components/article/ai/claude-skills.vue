@@ -1,6 +1,6 @@
 <script lang="ts">
 export const metadata = {
-  updateDate: '2026/04/05',
+  updateDate: '2026/10/09',
 }
 </script>
 
@@ -34,8 +34,6 @@ import CopyCode from '@/components/CopyCode.vue'
       <CopyCode><b class="t01">npx skills add https://github.com/supabase/agent-skills --skill supabase-postgres-best-practices
 </b></CopyCode>
       <CopyCode><b class="t01">npx skills add https://github.com/coreyhaines31/marketingskills --skill seo-audit
-</b></CopyCode>
-      <CopyCode><b class="t01">npx skills add https://github.com/sanyuan0704/code-review-expert --skill code-review-expert
 </b></CopyCode></code></pre>
   </PreCodes>
 </template>
