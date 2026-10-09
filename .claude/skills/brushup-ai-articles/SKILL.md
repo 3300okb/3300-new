@@ -47,9 +47,11 @@ Phase 6（ホームディレクトリの書き換え）と Phase 7（ブラン�
 AskUserQuestion で次をまとめて聞いてください。
 
 1. **Claude Code 側の対象モデル**
-   - 選択肢: 調べた最新モデル（Recommended）、「変更なし（現在: 〇〇）」
-   - 自由入力は「Other」で受ける
-2. **Codex CLI 側の対象モデル**（同じ形）
+   - 選択肢: 調べた現行モデルから最大 3 つ（例: Opus・Sonnet・Fable の最新版）と「変更なし（現在: 〇〇）」
+   - 最上位の最新モデルを先頭に置き「（Recommended）」を付ける。各選択肢の description にモデル ID と位置づけ（最上位 / バランス型 など）を書く
+   - 現在の前提モデルは候補に重ねず「変更なし」で表す
+   - 自由入力は「Other」で受ける（AskUserQuestion の選択肢は 4 つまでなので、それ以外のモデルはここで受ける）
+2. **Codex CLI 側の対象モデル**（同じ形。候補は Codex の公式モデル一覧から選ぶ）
 3. **今回の範囲**（multiSelect）
    - セットアップ記事、hooks 記事、commands・skills 記事、このPC のグローバル設定への反映
 
