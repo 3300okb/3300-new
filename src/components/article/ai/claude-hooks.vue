@@ -83,21 +83,27 @@ case "$EVENT" in
     [ -z "$COMMAND" ] &amp;&amp; exit 0
 
     # 自動ブロック（policies/security.md と対応）。それ以外の rm -r 等は通常の承認フローに任せる
-    if printf '%s' "$COMMAND" | grep -qE 'git[[:space:]]+push([[:space:]].*)?[[:space:]](--force|--force-with-lease|-f)([[:space:]=]|$)'; then
-      deny "force push は禁止です (policies/security.md)"
-    fi
-    # refspec 先頭の + も force push（例: git push origin +feat）
-    if printf '%s' "$COMMAND" | grep -qE 'git[[:space:]]+push[[:space:]]+[^;&amp;|]*[[:space:]]\+[^[:space:]]'; then
+    # force push は +refspec（git push origin +branch）と短縮フラグの結合（-fu 等）も含む
+    if printf '%s' "$COMMAND" | grep -qE 'git[[:space:]]+push([[:space:]].*)?[[:space:]]((--force|--force-with-lease|-[a-zA-Z]*f[a-zA-Z]*)([[:space:]=]|$)|\+[^[:space:]])'; then
       deny "force push は禁止です (policies/security.md)"
     fi
     if printf '%s' "$COMMAND" | grep -qE 'git[[:space:]]+push[[:space:]]+[^;&amp;|]*[[:space:]:+](refs/heads/)?(main|master)([[:space:]]|$)'; then
       deny "main/master への直接 push は禁止です。PR を作成してください (policies/security.md)"
     fi
+    # refspec を省いた push（git push / git push origin）は、main/master 上なら同じく拒否
+    PUSH=$(printf '%s' "$COMMAND" | grep -oE 'git[[:space:]]+push([[:space:]]+[^;&amp;|[:space:]]+)*' | head -1)
+    if [ -n "$PUSH" ] &amp;&amp; ! printf '%s' "$PUSH" | grep -q -- '--tags' \
+      &amp;&amp; [ "$(printf '%s' "$PUSH" | awk '{n=0; for(i=3;i&lt;=NF;i++) if($i !~ /^-/) n++; print n}')" -le 1 ]; then
+      CWD=$(json "d.get('cwd','')")
+      case "$(git -C "${CWD:-.}" symbolic-ref --short -q HEAD 2>/dev/null)" in
+        main|master) deny "main/master への直接 push は禁止です。PR を作成してください (policies/security.md)" ;;
+      esac
+    fi
     # .env.example など共有用の雛形は対象外
     if printf '%s' "$COMMAND" | sed -E 's/\.env\.(example|sample|template)//g' | grep -qE '(git[[:space:]]+add|git[[:space:]]+commit)[^|;&amp;]*\.env([[:space:]]|$|\.)'; then
       deny ".env を stage / commit しないでください (policies/security.md)"
     fi
-    if printf '%s' "$COMMAND" | grep -qE 'rm[[:space:]]+(-[a-zA-Z]*[rR][a-zA-Z]*|--recursive)([[:space:]]+-[a-zA-Z-]+)*[[:space:]]+(/|~|\$HOME)/?\*?([[:space:]]|$)'; then
+    if printf '%s' "$COMMAND" | grep -qE 'rm[[:space:]]+(-[a-zA-Z]*[rR][a-zA-Z]*|--recursive)([[:space:]]+-[a-zA-Z-]+)*[[:space:]]+["'\'']?(/|~|\$HOME|\$\{HOME\})/?\*?["'\'']?([[:space:]]|$)'; then
       deny "/・~・\$HOME を対象にした再帰削除は禁止です (policies/security.md)"
     fi
     if printf '%s' "$COMMAND" | grep -qiE 'drop[[:space:]]+(table|database)'; then
