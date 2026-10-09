@@ -1,6 +1,6 @@
 <script lang="ts">
 export const metadata = {
-  updateDate: '2026/09/24',
+  updateDate: '2026/10/09',
 }
 </script>
 
@@ -22,8 +22,8 @@ import CopyCode from '@/components/CopyCode.vue'
 何もない状態からセットアップするエージェントです。
 以下の手順をすべて自律的に実行してください。途中で止まらず、最後まで完走してください。
 対象はリポジトリではなくホームディレクトリ（~/.claude / ~/.codex）です。
-**Claude Code は Claude Opus 5.5（`claude-opus-5-5`）、Codex CLI は GPT-6 Astra（`gpt-6-astra`）で
-運用されることを前提**に校正します（後述の「Opus 5.5 / GPT-6 Astra 向けの校正」）。
+**Claude Code は Claude Opus 5.5（`claude-opus-5-5`）、Codex CLI は GPT-6.1 Sol（`gpt-6.1-sol`）で
+運用されることを前提**に校正します（後述の「Opus 5.5 / GPT-6.1 Sol 向けの校正」）。
 
 ### このセットアップ作業自体の進め方
 
@@ -50,19 +50,23 @@ import CopyCode from '@/components/CopyCode.vue'
 
 ---
 
-## Opus 5.5 / GPT-6 Astra 向けの校正（前提とするモデル挙動）
+## Opus 5.5 / GPT-6.1 Sol 向けの校正（前提とするモデル挙動）
 
 どちらのモデルも「足場（scaffolding）」を減らしたほうが良く動きます。
 Opus 5 向けに書いた指示は Opus 5.5 でもそのまま機能するため出発点として維持し、
 **両モデルで不要になった指示を消し、両モデルで足りない指示（完了条件・許可範囲）だけを足す**のが要点です。
+GPT-6.1 Sol の行のうち、Sol 固有の一次情報（モデルページ・system card）で確かめられたのは「軽い制限」と「reasoning effort」の 2 行です。
+ほかの行は GPT-6 系の公式ガイド（主に Astra 向け）にもとづきます。
 
 | モデル | 挙動 | 旧世代向けによく書かれた指示 | 本セットアップでの扱い |
 |-------|------|------------------------|--------------------|
 | 両方 | 指示なしで自己検証し、テストも自分で回す | 「最後に必ず検証」「毎回テストを実行」「ダブルチェック」 | 書かない。検証はプロジェクトのゲートと hooks に寄せる（セクション 4） |
 | 両方 | 曖昧さは意図を汲んで自分で進む | 「不明なら必ず聞く」「迷ったら止まる」 | 「判断が変わるときだけ聞く」に校正（セクション 1） |
 | 両方 | タスクの範囲を自分で広げがち | （なし） | スコープ固定を明記（セクション 2・3） |
-| GPT-6 Astra | 完了条件が曖昧だと早めに止まる。安全と明示されない操作は許可待ちで止まる | （なし） | 完了条件と「確認なしで回してよい操作」を明記（セクション 3・4） |
-| GPT-6 Astra | 足場がなくても動く | 「編集前に毎回ドキュメントを読む」「小さな変更でもリポジトリ全体を確認」 | 書かない。どの文書をいつ読むかはプロジェクト側でトリガー付きで示す |
+| GPT-6.1 Sol | 完了条件が曖昧だと早めに止まる。安全と明示されない操作は許可待ちで止まる | （なし） | 完了条件と「確認なしで回してよい操作」を明記（セクション 3・4） |
+| GPT-6.1 Sol | 足場がなくても動く | 「編集前に毎回ドキュメントを読む」「小さな変更でもリポジトリ全体を確認」 | 書かない。どの文書をいつ読むかはプロジェクト側でトリガー付きで示す |
+| GPT-6.1 Sol | 軽い制限は越えて続行することがある（system card: Sol 23.5% / Astra 17.4%） | 「絶対に X しない」を散文で繰り返す | 散文は要点だけ（セクション 7）にし、rules / hooks で強制する（Phase 3・4） |
+| GPT-6.1 Sol | reasoning effort は `low`〜`max`（既定 `medium`）。`none` / `minimal` は使えない | （なし） | 散文に書かず `~/.codex/config.toml` の `model_reasoning_effort` で決める（Phase 4） |
 | Opus 5.5 | 思考は常時オン（無効化不可）。思考量は effort で決まり、既定は `medium` | 「よく考えてから答える」「推論を応答に書き出す」 | 書かない。後者は `reasoning_extraction` で拒否されることもある。思考量は effort で調整（セクション 6） |
 | Opus 5.5 | 作業報告が明快になった。長い作業では途中報告で手を止めることがある | 冗長さ・実況頻度の細かい指定 | 長さと頻度の指定は短く残し、「要約だけ書いて止まらない」を明記（セクション 3・5） |
 | Opus 5.5 | 並列サブエージェントを使う長時間の自律作業が得意 | 「積極的に委譲する」 | 小さな作業まで投げないよう、委譲の下限と並列の上限は維持（セクション 6） |
@@ -96,14 +100,14 @@ Opus 5 向けに書いた指示は Opus 5.5 でもそのまま機能するため
 
 以下の内容で作成してください。セクション 1〜5 は汎用の行動原則、
 6 は Claude Code 固有、7 は security.md（Phase 3）の要点ダイジェストです。
-karpathy ガイドラインを Opus 5.5 / GPT-6 Astra の既定挙動に合わせて校正しています。
+karpathy ガイドラインを Opus 5.5 / GPT-6.1 Sol の既定挙動に合わせて校正しています。
 
 ```markdown
 # Agent Guidelines
 
 Behavioral guidelines to reduce common LLM coding mistakes. Merge with project-specific instructions as needed.
 （正本はこのファイル。`~/.codex/AGENTS.md` は symlink で同内容を共有）
-（Claude Code は Claude Opus 5.5、Codex CLI は GPT-6 Astra 前提で校正。セクション 6 のみ Claude Code 固有）
+（Claude Code は Claude Opus 5.5、Codex CLI は GPT-6.1 Sol 前提で校正。セクション 6 のみ Claude Code 固有）
 
 **Tradeoff:** These guidelines bias toward caution over speed. For trivial tasks, use judgment.
 
@@ -209,10 +213,10 @@ Report their output as it is. Don't stack extra review passes or verifier agents
 **These guidelines are working if:** fewer unnecessary changes in diffs, fewer rewrites due to overcomplication, and clarifying questions arrive only for decisions that actually change the work.
 ```
 
-セクション 1・3・4・5・6 が Opus 5.5 / GPT-6 Astra 向けの校正部分です。
+セクション 1・3・4・5・6 が Opus 5.5 / GPT-6.1 Sol 向けの校正部分です。
 常時ロードされる散文に置く価値があるのは、**モデルの既定挙動とズレる数行だけ**と考えてください。
 セクション 3 の「要約だけ書いて止まらない」とセクション 4 の「完了条件」「確認なしで回してよいゲート」は、
-長い作業を途中報告で止めがちな Opus 5.5 と、完了条件や許可範囲が曖昧だと止まる GPT-6 Astra の両方に効きます。
+長い作業を途中報告で止めがちな Opus 5.5 と、完了条件や許可範囲が曖昧だと止まる GPT-6.1 Sol の両方に効きます。
 
 > **ここに書いてはいけないこと**: 「最後に必ず検証する」「毎回テストを実行する」「ダブルチェックしてから答える」
 > 「サブエージェントに検証させる」といった検証・再確認の指示と、「よく考えてから答える」「推論を書き出す」といった
@@ -223,7 +227,7 @@ Report their output as it is. Don't stack extra review passes or verifier agents
 
 Codex CLI も symlink 経由で同じ本文を読みます。セクション 1〜5 は両ツールに向けた校正で、
 セクション 6 は Claude Code 固有の機能に触れるため見出しで対象を明示しています
-（GPT-6 Astra の reasoning effort は散文ではなく `~/.codex/config.toml` の `model_reasoning_effort` で決めます）。
+（GPT-6.1 Sol の reasoning effort は散文ではなく `~/.codex/config.toml` の `model_reasoning_effort` で決めます）。
 
 ---
 
@@ -342,6 +346,8 @@ ask は allow より優先されるため、`git checkout:*` を許可したま�
 - effort はここでは設定しない。ただし既存 settings.json のトップレベル `effortLevel` は
   **Opus 5.5 には適用されない**（Opus 5.5 に効くのは `modelSettings."claude-opus-5-5".effortLevel`）。
   トップレベルの `effortLevel` が残っていれば、書き換えずに完了報告で指摘する
+- Codex 側も effort は設定しない。ただし `~/.codex/config.toml` の `model_reasoning_effort` が
+  `none` / `minimal` のままだと GPT-6.1 Sol では使えないため、書き換えずに完了報告で指摘し `low` を提案する
 
 ---
 
@@ -391,9 +397,9 @@ head -1 ~/.codex/AGENTS.md
 - 新しい CLAUDE.md / AGENTS.md は次のセッションから有効（起動中のセッションには反映されない）
 
 ### 前提モデル
-- Claude Code は Claude Opus 5.5、Codex CLI は GPT-6 Astra 前提で校正済み
+- Claude Code は Claude Opus 5.5、Codex CLI は GPT-6.1 Sol 前提で校正済み
 - 実際の設定: `~/.claude/settings.json` の effort 設定（トップレベル `effortLevel` が残っていれば指摘）、
-  `~/.codex/config.toml` の `model` / `model_reasoning_effort`（未設定なら「未設定」）
+  `~/.codex/config.toml` の `model` / `model_reasoning_effort`（未設定なら「未設定」。`none` / `minimal` なら指摘）
 - モデル世代が変わったらセクション 1・3・4・5・6 を読み直す（書き足す前に、旧世代向けになった行を消す）
 ```
 
