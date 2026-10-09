@@ -66,7 +66,7 @@ import CopyCode from '@/components/CopyCode.vue'
 
 ## GPT-6.1 Sol 向けの校正（前提とするモデル挙動）
 
-GPT-6.1 Sol は Astra に近い性能を約 5 分の 1 の価格で出すモデルで、Codex CLI 0.161.0 以降の既定モデルです。
+GPT-6.1 Sol は Astra に近い性能を約 5 分の 1 の価格で出すモデルで、Codex の公式ドキュメントが複雑なコーディングとエージェント作業に推奨するモデルです。
 GPT-6 世代は足場（scaffolding）が少ないほど良く動くため、
 **旧世代向けの手取り足取りの指示を消し、「完了条件」「確認なしで進めてよい範囲」「指示の優先順位」だけを明示する**のが要点です。
 ただし公式ガイドは「Sol / Luna に効く指示は Astra には過剰になりうる」としており、Sol では Astra 向けより明示を少し厚めに残します。
@@ -117,7 +117,7 @@ Sol 23.5% / Astra 17.4% と報告されています。禁止事項は散文に�
 
 1. `~/.codex/config.toml` を読み、現在設定されているモデルと reasoning effort を確認する
 2. `gpt-6.1-sol` が利用可能か確認する（`/model` の一覧に出るか、`codex exec -m gpt-6.1-sol` が通るか）。
-   一覧にない場合は、まず `codex --version` が 0.161.0 以降かを確かめる（古い CLI ではモデル一覧に出ないことがある）。
+   一覧にない場合は、まず Codex CLI を最新版に更新する（古い CLI ではモデル一覧に出ないことがある）。
    Free / Go プランでは使えず、Enterprise / Edu は管理者の有効化が必要。それでも使えない場合は一覧にある最上位モデルに置き換え、完了報告に記載する
 3. 以下の観点でモデルと reasoning effort（`low` / `medium` / `high` / `xhigh` / `max`。既定は `medium`）を決める：
    - **coder / デフォルト (config.toml)**: `gpt-6.1-sol`、`medium`（重い実装が中心なら `high`）
