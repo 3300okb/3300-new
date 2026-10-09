@@ -29,3 +29,9 @@ git push origin main:main
 git push origin dev:refs/heads/main
 git push origin +feat
 git push origin feat:main-fix
+git push -fu origin feat
+git push --follow-tags origin feat
+rm -rf "$HOME"
+rm -rf "${HOME}"
+rm -rf "/"
+rm -rf "./build"
