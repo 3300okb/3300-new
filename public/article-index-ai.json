@@ -24,6 +24,12 @@
     "updateDate": "2026/10/09"
   },
   {
+    "articlePath": "ai/claude-usage-line-mod-prompt",
+    "articleName": "claude-usage-line-mod-prompt",
+    "category": "ai",
+    "updateDate": "2026/10/10"
+  },
+  {
     "articlePath": "ai/codex-hooks",
     "articleName": "codex-hooks",
     "category": "ai",
