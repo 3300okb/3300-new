@@ -69,6 +69,14 @@
     ]
   },
   {
+    "articlePath": "etc/git-config-setup",
+    "articleName": "git-config-setup",
+    "category": "etc",
+    "preBlocks": [
+      "git config --global color.ui auto && \\\ngit config --global alias.a 'add -A' && \\\ngit config --global alias.c 'commit' && \\\ngit config --global alias.b 'branch' && \\\ngit config --global alias.co 'checkout' && \\\ngit config --global alias.s 'status -s -b -uall' && \\\ngit config --global alias.t 'log --graph --all --date=short --format=\"%C(green)[%ad] %C(cyan)%h %C(yellow)%an %C(red)%d %Creset%s\"' && \\\necho \"done\""
+    ]
+  },
+  {
     "articlePath": "etc/git-config",
     "articleName": "git-config",
     "category": "etc",
