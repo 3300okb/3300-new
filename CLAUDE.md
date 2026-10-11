@@ -10,13 +10,6 @@
 
 ---
 
-## エージェント構成
-
-`.claude/agents/` に researcher / planner / coder / reviewer がある。
-使うのは、ユーザーが指示したときか、独立した大きな作業（広範囲の調査など）のときだけ。
-
----
-
 ## クイックリファレンス
 
 - `npm run index:generate` は記事の追加・削除時に必須。
