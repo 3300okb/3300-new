@@ -36,6 +36,12 @@
     "updateDate": "2015/07/15"
   },
   {
+    "articlePath": "etc/git-config-setup",
+    "articleName": "git-config-setup",
+    "category": "etc",
+    "updateDate": "2026/10/11"
+  },
+  {
     "articlePath": "etc/git-config",
     "articleName": "git-config",
     "category": "etc",
