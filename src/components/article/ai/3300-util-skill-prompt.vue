@@ -29,7 +29,7 @@ import CopyCode from '@/components/CopyCode.vue'
 
 # URLを貼った時
 
-chromeのブックマークの「temp」フォルダ内に登録する。tempフォルダがなかったら作る。
+~/Documents/url.html にリンク付きで記録する。ファイルがなかったら作り、既存の記録は消さずに追記する。
 
 # 単語や文章を貼った時
 
