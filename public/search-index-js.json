@@ -315,6 +315,12 @@
     ]
   },
   {
+    "articlePath": "js/typescript-playground",
+    "articleName": "typescript-playground",
+    "category": "js",
+    "preBlocks": []
+  },
+  {
     "articlePath": "js/vue",
     "articleName": "vue",
     "category": "js",
