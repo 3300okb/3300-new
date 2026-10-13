@@ -32,6 +32,14 @@ export default defineConfig({
             if (id.includes('swiper')) {
               return 'vendor-swiper'
             }
+            // TypeScript コンパイラと lib.*.d.ts は巨大なため、
+            // vendor に混ぜず playground 記事を開いたときだけ遅延ロードする
+            if (id.includes('node_modules/typescript/lib/lib.')) {
+              return 'vendor-typescript-lib'
+            }
+            if (id.includes('node_modules/typescript/')) {
+              return 'vendor-typescript'
+            }
             // その他のvendorはまとめる（ホスティング問題対策）
             return 'vendor'
           }
