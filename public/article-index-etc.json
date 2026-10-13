@@ -12,6 +12,12 @@
     "updateDate": "2016/06/06"
   },
   {
+    "articlePath": "etc/deploy-test",
+    "articleName": "deploy-test",
+    "category": "etc",
+    "updateDate": "2026/10/13"
+  },
+  {
     "articlePath": "etc/docker",
     "articleName": "docker",
     "category": "etc",

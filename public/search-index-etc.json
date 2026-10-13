@@ -19,6 +19,12 @@
     ]
   },
   {
+    "articlePath": "etc/deploy-test",
+    "articleName": "deploy-test",
+    "category": "etc",
+    "preBlocks": []
+  },
+  {
     "articlePath": "etc/docker",
     "articleName": "docker",
     "category": "etc",
