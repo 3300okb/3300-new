@@ -1096,8 +1096,8 @@
     --tw-duration: 1s;
     transition-duration: 1s;
   }
-  .not-first\:mt-10:not(:first-child) {
-    margin-top: 0.625rem;
+  .not-first\:mt-40:not(:first-child) {
+    margin-top: 2.5rem;
   }
   .placeholder\:text-gray-300::placeholder {
     color: var(--color-gray-300);

@@ -39,7 +39,7 @@ onBeforeUnmount(() => {
 
 <template>
   <div
-    class="flex flex-col gap-20 not-first:mt-10"
+    class="flex flex-col gap-20 not-first:mt-40"
     :class="{ 'flex-col-reverse': top }"
   >
     <div ref="areaRef">
