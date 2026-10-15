@@ -75,6 +75,16 @@
     ]
   },
   {
+    "articlePath": "etc/ghostty-herdr-shortcuts",
+    "articleName": "ghostty-herdr-shortcuts",
+    "category": "etc",
+    "preBlocks": [
+      "// Ghostty 1.3 の既定（macOS）。一覧は ghostty +list-keybinds --default\n\n[command]+n  // 新規ウィンドウ\n[command]+t  // 新規タブ\n[command]+[shift]+[ / ]  // 前 / 次のタブ\n[command]+1〜8  // タブ 1〜8 へ移動（9 は最後のタブ）\n[command]+w  // 今いるペインを閉じる\n\n[command]+d  // 右に分割\n[command]+[shift]+d  // 下に分割\n[command]+[ / ]  // 前 / 次のペインへ移動\n[command]+[option]+[arrow]  // 矢印方向のペインへ移動\n[command]+[control]+[arrow]  // ペインのサイズ変更\n[command]+[control]+=  // ペインのサイズを均等に\n[command]+[shift]+[Enter]  // ペインをズーム\n\n[command]+f  // 検索\n[command]+g  // 次の候補に移動\n[command]+[shift]+g  // 前の候補に移動\n[command]+[arrow-up/down]  // 前 / 次のプロンプトへジャンプ\n[command]+k  // 画面クリア\n\n[command]+[Enter]  // フルスクリーン\n[command]+[shift]+p  // コマンドパレット\n[command]+, / [command]+[shift]+,  // 設定を開く / 再読み込み",
+      "// herdr 0.9 の既定。prefix は [control]+b（押して離してから次のキー）\n// prefix+? で現在有効なキー一覧を表示\n\nprefix+[shift]+n  // 新規ワークスペース\nprefix+w  // ワークスペース一覧\nprefix+[shift]+w  // ワークスペース名を変更\nprefix+[shift]+d  // ワークスペースを閉じる\nprefix+g  // エージェントの状態で絞り込める移動ピッカー\nprefix+b  // サイドバー表示切り替え\n\nprefix+c  // 新規タブ\nprefix+n / p  // 次 / 前のタブ\nprefix+1〜9  // タブ 1〜9 へ移動\nprefix+[shift]+t  // タブ名を変更\nprefix+[shift]+x  // タブを閉じる\n\nprefix+v  // 右に分割\nprefix+-  // 下に分割\nprefix+h / j / k / l  // 左 / 下 / 上 / 右のペインへ移動\nprefix+[shift]+h / j / k / l  // ペインを入れ替え\nprefix+r  // リサイズモード\nprefix+z  // ペインをズーム\nprefix+x  // ペインを閉じる\n\nprefix+[  // コピーモード（vi 風に移動、/ で検索、v で選択、y でコピー、q で終了）\nprefix+q  // デタッチ（セッションは残る。herdr で再接続）",
+      "// Ghostty の [command] 系キーを herdr の prefix 操作に変換する設定\n// ~/Library/Application Support/com.mitchellh.ghostty/config.ghostty\nkeybind = super+t=text:\\x02c\nkeybind = super+shift+left_bracket=text:\\x02p\nkeybind = super+shift+right_bracket=text:\\x02n\nkeybind = super+d=text:\\x02v\nkeybind = super+shift+d=text:\\x02-\nkeybind = super+w=text:\\x02x\nkeybind = super+shift+enter=text:\\x02z\nkeybind = super+alt+arrow_left=text:\\x02h\nkeybind = super+alt+arrow_down=text:\\x02j\nkeybind = super+alt+arrow_up=text:\\x02k\nkeybind = super+alt+arrow_right=text:\\x02l\nkeybind = super+n=text:\\x02N\n// \\x02 は [control]+b。設定後は [command]+[shift]+, で再読み込み\n// herdr 側の設定変更は herdr server reload-config で反映"
+    ]
+  },
+  {
     "articlePath": "etc/git-config-setup",
     "articleName": "git-config-setup",
     "category": "etc",
