@@ -99,7 +99,7 @@ import CopyCode from '@/components/CopyCode.vue'
 
 <b class="t03">タブ</b>
 <b class="t01">[command]+t</b>  <b class="t02">// 新規タブ</b>
-<b class="t01">[command]+[shift]+[ / ]</b>  <b class="t02">// 前 / 次のタブ</b>
+<b class="t01">[command]+[shift]+「[」 / 「]」</b>  <b class="t02">// 前 / 次のタブ</b>
 <b class="t01">[option]+1〜9</b>  <b class="t02">// タブ 1〜9 へ移動</b>
 <b class="t01">prefix+[shift]+t</b>  <b class="t02">// タブ名を変更</b>
 <b class="t01">prefix+[shift]+x</b>  <b class="t02">// タブを閉じる</b>
