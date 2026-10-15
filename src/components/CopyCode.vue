@@ -38,7 +38,10 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
-  <div class="flex flex-col gap-20" :class="{ 'flex-col-reverse': top }">
+  <div
+    class="flex flex-col gap-20 not-first:mt-10"
+    :class="{ 'flex-col-reverse': top }"
+  >
     <div ref="areaRef">
       <slot />
     </div>
