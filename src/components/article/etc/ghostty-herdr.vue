@@ -131,12 +131,58 @@ import CopyCode from '@/components/CopyCode.vue'
 <b class="t01">prefix+b</b>  <b class="t02">// サイドバー表示切り替え</b>
 <b class="t01">prefix+q</b>  <b class="t02">// デタッチ（herdr で再接続）</b>
 <b class="t01">prefix+?</b>  <b class="t02">// 有効なキー一覧</b>
+<b class="t01">prefix+e</b>  <b class="t02">// TTT Editor を開く（6 の設定後）</b>
 
 <b class="t03">Ghostty（そのまま）</b>
 <b class="t01">[command]+c / v</b>  <b class="t02">// コピー / ペースト</b>
 <b class="t01">[command]+= / - / 0</b>  <b class="t02">// 文字サイズ 拡大 / 縮小 / リセット</b>
 <b class="t01">[command]+[Enter]</b>  <b class="t02">// フルスクリーン</b>
 <b class="t01">[command]+, / [command]+[shift]+,</b>  <b class="t02">// 設定を開く / 再読み込み</b>
+</code></pre>
+
+    <p>6. TTT Editor をインストールする</p>
+
+    <pre><code><CopyCode top><b class="t01">brew tap</b> <b class="t05">eugenioenko/ttt</b>
+<b class="t01">brew trust</b> <b class="t05">eugenioenko/ttt</b>
+<b class="t01">brew install</b> <b class="t05">ttt</b></CopyCode>
+<b class="t02">// ターミナル上で動くエディタ。herdr のペイン内でそのまま使える</b>
+<b class="t02">// Git（ソース管理）と ripgrep（ワークスペース検索）を使うので未導入なら入れておく</b>
+<b class="t01">brew install</b> <b class="t05">ripgrep</b>
+
+<b class="t02">// herdr から開けるように TTT の herdr プラグインを入れる</b>
+<CopyCode top><b class="t01">herdr plugin install</b> <b class="t05">eugenioenko/ttt/herdr-plugin</b></CopyCode>
+
+<b class="t02">// prefix+e で起動するようにキーを割り当てる（プラグインに既定のキーはない）</b>
+<b class="t02">// ~/.config/herdr/config.toml に追記</b>
+<CopyCode top><b class="t03">[[keys.command]]</b>
+<b class="t01">key</b> = <b class="t05">"prefix+e"</b>
+<b class="t01">type</b> = <b class="t05">"shell"</b>
+<b class="t01">command</b> = <b class="t05">"herdr plugin pane open --plugin ttt.editor --entrypoint editor"</b>
+<b class="t01">description</b> = <b class="t05">"open TTT editor"</b></CopyCode>
+<b class="t02">// 反映</b>
+<b class="t01">herdr server reload-config</b>
+
+<b class="t02">// prefix+e で、アクティブなワークスペースのディレクトリを TTT で新規タブに開く</b>
+</code></pre>
+
+    <p>7. TTT Editor に Vim mode をインストールする</p>
+
+    <pre><code><b class="t02">// サイドバーの Plugins タブを開き、Vim Mode を選んでインストール（ttt 1.1.0 以上）</b>
+<b class="t02">// 初回起動時にプラグインの権限を確認されるので許可する</b>
+
+<b class="t02">// レジストリから入れられない場合は [control]+p（コマンドパレット）で</b>
+<b class="t02">// Plugins: Install from URL を実行し、次の URL を指定</b>
+<CopyCode top><b class="t05">https://github.com/eugenioenko/ttt-vim</b></CopyCode>
+
+<b class="t02">// 設定: ~/.config/ttt/settings.json</b>
+<CopyCode top>{
+  <b class="t01">"vim"</b>: {
+    <b class="t01">"enabled"</b>: <b class="t05">true</b>,
+    <b class="t01">"clipboard"</b>: <b class="t05">true</b>
+  }
+}</CopyCode>
+<b class="t02">// enabled は起動時に Vim mode を有効にするか（既定 true）</b>
+<b class="t02">// clipboard = true で無名レジスタ（y / p）をシステムのクリップボードと共有（既定 false）</b>
 </code></pre>
   </PreCodes>
 </template>
