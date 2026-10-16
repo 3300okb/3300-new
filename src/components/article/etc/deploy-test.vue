@@ -11,6 +11,5 @@ import ArticleHeader from '@/components/ArticleHeader.vue'
 <template>
   <ArticleHeader title="deploy-test" :update-date="metadata.updateDate" />
 
-  <p>リモート環境からの記事追加デプロイテスト用の記事です。</p>
-  <p>Claude Code のクラウドセッションを利用。</p>
+  <p>リモート環境からの記事追加デプロイテスト用の記事です。Claude Code のクラウドセッションを利用。</p>
 </template>
