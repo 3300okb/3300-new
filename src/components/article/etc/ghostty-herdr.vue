@@ -1,6 +1,6 @@
 <script lang="ts">
 export const metadata = {
-  updateDate: '2026/10/15',
+  updateDate: '2026/10/16',
 }
 </script>
 
@@ -87,7 +87,20 @@ import CopyCode from '@/components/CopyCode.vue'
 <b class="t02">// 反映は [command]+[shift]+,</b>
 </code></pre>
 
-    <p>4. 融合後のショートカット</p>
+    <p>4. Ghostty 側: 背景画像を設定する</p>
+
+    <pre><code><b class="t02">// 3 と同じ config.ghostty に追記</b>
+<CopyCode top><b class="t02"># 背景画像</b>
+<b class="t01">background-image</b> = <b class="t05">/Users/xxx/Pictures/bg.png</b>
+<b class="t01">background-image-opacity</b> = <b class="t05">0.3</b>
+<b class="t01">background-image-fit</b> = <b class="t05">cover</b></CopyCode>
+<b class="t02">// background-image は画像の絶対パス</b>
+<b class="t02">// background-image-opacity は画像の不透明度（文字を読みやすくするため低めにする）</b>
+<b class="t02">// background-image-fit = cover でウィンドウ全体を覆うように拡大・トリミング</b>
+<b class="t02">// 反映は [command]+[shift]+,</b>
+</code></pre>
+
+    <p>5. 融合後のショートカット</p>
 
     <pre><code><b class="t03">ワークスペース</b>
 <b class="t01">[command]+n</b>  <b class="t02">// 新規ワークスペース</b>
