@@ -131,7 +131,7 @@ import CopyCode from '@/components/CopyCode.vue'
 <b class="t01">prefix+b</b>  <b class="t02">// サイドバー表示切り替え</b>
 <b class="t01">prefix+q</b>  <b class="t02">// デタッチ（herdr で再接続）</b>
 <b class="t01">prefix+?</b>  <b class="t02">// 有効なキー一覧</b>
-<b class="t01">prefix+e</b>  <b class="t02">// TTT Editor を開く（6 の設定後）</b>
+<b class="t01">prefix+e</b>  <b class="t02">// TTT Editor を上ペインに開く（6 の設定後）</b>
 
 <b class="t03">Ghostty（そのまま）</b>
 <b class="t01">[command]+c / v</b>  <b class="t02">// コピー / ペースト</b>
@@ -153,16 +153,42 @@ import CopyCode from '@/components/CopyCode.vue'
 <CopyCode top><b class="t01">herdr plugin install</b> <b class="t05">eugenioenko/ttt/herdr-plugin</b></CopyCode>
 
 <b class="t02">// prefix+e で起動するようにキーを割り当てる（プラグインに既定のキーはない）</b>
+<b class="t02">// プラグインの既定は新規タブで開くので、同じタブの上ペイン（縦 66%）に開くスクリプトを用意する</b>
+<b class="t02">// ~/.config/herdr/open-ttt.sh を作成</b>
+<CopyCode top>#!/bin/sh
+<b class="t02"># フォーカス中のペインの Claude Code セッションが worktree で作業中なら、その worktree を開く</b>
+cur=$(herdr pane current)
+field() { printf '%s' "$cur" | grep -o "\"$1\":\"[^\"]*\"" | head -1 | cut -d\" -f4; }
+dir=$(field cwd)
+
+<b class="t02"># Claude Code はセッション中に cd してもペインの cwd が変わらないので、</b>
+<b class="t02"># セッションログに出てくる worktree パスのうち最後の、まだ存在するものを使う</b>
+session=$(field value)
+log=$(ls "$HOME"/.claude/projects/*/"$session".jsonl 2>/dev/null | head -1)
+if [ -n "$session" ] && [ -n "$log" ]; then
+  wt=$(grep -oE '/[A-Za-z0-9/._-]*(\.worktrees|/\.claude/worktrees)/[A-Za-z0-9._-]+' "$log" \
+    | tail -r | while read -r d; do [ -d "$d" ] && echo "$d" && break; done)
+  [ -n "$wt" ] && dir=$wt
+fi
+
+<b class="t02"># split は right/down のみなので、下に開いてから上下を入れ替える。resize の amount は比率の増分（0.5 + 0.16）</b>
+p=$(herdr plugin pane open --plugin ttt.editor --entrypoint editor --placement split --direction down --focus \
+  --env "TTT_TARGET_DIR=$dir" | grep -o '"pane_id":"[^"]*"' | head -1 | cut -d\" -f4) &amp;&amp;
+  herdr pane swap --pane "$p" --direction up &amp;&amp;
+  herdr pane resize --pane "$p" --direction down --amount 0.16</CopyCode>
+
 <b class="t02">// ~/.config/herdr/config.toml に追記</b>
 <CopyCode top><b class="t03">[[keys.command]]</b>
 <b class="t01">key</b> = <b class="t05">"prefix+e"</b>
 <b class="t01">type</b> = <b class="t05">"shell"</b>
-<b class="t01">command</b> = <b class="t05">"herdr plugin pane open --plugin ttt.editor --entrypoint editor"</b>
+<b class="t01">command</b> = <b class="t05">'sh "$HOME/.config/herdr/open-ttt.sh"'</b>
 <b class="t01">description</b> = <b class="t05">"open TTT editor"</b></CopyCode>
 <b class="t02">// 反映</b>
 <b class="t01">herdr server reload-config</b>
 
-<b class="t02">// prefix+e で、アクティブなワークスペースのディレクトリを TTT で新規タブに開く</b>
+<b class="t02">// prefix+e で、フォーカス中のタブの上ペイン（縦 66%）に TTT を開く</b>
+<b class="t02">// 開くディレクトリは、Claude Code が worktree で作業中ならその worktree、それ以外はペインのディレクトリ</b>
+<b class="t02">// worktree はログに出てきたパスで判断するので、会話で名前を出しただけの worktree が選ばれることもある</b>
 </code></pre>
 
     <p>7. TTT Editor に Vim mode をインストールし、表示を設定する</p>
