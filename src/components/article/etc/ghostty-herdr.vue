@@ -1,6 +1,6 @@
 <script lang="ts">
 export const metadata = {
-  updateDate: '2026/10/16',
+  updateDate: '2026/10/17',
 }
 </script>
 
@@ -165,7 +165,7 @@ import CopyCode from '@/components/CopyCode.vue'
 <b class="t02">// prefix+e で、アクティブなワークスペースのディレクトリを TTT で新規タブに開く</b>
 </code></pre>
 
-    <p>7. TTT Editor に Vim mode をインストールする</p>
+    <p>7. TTT Editor に Vim mode をインストールし、表示を設定する</p>
 
     <pre><code><b class="t02">// サイドバーの Plugins タブを開き、Vim Mode を選んでインストール（ttt 1.1.0 以上）</b>
 <b class="t02">// 初回起動時にプラグインの権限を確認されるので許可する</b>
@@ -179,10 +179,73 @@ import CopyCode from '@/components/CopyCode.vue'
   <b class="t01">"vim"</b>: {
     <b class="t01">"enabled"</b>: <b class="t05">true</b>,
     <b class="t01">"clipboard"</b>: <b class="t05">true</b>
+  },
+  <b class="t01">"appearance"</b>: {
+    <b class="t01">"icons"</b>: <b class="t05">"nerd-font"</b>,
+    <b class="t01">"scrollbarGlyphs"</b>: <b class="t05">"legacy"</b>
+  },
+  <b class="t01">"editor"</b>: {
+    <b class="t01">"cursorStyle"</b>: <b class="t05">"steadyBlock"</b>,
+    <b class="t01">"bracketPairColorization"</b>: <b class="t05">true</b>
   }
 }</CopyCode>
 <b class="t02">// enabled は起動時に Vim mode を有効にするか（既定 true）</b>
 <b class="t02">// clipboard = true で無名レジスタ（y / p）をシステムのクリップボードと共有（既定 false）</b>
+<b class="t02">// icons = "nerd-font" でエクスプローラなどにファイルアイコンを表示（Ghostty は Nerd Font 内蔵）</b>
+<b class="t02">//   アイコンの色はテーマの terminal 色（red / blue など）から自動で付く</b>
+<b class="t02">// scrollbarGlyphs = "legacy" でスクロールバーの git 変更マークを細かく描画（Ghostty は対応）</b>
+<b class="t02">// cursorStyle = "steadyBlock" で点滅しない塗りつぶしの四角カーソル（既定は点滅する縦棒）</b>
+<b class="t02">//   ttt 1.8.0 / ttt-vim ではモード別のカーソル形状は未対応なので、インサートモードでも四角</b>
+<b class="t02">// bracketPairColorization = true で括弧をネストの深さごとに色分け</b>
+<b class="t02">// 反映は [control]+p（コマンドパレット）で Reload Settings、または TTT を開き直す</b>
+</code></pre>
+
+    <p>8. TTT Editor に Catppuccin Mocha テーマを入れる</p>
+
+    <pre><code><b class="t02">// TTT には Catppuccin が組み込まれていないので、Ghostty（Catppuccin Mocha）に合わせて自作する</b>
+<b class="t02">// 組み込みの Dracula テーマを取得し、色を Catppuccin Mocha のパレットに置き換えて保存</b>
+<CopyCode top><b class="t01">mkdir</b> <b class="t04">-p</b> <b class="t05">~/.config/ttt/themes</b>
+<b class="t01">curl</b> <b class="t04">-fsSL</b> <b class="t05">https://raw.githubusercontent.com/eugenioenko/ttt/v1.8.0/internal/config/themes/dracula.json</b> \
+| <b class="t01">sed</b> <b class="t04">-e</b> <b class="t05">'s/#f8f8f2/#cdd6f4/g; s/#ff79c6/#cba6f7/g; s/#f1fa8c/#a6e3a1/g; s/#e9f284/#a6e3a1/g'</b> \
+      <b class="t04">-e</b> <b class="t05">'s/#8be9fd/#f9e2af/g; s/#8be9fe/#f9e2af/g; s/#bd93f9/#fab387/g; s/#50fa7b/#89b4fa/g'</b> \
+      <b class="t04">-e</b> <b class="t05">'s/#6272a4/#9399b2/g; s/#ffb86c/#eba0ac/g; s/#ff5555/#f38ba8/g; s/#44475a/#45475a/g'</b> \
+      <b class="t04">-e</b> <b class="t05">'s/#282a36/#1e1e2e/g; s/#333644/#2a2b3c/g; s/#555972/#585b70/g'</b> \
+| <b class="t01">jq</b> <b class="t05">'
+  .muted.fg = "#7f849c" | .border.fg = "#585b70"
+| .success.fg = "#a6e3a1" | .warning.fg = "#f9e2af"
+| .tabs.inactive.fg = "#7f849c" | .dialog.muted.fg = "#7f849c"
+| .editor.lineNumber.fg = "#6c7086"
+| .editor.searchMatch = {"fg": "#1e1e2e", "bg": "#f9e2af"}
+| .editor.searchActive = {"fg": "#1e1e2e", "bg": "#fab387"}
+| .editor.diagnostics.warning.fg = "#f9e2af"
+| .editor.diagnostics.info.fg = "#89dceb"
+| .editor.diagnostics.hint.fg = "#94e2d5"
+| .editor.bracketColors = ["#f38ba8", "#fab387", "#f9e2af", "#a6e3a1", "#74c7ec", "#b4befe"]
+| .hover.code.fg = "#a6e3a1"
+| .diff = {"added": {"bg": "#364143"}, "deleted": {"bg": "#493446"}, "modified": {"bg": "#4a4548"}}
+| .scrollbar = {"fg": "#585b70", "bg": "#313244"}
+| .syntax.operator.fg = "#89dceb" | .syntax.punctuation.fg = "#9399b2"
+| .syntax.property.fg = "#b4befe" | .syntax.link.fg = "#89b4fa"
+| .syntax.heading.fg = "#f38ba8" | .syntax.attribute.fg = "#f9e2af"
+| .syntax.tag.fg = "#89b4fa"
+| .terminal = {
+    "foreground": "#cdd6f4", "background": "#1e1e2e",
+    "black": "#45475a", "red": "#f38ba8", "green": "#a6e3a1", "yellow": "#f9e2af",
+    "blue": "#89b4fa", "magenta": "#f5c2e7", "cyan": "#94e2d5", "white": "#bac2de",
+    "brightBlack": "#585b70", "brightRed": "#f38ba8", "brightGreen": "#a6e3a1",
+    "brightYellow": "#f9e2af", "brightBlue": "#89b4fa", "brightMagenta": "#f5c2e7",
+    "brightCyan": "#94e2d5", "brightWhite": "#a6adc8", "selection": "#585b70"
+  }'</b> > <b class="t05">~/.config/ttt/themes/catppuccin-mocha.json</b></CopyCode>
+<b class="t02">// Dracula は VS Code 版と同じ細かい色分けルール（tokenColors）を持つので、それを流用する</b>
+<b class="t02">// 色の割り当て: キーワード mauve / 文字列 green / 関数・タグ blue / 型 yellow / 数値 peach</b>
+<b class="t02">//   引数 maroon / 演算子 sky / プロパティ lavender / コメント overlay2</b>
+<b class="t02">// terminal は Ghostty の Catppuccin Mocha と同じ 16 色（ファイルアイコンの色にも使われる）</b>
+
+<b class="t02">// ~/.config/ttt/settings.json でテーマを指定（テーマ名 = ファイル名から .json を除いたもの）</b>
+<CopyCode top>{
+  <b class="t01">"theme"</b>: <b class="t05">"catppuccin-mocha"</b>
+}</CopyCode>
+<b class="t02">// TTT はライト / ダークの自動切り替えに未対応。Ghostty がライト（Latte）のときも Mocha のまま</b>
 </code></pre>
   </PreCodes>
 </template>
