@@ -44,7 +44,8 @@ import CopyCode from '@/components/CopyCode.vue'
 <b class="t01">switch_workspace</b> = <b class="t05">"cmd+1..9"</b>
 <b class="t01">next_agent</b> = <b class="t05">"ctrl+alt+j"</b>
 <b class="t01">previous_agent</b> = <b class="t05">"ctrl+alt+k"</b></CopyCode>
-<b class="t02">// onboarding = false で起動時のオンボーディング表示を出さない</b>
+<b class="t02">// onboarding = false で初回の案内画面（使い方の紹介 → インテグレーション導入への誘導）を出さない</b>
+<b class="t02">// 案内を終えると herdr が自動でこの行を書き込む</b>
 <b class="t02">// switch_workspace は Ghostty の [command]+1〜9 から CSI u で送られる super+数字 を受け取る（3 で設定）</b>
 <b class="t02">// next_agent / previous_agent でサイドバーの agents 枠内を次 / 前のエージェントへ切り替える</b>
 <b class="t02">//   ctrl+j / k だとペイン内のシェルや Vim に届かなくなるので [option] を足す（3 で設定）</b>
