@@ -346,5 +346,27 @@ p=$(herdr plugin pane open --plugin ttt.editor --entrypoint editor --placement s
 }</CopyCode>
 <b class="t02">// TTT はライト / ダークの自動切り替えに未対応。Ghostty がライト（Latte）のときも Mocha のまま</b>
 </code></pre>
+
+    <p>
+      11. TTT Editor で [command]+/ をコメント化（Toggle Line Comment）にする
+    </p>
+
+    <pre><code><b class="t02">// TTT の既定は [control]+/ だが、Vim mode のノーマル / ビジュアルモードでは効かない</b>
+<b class="t02">//   ttt-vim が [control]+/ を修飾なしの "_"（CSI u なら "/"）として受け取り、文字キーとして握り潰すため</b>
+<b class="t02">// ttt-vim が素通しする [option]+/ に割り当て直す</b>
+<b class="t02">// ~/.config/ttt/keybindings.json を作成</b>
+<CopyCode top>[
+  { <b class="t01">"key"</b>: <b class="t05">"alt+/"</b>, <b class="t01">"command"</b>: <b class="t05">"editor.toggleComment"</b> }
+]</CopyCode>
+<b class="t02">// 反映は TTT を開き直す</b>
+
+<b class="t02">// TTT は [command] を扱えないので、Ghostty で [command]+/ を [option]+/ に変換する</b>
+<b class="t02">// 5 と同じ config.ghostty に追記</b>
+<CopyCode top><b class="t02"># TTT Editor</b>
+<b class="t01">keybind</b> = <b class="t04">super+slash</b>=<b class="t05">text:\x1b/</b></CopyCode>
+<b class="t02">// text:\x1b/ は ESC + "/"（[option]+/ のレガシー表現）。herdr のペインを通してもそのまま届く</b>
+<b class="t02">// ノーマルモードではカーソル行、v / V で選択中なら選択範囲をコメント化 / 解除する</b>
+<b class="t02">// 反映は [command]+[shift]+,</b>
+</code></pre>
   </PreCodes>
 </template>
