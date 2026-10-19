@@ -77,7 +77,7 @@ import CopyCode from '@/components/CopyCode.vue'
     <pre><code><b class="t02">// 2 と同じ config.toml に追記</b>
 <CopyCode top><b class="t03">[ui]</b>
 <b class="t01">show_agent_labels_on_pane_borders</b> = <b class="t05">true</b>
-<b class="t01">window_title</b> = <b class="t05">"herdr · {workspace} · {tab}"</b>
+<b class="t01">window_title</b> = <b class="t05">"herdr"</b>
 
 <b class="t03">[ui.sidebar.agents]</b>
 <b class="t01">row_gap</b> = <b class="t05">0</b>
@@ -96,7 +96,8 @@ import CopyCode from '@/components/CopyCode.vue'
   [{ <b class="t01">token</b> = <b class="t05">"agent"</b>, <b class="t01">fg</b> = <b class="t05">"#2b8fff"</b>, <b class="t01">bold</b> = <b class="t05">false</b> }, <b class="t05">"state_text"</b>],
 ]</CopyCode>
 <b class="t02">// show_agent_labels_on_pane_borders で分割したペインの枠にエージェント名を出す（どのペインが何か分かる）</b>
-<b class="t02">// window_title は Ghostty のウィンドウタイトル。{workspace} / {tab} が現在の名前に置き換わる</b>
+<b class="t02">// window_title は Ghostty のウィンドウタイトル。{workspace} / {tab} も使えるが、herdr 0.9.5 では</b>
+<b class="t02">//   名前を付けていないワークスペースだと切り替えても更新されない（herdrdev/herdr#3200）ので固定にする</b>
 <b class="t02">// [ui.sidebar.agents] の rows はサイドバーの 1 エージェントを何行でどう並べるかの指定</b>
 <b class="t02">//   上の例は 1 行目に 状態アイコン + ワークスペース名 + タブ名、2 行目に エージェント名 + 状態テキスト</b>
 <b class="t02">//   row_gap = 0 で行間を詰める</b>
