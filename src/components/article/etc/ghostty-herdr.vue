@@ -1,6 +1,6 @@
 <script lang="ts">
 export const metadata = {
-  updateDate: '2026/10/18',
+  updateDate: '2026/10/19',
 }
 </script>
 
@@ -46,14 +46,69 @@ import CopyCode from '@/components/CopyCode.vue'
 <b class="t01">previous_agent</b> = <b class="t05">"ctrl+alt+k"</b></CopyCode>
 <b class="t02">// onboarding = false で初回の案内画面（使い方の紹介 → インテグレーション導入への誘導）を出さない</b>
 <b class="t02">// 案内を終えると herdr が自動でこの行を書き込む</b>
-<b class="t02">// switch_workspace は Ghostty の [command]+1〜9 から CSI u で送られる super+数字 を受け取る（3 で設定）</b>
+<b class="t02">// switch_workspace は Ghostty の [command]+1〜9 から CSI u で送られる super+数字 を受け取る（5 で設定）</b>
 <b class="t02">// next_agent / previous_agent でサイドバーの agents 枠内を次 / 前のエージェントへ切り替える</b>
-<b class="t02">//   ctrl+j / k だとペイン内のシェルや Vim に届かなくなるので [option] を足す（3 で設定）</b>
+<b class="t02">//   ctrl+j / k だとペイン内のシェルや Vim に届かなくなるので [option] を足す（5 で設定）</b>
 <b class="t02">// 反映（herdr config check で設定を検証できる）</b>
 <b class="t01">herdr server reload-config</b>
 </code></pre>
 
-    <p>3. Ghostty 側: [command] 系キーを herdr の操作に変換する</p>
+    <p>3. herdr 側: 日本語入力（IME）に対応させる</p>
+
+    <pre><code><b class="t02">// 2 と同じ config.toml に追記</b>
+<CopyCode top><b class="t03">[experimental]</b>
+<b class="t01">switch_ascii_input_source_in_prefix</b> = <b class="t05">true</b>
+<b class="t01">reveal_hidden_cursor_for_cjk_ime</b> = <b class="t05">true</b>
+<b class="t01">cjk_ime_agents</b> = [<b class="t05">"claude"</b>, <b class="t05">"codex"</b>]
+<b class="t01">cjk_ime_cursor_shape</b> = <b class="t05">"steady_bar"</b></CopyCode>
+<b class="t02">// switch_ascii_input_source_in_prefix で prefix モード中だけ入力ソースを ASCII に切り替え、抜けたら元に戻す</b>
+<b class="t02">//   IME が ON のままだと prefix（[control]+b）に続けて押すキー（prefix+w / prefix+g / prefix+e など）が握り潰される</b>
+<b class="t02">// reveal_hidden_cursor_for_cjk_ime でフォーカス中のペインのカーソルを外側の Ghostty に露出させる</b>
+<b class="t02">//   Claude Code / Codex は自前でカーソルを描くので、そのままだと IME の変換候補ウィンドウが入力位置に追従しない</b>
+<b class="t02">// cjk_ime_agents で上の対象にするエージェントを限定する</b>
+<b class="t02">//   Vim の normal mode などで余分なカーソルが見える副作用を避けるため</b>
+<b class="t02">// cjk_ime_cursor_shape は露出させるカーソルの形（steady_bar = 点滅しない縦棒）</b>
+<b class="t02">// 反映</b>
+<b class="t01">herdr server reload-config</b>
+</code></pre>
+
+    <p>4. herdr 側: 画面の表示を設定する</p>
+
+    <pre><code><b class="t02">// 2 と同じ config.toml に追記</b>
+<CopyCode top><b class="t03">[ui]</b>
+<b class="t01">show_agent_labels_on_pane_borders</b> = <b class="t05">true</b>
+<b class="t01">hide_tab_bar_when_single_tab</b> = <b class="t05">true</b>
+<b class="t01">window_title</b> = <b class="t05">"herdr · {workspace} · {tab}"</b>
+
+<b class="t03">[ui.sidebar.agents]</b>
+<b class="t01">row_gap</b> = <b class="t05">0</b>
+<b class="t01">rows</b> = [
+  [<b class="t05">"state_icon"</b>, <b class="t05">"workspace"</b>, <b class="t05">"tab"</b>],
+  [<b class="t05">"agent"</b>, <b class="t05">"state_text"</b>],
+]
+
+<b class="t03">[ui.sidebar.agents.rows_by_agent]</b>
+<b class="t01">claude</b> = [
+  [<b class="t05">"state_icon"</b>, <b class="t05">"workspace"</b>, <b class="t05">"tab"</b>],
+  [{ <b class="t01">token</b> = <b class="t05">"agent"</b>, <b class="t01">fg</b> = <b class="t05">"#d77757"</b>, <b class="t01">bold</b> = <b class="t05">false</b> }, <b class="t05">"state_text"</b>],
+]
+<b class="t01">codex</b> = [
+  [<b class="t05">"state_icon"</b>, <b class="t05">"workspace"</b>, <b class="t05">"tab"</b>],
+  [{ <b class="t01">token</b> = <b class="t05">"agent"</b>, <b class="t01">fg</b> = <b class="t05">"#2b8fff"</b>, <b class="t01">bold</b> = <b class="t05">false</b> }, <b class="t05">"state_text"</b>],
+]</CopyCode>
+<b class="t02">// show_agent_labels_on_pane_borders で分割したペインの枠にエージェント名を出す（どのペインが何か分かる）</b>
+<b class="t02">// hide_tab_bar_when_single_tab でタブが 1 枚のときはタブバーを隠す</b>
+<b class="t02">// window_title は Ghostty のウィンドウタイトル。{workspace} / {tab} が現在の名前に置き換わる</b>
+<b class="t02">// [ui.sidebar.agents] の rows はサイドバーの 1 エージェントを何行でどう並べるかの指定</b>
+<b class="t02">//   上の例は 1 行目に 状態アイコン + ワークスペース名 + タブ名、2 行目に エージェント名 + 状態テキスト</b>
+<b class="t02">//   row_gap = 0 で行間を詰める</b>
+<b class="t02">// rows_by_agent でエージェントごとに上書きする。token 指定にすると fg / bold を付けられる</b>
+<b class="t02">//   claude は #d77757、codex は #2b8fff で、どちらが動いているか色で見分ける</b>
+<b class="t02">// 反映</b>
+<b class="t01">herdr server reload-config</b>
+</code></pre>
+
+    <p>5. Ghostty 側: [command] 系キーを herdr の操作に変換する</p>
 
     <pre><code><b class="t02">// ~/Library/Application Support/com.mitchellh.ghostty/config.ghostty</b>
 <b class="t02">// （Ghostty で [command]+, を押すと開く）</b>
@@ -105,9 +160,9 @@ import CopyCode from '@/components/CopyCode.vue'
 <b class="t02">// 反映は [command]+[shift]+,</b>
 </code></pre>
 
-    <p>4. Ghostty 側: 背景画像を設定する</p>
+    <p>6. Ghostty 側: 背景画像を設定する</p>
 
-    <pre><code><b class="t02">// 3 と同じ config.ghostty に追記</b>
+    <pre><code><b class="t02">// 5 と同じ config.ghostty に追記</b>
 <CopyCode top><b class="t02"># 背景画像</b>
 <b class="t01">background-image</b> = <b class="t05">/Users/xxx/Pictures/bg.png</b>
 <b class="t01">background-image-opacity</b> = <b class="t05">0.3</b>
@@ -118,7 +173,7 @@ import CopyCode from '@/components/CopyCode.vue'
 <b class="t02">// 反映は [command]+[shift]+,</b>
 </code></pre>
 
-    <p>5. 融合後のショートカット</p>
+    <p>7. 融合後のショートカット</p>
 
     <pre><code><b class="t03">ワークスペース</b>
 <b class="t01">[command]+n</b>  <b class="t02">// 新規ワークスペース</b>
@@ -150,7 +205,7 @@ import CopyCode from '@/components/CopyCode.vue'
 <b class="t01">prefix+b</b>  <b class="t02">// サイドバー表示切り替え</b>
 <b class="t01">prefix+q</b>  <b class="t02">// デタッチ（herdr で再接続）</b>
 <b class="t01">prefix+?</b>  <b class="t02">// 有効なキー一覧</b>
-<b class="t01">prefix+e</b>  <b class="t02">// TTT Editor を上ペインに開く（6 の設定後）</b>
+<b class="t01">prefix+e</b>  <b class="t02">// TTT Editor を上ペインに開く（8 の設定後）</b>
 
 <b class="t03">Ghostty（そのまま）</b>
 <b class="t01">[command]+c / v</b>  <b class="t02">// コピー / ペースト</b>
@@ -159,7 +214,7 @@ import CopyCode from '@/components/CopyCode.vue'
 <b class="t01">[command]+, / [command]+[shift]+,</b>  <b class="t02">// 設定を開く / 再読み込み</b>
 </code></pre>
 
-    <p>6. TTT Editor をインストールする</p>
+    <p>8. TTT Editor をインストールする</p>
 
     <pre><code><CopyCode top><b class="t01">brew tap</b> <b class="t05">eugenioenko/ttt</b>
 <b class="t01">brew trust</b> <b class="t05">eugenioenko/ttt</b>
@@ -210,7 +265,7 @@ p=$(herdr plugin pane open --plugin ttt.editor --entrypoint editor --placement s
 <b class="t02">// worktree はログに出てきたパスで判断するので、会話で名前を出しただけの worktree が選ばれることもある</b>
 </code></pre>
 
-    <p>7. TTT Editor に Vim mode をインストールし、表示を設定する</p>
+    <p>9. TTT Editor に Vim mode をインストールし、表示を設定する</p>
 
     <pre><code><b class="t02">// サイドバーの Plugins タブを開き、Vim Mode を選んでインストール（ttt 1.1.0 以上）</b>
 <b class="t02">// 初回起動時にプラグインの権限を確認されるので許可する</b>
@@ -245,7 +300,7 @@ p=$(herdr plugin pane open --plugin ttt.editor --entrypoint editor --placement s
 <b class="t02">// 反映は [control]+p（コマンドパレット）で Reload Settings、または TTT を開き直す</b>
 </code></pre>
 
-    <p>8. TTT Editor に Catppuccin Mocha テーマを入れる</p>
+    <p>10. TTT Editor に Catppuccin Mocha テーマを入れる</p>
 
     <pre><code><b class="t02">// TTT には Catppuccin が組み込まれていないので、Ghostty（Catppuccin Mocha）に合わせて自作する</b>
 <b class="t02">// 組み込みの Dracula テーマを取得し、色を Catppuccin Mocha のパレットに置き換えて保存</b>
