@@ -85,26 +85,28 @@ import CopyCode from '@/components/CopyCode.vue'
 <b class="t03">[ui.sidebar.agents]</b>
 <b class="t01">row_gap</b> = <b class="t05">0</b>
 <b class="t01">rows</b> = [
-  [<b class="t05">"state_icon"</b>, <b class="t05">"workspace"</b>, <b class="t05">"tab"</b>],
+  [<b class="t05">"state_icon"</b>, { <b class="t01">token</b> = <b class="t05">"tab"</b>, <b class="t01">fg</b> = <b class="t05">"#cdd6f4"</b> }, { <b class="t01">token</b> = <b class="t05">"workspace"</b>, <b class="t01">dim</b> = <b class="t05">true</b> }],
   [<b class="t05">"agent"</b>, <b class="t05">"state_text"</b>],
 ]
 
 <b class="t03">[ui.sidebar.agents.rows_by_agent]</b>
 <b class="t01">claude</b> = [
-  [<b class="t05">"state_icon"</b>, <b class="t05">"workspace"</b>, <b class="t05">"tab"</b>],
+  [<b class="t05">"state_icon"</b>, { <b class="t01">token</b> = <b class="t05">"tab"</b>, <b class="t01">fg</b> = <b class="t05">"#cdd6f4"</b> }, { <b class="t01">token</b> = <b class="t05">"workspace"</b>, <b class="t01">dim</b> = <b class="t05">true</b> }],
   [{ <b class="t01">token</b> = <b class="t05">"agent"</b>, <b class="t01">fg</b> = <b class="t05">"#d77757"</b>, <b class="t01">bold</b> = <b class="t05">false</b> }, <b class="t05">"state_text"</b>],
 ]
 <b class="t01">codex</b> = [
-  [<b class="t05">"state_icon"</b>, <b class="t05">"workspace"</b>, <b class="t05">"tab"</b>],
+  [<b class="t05">"state_icon"</b>, { <b class="t01">token</b> = <b class="t05">"tab"</b>, <b class="t01">fg</b> = <b class="t05">"#cdd6f4"</b> }, { <b class="t01">token</b> = <b class="t05">"workspace"</b>, <b class="t01">dim</b> = <b class="t05">true</b> }],
   [{ <b class="t01">token</b> = <b class="t05">"agent"</b>, <b class="t01">fg</b> = <b class="t05">"#2b8fff"</b>, <b class="t01">bold</b> = <b class="t05">false</b> }, <b class="t05">"state_text"</b>],
 ]</CopyCode>
 <b class="t02">// show_agent_labels_on_pane_borders で分割したペインの枠にエージェント名を出す（どのペインが何か分かる）</b>
 <b class="t02">// window_title は Ghostty のウィンドウタイトル。{workspace} / {tab} も使えるが、herdr 0.9.5 では</b>
 <b class="t02">//   名前を付けていないワークスペースだと切り替えても更新されない（herdrdev/herdr#3200）ので固定にする</b>
 <b class="t02">// [ui.sidebar.agents] の rows はサイドバーの 1 エージェントを何行でどう並べるかの指定</b>
-<b class="t02">//   上の例は 1 行目に 状態アイコン + ワークスペース名 + タブ名、2 行目に エージェント名 + 状態テキスト</b>
+<b class="t02">//   上の例は 1 行目に 状態アイコン + タブ名 + ワークスペース名、2 行目に エージェント名 + 状態テキスト</b>
 <b class="t02">//   row_gap = 0 で行間を詰める</b>
-<b class="t02">// rows_by_agent でエージェントごとに上書きする。token 指定にすると fg / bold を付けられる</b>
+<b class="t02">// rows_by_agent でエージェントごとに上書きする。token 指定にすると fg / bold / dim を付けられる</b>
+<b class="t02">//   タブ名は既定でグレーなので fg で白（Catppuccin Mocha の text）に、ワークスペース名は dim でグレーにする</b>
+<b class="t02">//   dim = false ではタブ名の既定のグレーは消えない</b>
 <b class="t02">//   claude は #d77757、codex は #2b8fff で、どちらが動いているか色で見分ける</b>
 <b class="t02">// 反映</b>
 <b class="t01">herdr server reload-config</b>
