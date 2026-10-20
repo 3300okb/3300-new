@@ -1,6 +1,6 @@
 <script lang="ts">
 export const metadata = {
-  updateDate: '2026/10/20',
+  updateDate: '2026/10/21',
 }
 </script>
 
@@ -116,6 +116,7 @@ import CopyCode from '@/components/CopyCode.vue'
 <b class="t02">// （Ghostty で [command]+, を押すと開く）</b>
 <CopyCode top><b class="t02"># タブ</b>
 <b class="t01">keybind</b> = <b class="t04">super+t</b>=<b class="t05">text:\x02c</b>
+<b class="t01">keybind</b> = <b class="t04">super+shift+t</b>=<b class="t05">text:\x02T</b>
 <b class="t01">keybind</b> = <b class="t04">alt+left_bracket</b>=<b class="t05">text:\x02p</b>
 <b class="t01">keybind</b> = <b class="t04">alt+right_bracket</b>=<b class="t05">text:\x02n</b>
 
@@ -154,6 +155,7 @@ import CopyCode from '@/components/CopyCode.vue'
 <b class="t01">keybind</b> = <b class="t04">ctrl+alt+j</b>=<b class="t05">csi:106;7u</b>
 <b class="t01">keybind</b> = <b class="t04">ctrl+alt+k</b>=<b class="t05">csi:107;7u</b></CopyCode>
 <b class="t02">// text:\x02 は [control]+b（herdr の prefix）。続く文字が herdr のキーになる</b>
+<b class="t02">//   text:\x02T のように大文字を送ると prefix+[shift]+t（タブ名を変更）になる</b>
 <b class="t02">// csi:49;9u は CSI u 形式の [command]+1（49 = "1" の文字コード、9 = command）</b>
 <b class="t02">//   → herdr の switch_workspace = "cmd+1..9" が受け取る</b>
 <b class="t02">// csi:49;3u は [option]+1（3 = 1 + alt 2）→ herdr の focus_agent = "alt+1..9" が受け取る</b>
@@ -193,7 +195,7 @@ import CopyCode from '@/components/CopyCode.vue'
 <b class="t01">[command]+t</b>  <b class="t02">// 新規タブ</b>
 <b class="t01">[option]+「[」 / 「]」</b>  <b class="t02">// 前 / 次のタブ</b>
 <b class="t01">prefix+1〜9</b>  <b class="t02">// タブ 1〜9 へ移動</b>
-<b class="t01">prefix+[shift]+t</b>  <b class="t02">// タブ名を変更</b>
+<b class="t01">[command]+[shift]+t</b>  <b class="t02">// タブ名を変更（prefix+[shift]+t と同じ）</b>
 <b class="t01">prefix+[shift]+x</b>  <b class="t02">// タブを閉じる</b>
 
 <b class="t03">ペイン</b>
