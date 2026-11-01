@@ -1,6 +1,6 @@
 <script lang="ts">
 export const metadata = {
-  updateDate: '2025/11/17',
+  updateDate: '2026/11/01',
 }
 </script>
 
@@ -44,6 +44,7 @@ git <b class="t01">log --decorate</b>  <b class="t02">// headの位置やbranch,
 git <b class="t01">log --oneline</b>  <b class="t02">// 簡易履歴確認</b>
 git <b class="t01">log --oneline --graph --decorate --all</b>  <b class="t02">// アスキーアートで表示</b>
 git <b class="t01">log --graph --all --date=short --format="%C(green)[%ad] %C(cyan)%h %C(yellow)%an %C(red)%d %Creset%s"</b>  <b class="t02">// ログ表示の色付け</b>
+git <b class="t01">-C ~/workspace/</b>{project} <b class="t01">log --format='%h %an %s'</b> {LAST SYNC}<b class="t01">..</b>{SYNC STATUS}  <b class="t02">// hash間のコミット一覧を表示</b>
 
 git<b class="t01">k</b>  <b class="t02">// GUIツールで変更履歴確認</b>
 
