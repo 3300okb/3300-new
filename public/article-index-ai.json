@@ -6,6 +6,12 @@
     "updateDate": "2026/10/12"
   },
   {
+    "articlePath": "ai/argocd-sync-log-skill-prompt",
+    "articleName": "argocd-sync-log-skill-prompt",
+    "category": "ai",
+    "updateDate": "2026/11/01"
+  },
+  {
     "articlePath": "ai/claude-commands",
     "articleName": "claude-commands",
     "category": "ai",
