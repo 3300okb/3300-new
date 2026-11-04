@@ -1,6 +1,6 @@
 <script lang="ts">
 export const metadata = {
-  updateDate: '2026/10/21',
+  updateDate: '2026/11/04',
 }
 </script>
 
@@ -33,8 +33,8 @@ import CopyCode from '@/components/CopyCode.vue'
 </code></pre>
 
     <p>
-      2. herdr 側: [command]+1〜9 でワークスペース、[option]+1〜9 と
-      [control]+[option]+j / k でエージェントを切り替える
+      2. herdr 側: [command]+1〜9 / j / k でワークスペース、[command]+h / l
+      でタブ、[option]+1〜9 / j / k でエージェントを切り替える
     </p>
 
     <pre><code><b class="t02">// ~/.config/herdr/config.toml</b>
@@ -43,15 +43,21 @@ import CopyCode from '@/components/CopyCode.vue'
 <b class="t03">[keys]</b>
 <b class="t01">switch_workspace</b> = <b class="t05">"cmd+1..9"</b>
 <b class="t01">focus_agent</b> = <b class="t05">"alt+1..9"</b>
-<b class="t01">next_agent</b> = <b class="t05">"ctrl+alt+j"</b>
-<b class="t01">previous_agent</b> = <b class="t05">"ctrl+alt+k"</b></CopyCode>
+<b class="t01">next_workspace</b> = <b class="t05">"cmd+j"</b>
+<b class="t01">previous_workspace</b> = <b class="t05">"cmd+k"</b>
+<b class="t01">next_tab</b> = [<b class="t05">"prefix+n"</b>, <b class="t05">"cmd+l"</b>]
+<b class="t01">previous_tab</b> = [<b class="t05">"prefix+p"</b>, <b class="t05">"cmd+h"</b>]
+<b class="t01">next_agent</b> = <b class="t05">"alt+j"</b>
+<b class="t01">previous_agent</b> = <b class="t05">"alt+k"</b></CopyCode>
 <b class="t02">// onboarding = false で初回の案内画面（使い方の紹介 → インテグレーション導入への誘導）を出さない</b>
 <b class="t02">// 案内を終えると herdr が自動でこの行を書き込む</b>
 <b class="t02">// switch_workspace は Ghostty の [command]+1〜9 から CSI u で送られる super+数字 を受け取る（5 で設定）</b>
 <b class="t02">// focus_agent はサイドバーの agents 枠の 1〜9 番目のエージェントへ移動する</b>
 <b class="t02">//   Ghostty の [option]+1〜9 から CSI u で送られる alt+数字 を受け取る（5 で設定）</b>
-<b class="t02">// next_agent / previous_agent でサイドバーの agents 枠内を次 / 前のエージェントへ切り替える</b>
-<b class="t02">//   ctrl+j / k だとペイン内のシェルや Vim に届かなくなるので [option] を足す（5 で設定）</b>
+<b class="t02">// next_workspace / previous_workspace で次 / 前のワークスペースへ切り替える（cmd+j / k）</b>
+<b class="t02">// next_tab / previous_tab で次 / 前のタブへ切り替える（cmd+l / h）。prefix+n / p も残すので配列にする</b>
+<b class="t02">// next_agent / previous_agent でサイドバーの agents 枠内を次 / 前のエージェントへ切り替える（alt+j / k）</b>
+<b class="t02">//   hjkl を [command] = ワークスペース・タブ、[option] = エージェントで使い分ける（5 で設定）</b>
 <b class="t02">// 反映（herdr config check で設定を検証できる）</b>
 <b class="t01">herdr server reload-config</b>
 </code></pre>
@@ -119,8 +125,8 @@ import CopyCode from '@/components/CopyCode.vue'
 <CopyCode top><b class="t02"># タブ</b>
 <b class="t01">keybind</b> = <b class="t04">super+t</b>=<b class="t05">text:\x02c</b>
 <b class="t01">keybind</b> = <b class="t04">super+shift+t</b>=<b class="t05">text:\x02T</b>
-<b class="t01">keybind</b> = <b class="t04">alt+left_bracket</b>=<b class="t05">text:\x02p</b>
-<b class="t01">keybind</b> = <b class="t04">alt+right_bracket</b>=<b class="t05">text:\x02n</b>
+<b class="t01">keybind</b> = <b class="t04">super+h</b>=<b class="t05">csi:104;9u</b>
+<b class="t01">keybind</b> = <b class="t04">super+l</b>=<b class="t05">csi:108;9u</b>
 
 <b class="t02"># ペイン</b>
 <b class="t01">keybind</b> = <b class="t04">super+d</b>=<b class="t05">text:\x02v</b>
@@ -143,6 +149,8 @@ import CopyCode from '@/components/CopyCode.vue'
 <b class="t01">keybind</b> = <b class="t04">super+digit_7</b>=<b class="t05">csi:55;9u</b>
 <b class="t01">keybind</b> = <b class="t04">super+digit_8</b>=<b class="t05">csi:56;9u</b>
 <b class="t01">keybind</b> = <b class="t04">super+digit_9</b>=<b class="t05">csi:57;9u</b>
+<b class="t01">keybind</b> = <b class="t04">super+j</b>=<b class="t05">csi:106;9u</b>
+<b class="t01">keybind</b> = <b class="t04">super+k</b>=<b class="t05">csi:107;9u</b>
 
 <b class="t02"># エージェント</b>
 <b class="t01">keybind</b> = <b class="t04">alt+digit_1</b>=<b class="t05">csi:49;3u</b>
@@ -154,17 +162,20 @@ import CopyCode from '@/components/CopyCode.vue'
 <b class="t01">keybind</b> = <b class="t04">alt+digit_7</b>=<b class="t05">csi:55;3u</b>
 <b class="t01">keybind</b> = <b class="t04">alt+digit_8</b>=<b class="t05">csi:56;3u</b>
 <b class="t01">keybind</b> = <b class="t04">alt+digit_9</b>=<b class="t05">csi:57;3u</b>
-<b class="t01">keybind</b> = <b class="t04">ctrl+alt+j</b>=<b class="t05">csi:106;7u</b>
-<b class="t01">keybind</b> = <b class="t04">ctrl+alt+k</b>=<b class="t05">csi:107;7u</b></CopyCode>
+<b class="t01">keybind</b> = <b class="t04">alt+j</b>=<b class="t05">csi:106;3u</b>
+<b class="t01">keybind</b> = <b class="t04">alt+k</b>=<b class="t05">csi:107;3u</b></CopyCode>
 <b class="t02">// text:\x02 は [control]+b（herdr の prefix）。続く文字が herdr のキーになる</b>
 <b class="t02">//   text:\x02T のように大文字を送ると prefix+[shift]+t（タブ名を変更）になる</b>
 <b class="t02">// csi:49;9u は CSI u 形式の [command]+1（49 = "1" の文字コード、9 = command）</b>
 <b class="t02">//   → herdr の switch_workspace = "cmd+1..9" が受け取る</b>
 <b class="t02">// csi:49;3u は [option]+1（3 = 1 + alt 2）→ herdr の focus_agent = "alt+1..9" が受け取る</b>
-<b class="t02">// csi:106;7u は [control]+[option]+j（106 = "j"、7 = 1 + alt 2 + ctrl 4）</b>
+<b class="t02">// csi:106;9u は [command]+j（106 = "j"、9 = command）、csi:106;3u は [option]+j</b>
 <b class="t02">//   macOS の [option] は文字入力に使われ alt として届かないので、CSI u で直接送る</b>
-<b class="t02">// [option]+1〜9 をエージェントに使うので、タブの前後移動は [option]+「[」 / 「]」 にする</b>
-<b class="t02">//   タブの番号移動は herdr 既定の prefix+1〜9 を使う</b>
+<b class="t02">// [command]+h は macOS の「Ghostty を隠す」と重なる。ここでは macOS 側の「隠す」のショートカットを無効にして使っている</b>
+<b class="t02">//   隠れてしまう場合は、まず [command]+[shift]+, で Ghostty の設定を再読み込みする（無効化が必須かは未確認）</b>
+<b class="t02">//   [command]+k は Ghostty 既定の画面クリアを置き換える</b>
+<b class="t02">//   herdr の外のシェルではこれらのキーは何も起きなくなる</b>
+<b class="t02">// タブの番号移動は herdr 既定の prefix+1〜9 を使う</b>
 <b class="t02">// 反映は [command]+[shift]+,</b>
 </code></pre>
 
@@ -186,16 +197,17 @@ import CopyCode from '@/components/CopyCode.vue'
     <pre><code><b class="t03">ワークスペース</b>
 <b class="t01">[command]+n</b>  <b class="t02">// 新規ワークスペース</b>
 <b class="t01">[command]+1〜9</b>  <b class="t02">// ワークスペース 1〜9 へ移動</b>
+<b class="t01">[command]+j / k</b>  <b class="t02">// 次 / 前のワークスペースへ移動</b>
 <b class="t01">prefix+w</b>  <b class="t02">// ワークスペース一覧</b>
 <b class="t01">prefix+g</b>  <b class="t02">// エージェントの状態で絞り込める移動ピッカー</b>
 <b class="t01">prefix+[shift]+w</b>  <b class="t02">// ワークスペース名を変更</b>
 <b class="t01">prefix+[shift]+d</b>  <b class="t02">// ワークスペースを閉じる</b>
 <b class="t01">[option]+1〜9</b>  <b class="t02">// エージェント 1〜9 へ移動</b>
-<b class="t01">[control]+[option]+j / k</b>  <b class="t02">// 次 / 前のエージェントへ移動</b>
+<b class="t01">[option]+j / k</b>  <b class="t02">// 次 / 前のエージェントへ移動</b>
 
 <b class="t03">タブ</b>
 <b class="t01">[command]+t</b>  <b class="t02">// 新規タブ</b>
-<b class="t01">[option]+「[」 / 「]」</b>  <b class="t02">// 前 / 次のタブ</b>
+<b class="t01">[command]+h / l</b>  <b class="t02">// 前 / 次のタブ（prefix+p / n も使える）</b>
 <b class="t01">prefix+1〜9</b>  <b class="t02">// タブ 1〜9 へ移動</b>
 <b class="t01">[command]+[shift]+t</b>  <b class="t02">// タブ名を変更（prefix+[shift]+t と同じ）</b>
 <b class="t01">prefix+[shift]+x</b>  <b class="t02">// タブを閉じる</b>
@@ -240,6 +252,8 @@ import CopyCode from '@/components/CopyCode.vue'
 <b class="t02">// ~/.config/herdr/open-ttt.sh を作成</b>
 <CopyCode top>#!/bin/sh
 <b class="t02"># フォーカス中のペインの Claude Code セッションが worktree で作業中なら、その worktree を開く</b>
+export PATH="$HOME/.local/bin:$PATH"
+
 cur=$(herdr pane current)
 field() { printf '%s' "$cur" | grep -o "\"$1\":\"[^\"]*\"" | head -1 | cut -d\" -f4; }
 dir=$(field cwd)
@@ -269,6 +283,8 @@ p=$(herdr plugin pane open --plugin ttt.editor --entrypoint editor --placement s
 <b class="t02">// 反映</b>
 <b class="t01">herdr server reload-config</b>
 
+<b class="t02">// スクリプト冒頭の PATH は、ttt が ~/.local/bin にある環境でスクリプトから ttt を見つけられるようにするため</b>
+<b class="t02">//   brew で入れて ttt が既に PATH にある場合は不要</b>
 <b class="t02">// prefix+e で、フォーカス中のタブの上ペイン（縦 66%）に TTT を開く</b>
 <b class="t02">// 開くディレクトリは、Claude Code が worktree で作業中ならその worktree、それ以外はペインのディレクトリ</b>
 <b class="t02">// worktree はログに出てきたパスで判断するので、会話で名前を出しただけの worktree が選ばれることもある</b>
