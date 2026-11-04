@@ -251,6 +251,8 @@ import CopyCode from '@/components/CopyCode.vue'
 <b class="t02">// ~/.config/herdr/open-ttt.sh を作成</b>
 <CopyCode top>#!/bin/sh
 <b class="t02"># フォーカス中のペインの Claude Code セッションが worktree で作業中なら、その worktree を開く</b>
+export PATH="$HOME/.local/bin:$PATH"
+
 cur=$(herdr pane current)
 field() { printf '%s' "$cur" | grep -o "\"$1\":\"[^\"]*\"" | head -1 | cut -d\" -f4; }
 dir=$(field cwd)
@@ -280,6 +282,8 @@ p=$(herdr plugin pane open --plugin ttt.editor --entrypoint editor --placement s
 <b class="t02">// 反映</b>
 <b class="t01">herdr server reload-config</b>
 
+<b class="t02">// スクリプト冒頭の PATH は、ttt が ~/.local/bin にある環境でスクリプトから ttt を見つけられるようにするため</b>
+<b class="t02">//   brew で入れて ttt が既に PATH にある場合は不要</b>
 <b class="t02">// prefix+e で、フォーカス中のタブの上ペイン（縦 66%）に TTT を開く</b>
 <b class="t02">// 開くディレクトリは、Claude Code が worktree で作業中ならその worktree、それ以外はペインのディレクトリ</b>
 <b class="t02">// worktree はログに出てきたパスで判断するので、会話で名前を出しただけの worktree が選ばれることもある</b>
