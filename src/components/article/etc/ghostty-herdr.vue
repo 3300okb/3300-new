@@ -171,7 +171,8 @@ import CopyCode from '@/components/CopyCode.vue'
 <b class="t02">// csi:49;3u は [option]+1（3 = 1 + alt 2）→ herdr の focus_agent = "alt+1..9" が受け取る</b>
 <b class="t02">// csi:106;9u は [command]+j（106 = "j"、9 = command）、csi:106;3u は [option]+j</b>
 <b class="t02">//   macOS の [option] は文字入力に使われ alt として届かないので、CSI u で直接送る</b>
-<b class="t02">// [command]+h は macOS の「Ghostty を隠す」と重なる。ウィンドウが隠れる場合は別のキーにする</b>
+<b class="t02">// [command]+h は macOS の「Ghostty を隠す」と重なるので、macOS 側の「隠す」のショートカットを無効にしておく</b>
+<b class="t02">//   無効にしないと [command]+h でアプリが隠れて、タブ移動にならない</b>
 <b class="t02">//   [command]+k は Ghostty 既定の画面クリアを置き換える</b>
 <b class="t02">//   herdr の外のシェルではこれらのキーは何も起きなくなる</b>
 <b class="t02">// タブの番号移動は herdr 既定の prefix+1〜9 を使う</b>
