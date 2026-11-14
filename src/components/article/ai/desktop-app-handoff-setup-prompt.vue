@@ -44,6 +44,14 @@ import CopyCode from '@/components/CopyCode.vue'
       の差分を確認させる。対象はローカルに保存されたセッションのみで、クラウド実行のセッションは読めない。
     </p>
     <p>
+      herdr 版と併用する場合の使い分け：herdr 版の
+      <code>codex-to-claude</code> / <code>claude-to-codex</code>
+      は、中断した元のエージェントから実行する CLI 向け。こちらの
+      <code>continue-from-*</code>
+      は、引き継ぎ先のデスクトップアプリで実行する。スキル名・置き場所は重ならないが、description
+      が似ると自動選択が曖昧になるため、プロンプトでデスクトップアプリ専用と明記させている。
+    </p>
+    <p>
       セットアップ後の使い方：元アプリで中断したプロジェクトを、引き継ぎ先アプリで開いて新しいスレッドを作る。Codex
       → Claude なら Claude アプリで <code>/continue-from-codex</code>、Claude →
       Codex なら Codex アプリで
@@ -77,7 +85,8 @@ import CopyCode from '@/components/CopyCode.vue'
   - continue-from-codex: Claude 側で使う。Codex の履歴を読んで作業を続ける。
   - continue-from-claude: Codex 側で使う。Claude の履歴を読んで作業を続ける。
 - Claude から読めるよう、~/.claude/skills/&lt;name&gt; に実体フォルダへの symlink を置く。既存の実ファイルや異なるリンクがあれば勝手に置き換えず、衝突内容を確認する。Windows で symlink が使えない場合はコピーにし、更新方法を報告する。
-- 各 SKILL.md には name と、「Codex（Claude）が利用上限などで中断した作業を、このアプリで続行したいとき」に使うと分かる description を付ける。
+- 各 SKILL.md には name と、「デスクトップアプリで、Codex（Claude）が利用上限などで中断した作業を、このアプリの新しいスレッドで続行したいとき」に使うと分かる description を付ける。
+- 同名・類似のスキル codex-to-claude / claude-to-codex（Herdr 向け）が既にある場合は変更せず、description に「Herdr のペインや CLI からの引き継ぎには使わない」と明記して区別する。
 - 履歴取得などの共通処理が必要な場合だけ同じスキルフォルダに scripts/ を置く。スキル間でコピーせず、共有する場合は片方から呼ぶ。
 - 引数は --session &lt;ID&gt;（元アプリのセッション ID）、--dir &lt;絶対パス&gt;（対象 worktree）、--dry-run を受け付ける。呼び出し例:
   - Claude: /continue-from-codex --session &lt;CodexのID&gt;
