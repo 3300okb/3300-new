@@ -54,6 +54,12 @@
     "updateDate": "2026/10/09"
   },
   {
+    "articlePath": "ai/codex-to-claude-handoff-setup-prompt",
+    "articleName": "codex-to-claude-handoff-setup-prompt",
+    "category": "ai",
+    "updateDate": "2026/11/14"
+  },
+  {
     "articlePath": "ai/global-setup-prompt",
     "articleName": "global-setup-prompt",
     "category": "ai",
