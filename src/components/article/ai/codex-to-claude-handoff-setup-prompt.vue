@@ -21,9 +21,7 @@ import CopyCode from '@/components/CopyCode.vue'
       Ghostty + Herdr で作業中の Codex CLI / Claude Code
       が利用上限に達したとき、同じ worktree
       でもう一方へ作業を引き継ぐ環境をまとめて作るプロンプト。Claude → Codex
-      の逆方向にも対応する。 上限に達する前に、設定を変更できる Codex または
-      Claude Code に貼る。
-      このプロンプトを貼った時点では、元の開発作業は再開しない。
+      の逆方向にも対応する。
     </p>
     <p>
       元エージェントのセッションをそのまま別の CLI で再開するのではなく、catchup
