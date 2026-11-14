@@ -27,8 +27,10 @@ import CopyCode from '@/components/CopyCode.vue'
     <p>
       デスクトップアプリでは別の TTY ペインを開けないため、catchup fork
       のような「別 CLI
-      の起動」は使わない。引き継ぎ先のアプリで同じプロジェクト（worktree）の新しいスレッドを開き、スキルを実行する。スキルが
-      catchup で元アプリのローカル履歴を読み、そのスレッド内で作業を続ける。
+      の起動」は使わない。引き継ぎ先のアプリで新しいスレッドを開き、スキルを実行する。スキルが
+      catchup
+      で元アプリの直近のセッションを一覧し、選んだセッションの作業先（worktree）で作業を続ける。worktree
+      のパスを入力する必要はない。
     </p>
     <p>
       作るのは 2 つ。Claude 側の
@@ -52,12 +54,16 @@ import CopyCode from '@/components/CopyCode.vue'
       が似ると自動選択が曖昧になるため、プロンプトでデスクトップアプリ専用と明記させている。
     </p>
     <p>
-      セットアップ後の使い方：元アプリで中断したプロジェクトを、引き継ぎ先アプリで開いて新しいスレッドを作る。Codex
-      → Claude なら Claude アプリで <code>/continue-from-codex</code>、Claude →
+      セットアップ後の使い方：引き継ぎ先アプリで新しいスレッドを作る。Codex →
+      Claude なら Claude アプリで <code>/continue-from-codex</code>、Claude →
       Codex なら Codex アプリで
-      <code>$continue-from-claude</code> を実行する。セッション ID
-      が分かっていれば <code>--session</code> で指定できる。元アプリが working
-      のままなら、同じ worktree を同時に編集しないよう先に中断しておく。
+      <code>$continue-from-claude</code> を実行する。git worktree
+      内の直近のセッションが最大 10 件、worktree
+      付きで表示されるので、番号で選ぶ。セッション ID が分かっていれば
+      <code>--session</code> で指定できる。Codex
+      のサンドボックスなどで別フォルダへ書き込めない場合は、その worktree
+      を開いたスレッドで実行する。元アプリが working のままなら、同じ worktree
+      を同時に編集しないよう先に中断しておく。
     </p>
 
     <pre><code><CopyCode top>この環境に、Codex デスクトップアプリと Claude デスクトップアプリ間の引き継ぎ環境をセットアップしてください。
@@ -88,7 +94,7 @@ import CopyCode from '@/components/CopyCode.vue'
 - 各 SKILL.md には name と、「デスクトップアプリで、Codex（Claude）が利用上限などで中断した作業を、このアプリの新しいスレッドで続行したいとき」に使うと分かる description を付ける。
 - 同名・類似のスキル codex-to-claude / claude-to-codex（Herdr 向け）が既にある場合は変更せず、description に「Herdr のペインや CLI からの引き継ぎには使わない」と明記して区別する。
 - 履歴取得などの共通処理が必要な場合だけ同じスキルフォルダに scripts/ を置く。スキル間でコピーせず、共有する場合は片方から呼ぶ。
-- 引数は --session &lt;ID&gt;（元アプリのセッション ID）、--dir &lt;絶対パス&gt;（対象 worktree）、--dry-run を受け付ける。呼び出し例:
+- 引数は --session &lt;ID&gt;（元アプリのセッション ID）、--dry-run、任意の --dir &lt;絶対パス&gt;（候補の絞り込みと照合用。worktree の入力は必須にしない）を受け付ける。呼び出し例:
   - Claude: /continue-from-codex --session &lt;CodexのID&gt;
   - Codex: $continue-from-claude --session &lt;ClaudeのID&gt;
 
@@ -96,11 +102,12 @@ import CopyCode from '@/components/CopyCode.vue'
 
 履歴の読み取りは catchup のみで行い、元アプリへのモデル呼び出しや「要約して」という依頼はしない。catchup fork は別 CLI を起動するため使わない。
 
-1. 対象の特定
-   - 作業先は --dir、なければ現在のスレッドの cwd。実パスへ正規化し、git rev-parse --show-toplevel で worktree を確認する。メイン checkout へ移動したり、新しい worktree を作ったりしない。
-   - 元セッションは --session があればそれを使う。なければ catchup codex --list の候補のうち、この作業先のものを新しい順に最大 5 件、ID・タイトル・更新日時とともに表示する。
-   - 候補が 1 件、または最新が明確に突出していても、選んだ ID とタイトルをユーザーに示してから進める。判断が分かれるときは番号で選んでもらう。「最新だから」だけで別セッションを黙って選ばない。
-   - 履歴の作業先とこの worktree が一致しない場合は、理由を示して停止し確認する。
+1. 対象の特定（worktree は入力させず、直近のセッションから選ぶ）
+   - 元セッションは --session があればそれを使う。なければ catchup codex --list を全ディレクトリ対象で取得し、作業先が git worktree 内のものを新しい順に最大 10 件、ID・タイトル・更新日時・worktree とともに表示する。git 外や削除済みの作業先は続行できないため候補から除き、除外件数を示す。
+   - 候補が 1 件、または最新が明確に突出していても、選んだ ID・タイトル・worktree をユーザーに示してから進める。判断が分かれるときは番号で選んでもらう。「最新だから」だけで別セッションを黙って選ばない。
+   - 作業先は選んだセッションの cwd から決める。実パスへ正規化し、git rev-parse --show-toplevel で worktree を確認する。cwd が存在しない・git でない場合は停止して報告する。メイン checkout へ移動したり、新しい worktree を作ったりしない。
+   - その worktree が現在のスレッドの cwd と異なる場合はその旨を示し、以降のファイル操作と git コマンドは worktree の絶対パスで行う。権限やサンドボックスで書き込めない場合は、その worktree を開いた新しいスレッドで実行し直してもらう。
+   - --dir が指定された場合は候補をその worktree に絞り、--session と併用時は照合する。一致しない場合は理由を示して停止し確認する。
 2. 履歴の取得
    - catchup codex --id &lt;ID&gt; --agent の出力を、リポジトリ外のユーザー専用領域（~/.local/state/continue-from-codex/、Windows は %LOCALAPPDATA% 配下）へ実行ごとに一意な名前で保存し、保存先を報告する。自動削除はしない。作業先の指定方法は実際の help に従う。
    - 取得失敗・空の履歴は、その旨を報告して停止する。履歴を黙って直近数ターンへ切り詰めない。大きすぎて読みきれない場合は報告し、範囲を絞る選択肢（--since-compact、--last N）を提示する。
@@ -117,12 +124,12 @@ import CopyCode from '@/components/CopyCode.vue'
 
 - catchup のバージョン、スキルファイルと symlink（またはコピー）、catchup の --list / --agent が実際に動くことを確認する。
 - 実際のセッションが存在すれば、--dry-run で ID・worktree・保存先が正しいことを確認する。存在しなければ、その旨を報告する。
-- 可能な範囲で、明示 ID、候補が複数の場合、worktree の不一致、空白や日本語を含むパス、履歴取得失敗、--dry-run の副作用なしを、テスト用の代替コマンドで確認する。
+- 可能な範囲で、明示 ID、候補が複数の場合、git 外セッションの除外、現在のスレッドと別の worktree を選んだ場合、--dir との不一致、空白や日本語を含むパス、履歴取得失敗、--dry-run の副作用なしを、テスト用の代替コマンドで確認する。
 - 実際に開発作業を開始したり、課金を伴う推論リクエストを送ったりしない。実アプリでの接続を試していない場合は、その範囲を正確に報告する。
 - 完了時は変更ファイル・導入バージョン・検証結果・未確認事項（アプリの再起動が必要か等）と、次のコピー可能な実行例を示す:
   1. Codex で中断した作業を、Claude アプリの新しいスレッドで続行する。
   2. Claude で中断した作業を、Codex アプリの新しいスレッドで続行する。
-  3. セッション ID と worktree を明示して引き継ぐ。
+  3. 直近の候補から番号で選んで引き継ぐ。セッション ID を明示して引き継ぐ。
   4. 引き継ぎ前に --dry-run で対象を確認する。
 
 以上の範囲を実装・検証してください。インストールコマンドを並べるだけで完了とせず、両アプリからスキルが実行できる状態まで仕上げてください。
