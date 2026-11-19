@@ -4,9 +4,9 @@ import path from 'node:path'
 const ROOT = process.cwd()
 const ARTICLES_DIR = path.join(ROOT, 'src/components/article')
 const OUT_INDEX = path.join(ROOT, 'public/article-index.json')
-const OUT_SEARCH = path.join(ROOT, 'public/search-index.json')
+// 旧形式（カテゴリ一覧のみ）の search-index.json がブラウザキャッシュに残っていても当たらないよう、別名で出力する
+const OUT_SEARCH = path.join(ROOT, 'public/search-index-all.json')
 const OUT_INDEX_PREFIX = path.join(ROOT, 'public/article-index-')
-const OUT_SEARCH_PREFIX = path.join(ROOT, 'public/search-index-')
 
 interface ArticleIndexEntry {
   articlePath: string
@@ -65,11 +65,20 @@ const getUpdateDate = (content: string) => {
 
 const getPreBlocks = (content: string) => {
   const matches = Array.from(content.matchAll(/<pre[^>]*>([\s\S]*?)<\/pre>/gi))
-  return matches
-    .map((match) => match[1] || '')
-    .map((raw) => decodeEntities(stripTags(raw)))
-    .map((text) => text.replace(/\r\n/g, '\n').trim())
-    .filter((text) => text.length > 0)
+  return (
+    matches
+      .map((match) => match[1] || '')
+      .map((raw) => decodeEntities(stripTags(raw)))
+      .map((text) => text.replace(/\r\n/g, '\n').trim())
+      .filter((text) => text.length > 0)
+      // 検索は行単位で、スニペットも行ごとに trim するため行頭・行末の空白は不要
+      .map((text) =>
+        text
+          .split('\n')
+          .map((line) => line.trim())
+          .join('\n')
+      )
+  )
 }
 
 const run = async () => {
@@ -117,14 +126,10 @@ const run = async () => {
     JSON.stringify({ categories: categoryList }, null, 2),
     'utf8'
   )
-  await fs.writeFile(
-    OUT_SEARCH,
-    JSON.stringify({ categories: categoryList }, null, 2),
-    'utf8'
-  )
+  // 検索は常に全記事を対象にするため、1リクエストで取れるよう1ファイルにまとめる
+  await fs.writeFile(OUT_SEARCH, JSON.stringify(searchEntries, null, 2), 'utf8')
 
   const indexByCategory = new Map<string, ArticleIndexEntry[]>()
-  const searchByCategory = new Map<string, SearchIndexEntry[]>()
 
   for (const entry of indexEntries) {
     const list = indexByCategory.get(entry.category) || []
@@ -132,23 +137,11 @@ const run = async () => {
     indexByCategory.set(entry.category, list)
   }
 
-  for (const entry of searchEntries) {
-    const list = searchByCategory.get(entry.category) || []
-    list.push(entry)
-    searchByCategory.set(entry.category, list)
-  }
-
   for (const category of categoryList) {
     const indexList = indexByCategory.get(category) || []
-    const searchList = searchByCategory.get(category) || []
     await fs.writeFile(
       `${OUT_INDEX_PREFIX}${category}.json`,
       JSON.stringify(indexList, null, 2),
-      'utf8'
-    )
-    await fs.writeFile(
-      `${OUT_SEARCH_PREFIX}${category}.json`,
-      JSON.stringify(searchList, null, 2),
       'utf8'
     )
   }
