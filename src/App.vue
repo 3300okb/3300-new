@@ -60,10 +60,15 @@ watch(selectedArticle, (newValue, oldValue) => {
   }
 })
 
+let scrollRequestId = 0
+
 const handleScrollToPreIndex = async (
   preIndex: number,
   searchQuery: string
 ) => {
+  // 呼ばれた時点で記事の選択は更新済みなので、ここで対象の記事を控えておく
+  const requestId = ++scrollRequestId
+  const targetArticle = `${selectedCategory.value}/${selectedArticle.value}`
   targetPreIndex.value = preIndex
 
   // リロード後の最初のスクロールの場合、URL更新をスキップ
@@ -79,7 +84,12 @@ const handleScrollToPreIndex = async (
 
   await nextTick()
   // 記事が描画されるのを待つ（固定時間で待つと、速い回線では余計に待たされ、遅い回線では間に合わない）
-  if (await waitForPreElement(preIndex)) {
+  const found = await waitForPreElement(preIndex)
+  // 待っている間に別の記事へ移動したり、別の検索結果を選んだりしていたら、古い依頼ではスクロールしない
+  const isCurrentRequest =
+    requestId === scrollRequestId &&
+    targetArticle === `${selectedCategory.value}/${selectedArticle.value}`
+  if (found && isCurrentRequest) {
     scrollToPreElement(preIndex, searchQuery)
   }
 }
