@@ -41,7 +41,7 @@
 ├── public/
 │   ├── article-index.json             # 全カテゴリ一覧
 │   ├── article-index-<category>.json  # カテゴリ別記事一覧（自動生成）
-│   └── search-index.json              # 全記事の検索インデックス（自動生成）
+│   └── search-index-all.json          # 全記事の検索インデックス（自動生成）
 ├── dist/                          # ビルド出力（gitignore）
 ├── .github/
 │   └── workflows/
@@ -89,7 +89,7 @@ App.vue（状態管理: selectedCategory / selectedArticle）
   ├─ GlobalHeader.vue
   │    └─ SearchBox.vue
   │         ├─ useSearchBoxLogic.ts（検索ロジック）
-  │         └─ useSearchIndex.ts → fetch public/search-index.json
+  │         └─ useSearchIndex.ts → fetch public/search-index-all.json
   ├─ ArticleList.vue
   │    └─ useArticleIndex.ts → fetch public/article-index-<cat>.json
   └─ ArticleContent.vue（動的インポート）

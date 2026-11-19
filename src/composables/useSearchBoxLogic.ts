@@ -271,10 +271,6 @@ export const useSearchBoxLogic = (emit: SearchBoxEmit) => {
     }
   }
 
-  const showMoreResults = () => {
-    visibleCount.value += RESULTS_PAGE_SIZE
-  }
-
   const selectSearchResult = (result: SearchResult, resultIndex?: number) => {
     // まず現在の検索URLにresultIndexを追加（ブラウザバック時にスクロール位置を復元するため）
     if (resultIndex !== undefined && searchQuery.value) {
@@ -338,7 +334,7 @@ export const useSearchBoxLogic = (emit: SearchBoxEmit) => {
     }
     // キーボードで表示範囲の末尾を越えたら続きを描画する
     if (index >= visibleCount.value) {
-      showMoreResults()
+      visibleCount.value += RESULTS_PAGE_SIZE
     }
     activeResultIndex.value = index
     await nextTick()
@@ -353,6 +349,11 @@ export const useSearchBoxLogic = (emit: SearchBoxEmit) => {
       ensureResultVisible(targetElement, container)
     }
     targetElement.focus()
+  }
+
+  // 追加分は「Show more」ボタンより前に描画されるため、追加された先頭の結果へフォーカスを移す
+  const showMoreResults = () => {
+    void focusResultByIndex(visibleCount.value)
   }
 
   const selectResultByIndex = (index: number) => {

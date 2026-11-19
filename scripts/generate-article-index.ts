@@ -4,7 +4,8 @@ import path from 'node:path'
 const ROOT = process.cwd()
 const ARTICLES_DIR = path.join(ROOT, 'src/components/article')
 const OUT_INDEX = path.join(ROOT, 'public/article-index.json')
-const OUT_SEARCH = path.join(ROOT, 'public/search-index.json')
+// 旧形式（カテゴリ一覧のみ）の search-index.json がブラウザキャッシュに残っていても当たらないよう、別名で出力する
+const OUT_SEARCH = path.join(ROOT, 'public/search-index-all.json')
 const OUT_INDEX_PREFIX = path.join(ROOT, 'public/article-index-')
 
 interface ArticleIndexEntry {

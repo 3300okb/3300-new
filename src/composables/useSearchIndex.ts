@@ -25,7 +25,7 @@ export const loadSearchIndexAll = async () => {
   if (searchIndexCache) return searchIndexCache
   if (searchIndexPromise) return searchIndexPromise
 
-  searchIndexPromise = fetch('/search-index.json')
+  searchIndexPromise = fetch('/search-index-all.json')
     .then(async (res) => {
       if (!res.ok) throw new Error('Failed to load search index')
       return (await res.json()) as SearchIndexEntry[]
