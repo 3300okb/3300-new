@@ -1,0 +1,8 @@
+# キャッシュ設定。public/ から dist/ にコピーされ、デプロイで本番サーバーのルートに置かれる
+# mod_headers がない環境では何もしない
+<IfModule mod_headers.c>
+  # ファイル名が固定の HTML と JSON は、毎回サーバーに更新を確認させる（変更がなければ 304 で本文は送られない）
+  <FilesMatch "\.(html|json)$">
+    Header set Cache-Control "no-cache"
+  </FilesMatch>
+</IfModule>

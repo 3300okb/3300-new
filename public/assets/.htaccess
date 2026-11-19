@@ -1,0 +1,5 @@
+# assets/ はビルド時にファイル名へハッシュが入り、中身が変わらないため、1年キャッシュして更新確認もさせない
+# （Vite が出力する dist/assets/ と同じ場所に置くためのファイル）
+<IfModule mod_headers.c>
+  Header set Cache-Control "public, max-age=31536000, immutable"
+</IfModule>

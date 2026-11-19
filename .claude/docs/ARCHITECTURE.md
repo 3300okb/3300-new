@@ -39,6 +39,8 @@
 │   ├── markuplint-changed.ts      # 変更ファイルのみ markuplint 実行
 │   └── check-title-mismatch.ts   # 記事タイトル不一致チェック
 ├── public/
+│   ├── .htaccess                      # HTML・JSON を毎回更新確認させるキャッシュ設定（本番の Apache 用）
+│   ├── assets/.htaccess               # ハッシュ付きの dist/assets/ を1年キャッシュ（本番の Apache 用）
 │   ├── article-index-all.json         # 全記事の一覧（自動生成。index.html で先読み）
 │   └── search-index-all.json          # 全記事の検索インデックス（自動生成）
 ├── dist/                          # ビルド出力（gitignore）
