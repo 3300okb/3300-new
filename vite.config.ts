@@ -44,24 +44,9 @@ export default defineConfig({
             return 'vendor'
           }
 
-          // 記事コンポーネントは大きいので分割
-          // ただし、カテゴリごとにまとめて分割数を抑える（ホスティングの同時接続制限対策）
-          if (id.includes('src/components/article/')) {
-            if (id.includes('/js/')) {
-              return 'articles-js'
-            }
-            if (id.includes('/css/')) {
-              return 'articles-css'
-            }
-            if (id.includes('/etc/')) {
-              return 'articles-etc'
-            }
-            // その他の記事
-            return 'articles-other'
-          }
-
-          // 共通コンポーネントは記事と依存関係があるため、デフォルトチャンクに含める
-          // （循環依存を避けるため、個別チャンク化しない）
+          // 記事は manualChunks で指定せず、記事ごとの動的 import チャンクに任せる。
+          // カテゴリ単位でまとめると、共有ヘルパーが記事チャンクに入り込んで
+          // 初回ロードで記事チャンクを丸ごと読み込み、1記事を開くだけでカテゴリ全体も読み込んでしまう。
         },
       },
     },
