@@ -844,6 +844,9 @@
   .py-10 {
     padding-block: 0.625rem;
   }
+  .py-12 {
+    padding-block: 0.75rem;
+  }
   .pt-9 {
     padding-top: 0.5625rem;
   }

@@ -1,4 +1,4 @@
-import { nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue'
+import { computed, nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import { loadArticleIndexAll } from './useArticleIndex'
 import { loadSearchIndexAll } from './useSearchIndex'
 
@@ -22,9 +22,21 @@ export type SearchBoxEmit = {
   (event: 'ready'): void
 }
 
+// 一度に描画する検索結果の件数（短いクエリで数千件ヒットしても描画が重くならないように）
+const RESULTS_PAGE_SIZE = 100
+
+// 英数字・記号だけの1文字はほぼ全行にヒットするため検索しない（日本語などは1文字でも検索する）
+const isSearchableQuery = (query: string) =>
+  query.length >= 2 || /[^\x20-\x7e]/.test(query)
+
 export const useSearchBoxLogic = (emit: SearchBoxEmit) => {
   const searchQuery = ref('')
   const searchResults = ref<SearchResult[]>([])
+  const visibleCount = ref(RESULTS_PAGE_SIZE)
+  const visibleResults = computed(() =>
+    searchResults.value.slice(0, visibleCount.value)
+  )
+  const canSearch = computed(() => isSearchableQuery(searchQuery.value.trim()))
   const isSearching = ref(false)
   const inputRef = ref<HTMLInputElement | null>(null)
   const activeResultIndex = ref<number | null>(null)
@@ -43,6 +55,7 @@ export const useSearchBoxLogic = (emit: SearchBoxEmit) => {
   }
 
   const resetSearchState = () => {
+    searchId++ // 実行中の検索の結果が後から表示されないようにする
     searchResults.value = []
     isSearching.value = false
     activeResultIndex.value = null
@@ -133,10 +146,9 @@ export const useSearchBoxLogic = (emit: SearchBoxEmit) => {
 
     // 次にコンテンツマッチを検索
     for (const entry of searchIndex) {
-      entry.preBlocks.forEach((preContent, preIndex) => {
-        const preLines = preContent.split('\n')
-        preLines.forEach((line: string, lineIndex: number) => {
-          if (line.toLowerCase().includes(query)) {
+      entry.preBlocks.forEach(({ lines: preLines, lowerLines }, preIndex) => {
+        lowerLines.forEach((lowerLine, lineIndex) => {
+          if (lowerLine.includes(query)) {
             // 前後5行を取得
             const startLine = Math.max(0, lineIndex - 5)
             const endLine = Math.min(preLines.length, lineIndex + 6)
@@ -208,7 +220,7 @@ export const useSearchBoxLogic = (emit: SearchBoxEmit) => {
       clearTimeout(searchTimeoutId)
     }
 
-    if (!searchQuery.value.trim()) {
+    if (!isSearchableQuery(searchQuery.value.trim())) {
       resetSearchState()
       return
     }
@@ -226,7 +238,7 @@ export const useSearchBoxLogic = (emit: SearchBoxEmit) => {
     // 検索クエリをキャプチャ（非同期処理中に変更されないように）
     const capturedQuery = searchQuery.value.trim()
 
-    if (!capturedQuery) {
+    if (!isSearchableQuery(capturedQuery)) {
       resetSearchState()
       return
     }
@@ -234,6 +246,7 @@ export const useSearchBoxLogic = (emit: SearchBoxEmit) => {
     // 現在の検索に一意のIDを割り当て
     const currentSearchId = ++searchId
     searchResults.value = []
+    visibleCount.value = RESULTS_PAGE_SIZE
 
     try {
       const query = capturedQuery.toLowerCase()
@@ -256,6 +269,10 @@ export const useSearchBoxLogic = (emit: SearchBoxEmit) => {
         isSearching.value = false
       }
     }
+  }
+
+  const showMoreResults = () => {
+    visibleCount.value += RESULTS_PAGE_SIZE
   }
 
   const selectSearchResult = (result: SearchResult, resultIndex?: number) => {
@@ -318,6 +335,10 @@ export const useSearchBoxLogic = (emit: SearchBoxEmit) => {
   const focusResultByIndex = async (index: number) => {
     if (index < 0 || index >= searchResults.value.length) {
       return
+    }
+    // キーボードで表示範囲の末尾を越えたら続きを描画する
+    if (index >= visibleCount.value) {
+      showMoreResults()
     }
     activeResultIndex.value = index
     await nextTick()
@@ -509,6 +530,8 @@ export const useSearchBoxLogic = (emit: SearchBoxEmit) => {
     if (pendingScrollToIndex !== null && searchResults.value.length > 0) {
       const targetIndex = pendingScrollToIndex
       pendingScrollToIndex = null
+      // 復元先が表示範囲外なら、そこまで描画する
+      visibleCount.value = Math.max(visibleCount.value, targetIndex + 1)
 
       // DOM更新を待つ
       await nextTick()
@@ -548,12 +571,15 @@ export const useSearchBoxLogic = (emit: SearchBoxEmit) => {
   return {
     searchQuery,
     searchResults,
+    visibleResults,
+    canSearch,
     isSearching,
     inputRef,
     activeResultIndex,
     getHighlightedSegments,
     performSearch,
     prefetchSearchIndex,
+    showMoreResults,
     selectSearchResult,
     handleInputKeydown,
     handleResultKeydown,

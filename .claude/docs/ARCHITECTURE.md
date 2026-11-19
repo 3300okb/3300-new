@@ -41,8 +41,7 @@
 ├── public/
 │   ├── article-index.json             # 全カテゴリ一覧
 │   ├── article-index-<category>.json  # カテゴリ別記事一覧（自動生成）
-│   ├── search-index.json              # 全カテゴリ一覧（検索用）
-│   └── search-index-<category>.json   # カテゴリ別検索インデックス（自動生成）
+│   └── search-index.json              # 全記事の検索インデックス（自動生成）
 ├── dist/                          # ビルド出力（gitignore）
 ├── .github/
 │   └── workflows/
@@ -71,7 +70,7 @@
 
 - `scripts/generate-article-index.ts` が `.vue` ファイルを解析
 - `updateDate` と `<pre>` ブロック内テキストを抽出
-- カテゴリ別の JSON ファイルとして `public/` に出力
+- 記事一覧はカテゴリ別、検索インデックスは全記事を1つの JSON ファイルとして `public/` に出力
 - ランタイムでフェッチされ、`useArticleIndex.ts` / `useSearchIndex.ts` で管理
 
 ### 状態管理
@@ -90,7 +89,7 @@ App.vue（状態管理: selectedCategory / selectedArticle）
   ├─ GlobalHeader.vue
   │    └─ SearchBox.vue
   │         ├─ useSearchBoxLogic.ts（検索ロジック）
-  │         └─ useSearchIndex.ts → fetch public/search-index-<cat>.json
+  │         └─ useSearchIndex.ts → fetch public/search-index.json
   ├─ ArticleList.vue
   │    └─ useArticleIndex.ts → fetch public/article-index-<cat>.json
   └─ ArticleContent.vue（動的インポート）

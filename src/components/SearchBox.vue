@@ -15,11 +15,14 @@ const emit = defineEmits<{
 const {
   searchQuery,
   searchResults,
+  visibleResults,
+  canSearch,
   isSearching,
   activeResultIndex,
   getHighlightedSegments,
   performSearch,
   prefetchSearchIndex,
+  showMoreResults,
   selectSearchResult,
   handleInputKeydown,
   handleResultKeydown,
@@ -76,7 +79,7 @@ defineExpose({
         {{ searchResults.length }} results found
       </div>
       <div
-        v-for="(result, index) in searchResults"
+        v-for="(result, index) in visibleResults"
         :key="index"
         :data-result-index="index"
         role="button"
@@ -110,10 +113,18 @@ defineExpose({
           class="text-12 mt-8 overflow-x-auto rounded bg-[#112233] p-8 break-all whitespace-pre-wrap text-white"
         ><code><!-- prettier-ignore --><span v-for="(segment, segmentIndex) in getHighlightedSegments(result.snippet, searchQuery)" :key="segmentIndex" :class="segment.mark ? 'rounded-sm bg-yellow-200 px-2 font-bold text-black' : ''" v-text="segment.text"></span></code></pre>
       </div>
+      <button
+        v-if="visibleResults.length < searchResults.length"
+        type="button"
+        class="w-full cursor-pointer px-16 py-12 text-sm text-blue-600 hover:bg-gray-50"
+        @click="showMoreResults"
+      >
+        Show more ({{ searchResults.length - visibleResults.length }} remaining)
+      </button>
     </div>
 
     <div
-      v-if="searchQuery && !isSearching && searchResults.length === 0"
+      v-if="canSearch && !isSearching && searchResults.length === 0"
       class="absolute z-10 mt-4 w-full rounded-md border border-gray-300 bg-white p-16 shadow-lg"
     >
       <p class="text-gray-500">No results found</p>

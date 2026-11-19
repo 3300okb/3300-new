@@ -5,70 +5,44 @@ export interface SearchIndexEntry {
   preBlocks: string[]
 }
 
-export interface SearchIndexManifest {
-  categories: string[]
+// 検索のたびに split / toLowerCase しないよう、読み込み時に1回だけ行分割と小文字化をしておく
+export interface SearchablePreBlock {
+  lines: string[]
+  lowerLines: string[]
 }
 
-let searchIndexCache: SearchIndexEntry[] | null = null
-const searchIndexByCategory = new Map<string, SearchIndexEntry[]>()
-let searchManifest: SearchIndexManifest | null = null
-let searchManifestPromise: Promise<SearchIndexManifest> | null = null
-let searchIndexPromise: Promise<SearchIndexEntry[]> | null = null
-
-export const loadSearchIndexManifest = async () => {
-  if (searchManifest) return searchManifest
-  if (searchManifestPromise) return searchManifestPromise
-
-  searchManifestPromise = fetch('/search-index.json')
-    .then(async (res) => {
-      if (!res.ok) throw new Error('Failed to load search index')
-      return (await res.json()) as SearchIndexManifest
-    })
-    .then((data) => {
-      searchManifest = data
-      return data
-    })
-    .finally(() => {
-      searchManifestPromise = null
-    })
-
-  return searchManifestPromise
+export interface SearchableEntry {
+  articlePath: string
+  articleName: string
+  category: string
+  preBlocks: SearchablePreBlock[]
 }
 
-export const loadSearchIndexByCategory = async (category: string) => {
-  const cached = searchIndexByCategory.get(category)
-  if (cached) return cached
-
-  const data = await fetch(`/search-index-${category}.json`).then(
-    async (res) => {
-      if (!res.ok) throw new Error('Failed to load search index')
-      return (await res.json()) as SearchIndexEntry[]
-    }
-  )
-
-  searchIndexByCategory.set(category, data)
-  return data
-}
+let searchIndexCache: SearchableEntry[] | null = null
+let searchIndexPromise: Promise<SearchableEntry[]> | null = null
 
 export const loadSearchIndexAll = async () => {
   if (searchIndexCache) return searchIndexCache
   if (searchIndexPromise) return searchIndexPromise
 
-  searchIndexPromise = (async () => {
-    const manifest = await loadSearchIndexManifest()
-    const results = await Promise.allSettled(
-      manifest.categories.map((category) => loadSearchIndexByCategory(category))
-    )
-    searchIndexCache = results
-      .filter(
-        (r): r is PromiseFulfilledResult<SearchIndexEntry[]> =>
-          r.status === 'fulfilled'
-      )
-      .flatMap((r) => r.value)
-    return searchIndexCache
-  })().finally(() => {
-    searchIndexPromise = null
-  })
+  searchIndexPromise = fetch('/search-index.json')
+    .then(async (res) => {
+      if (!res.ok) throw new Error('Failed to load search index')
+      return (await res.json()) as SearchIndexEntry[]
+    })
+    .then((data) => {
+      searchIndexCache = data.map((entry) => ({
+        ...entry,
+        preBlocks: entry.preBlocks.map((preContent) => {
+          const lines = preContent.split('\n')
+          return { lines, lowerLines: lines.map((line) => line.toLowerCase()) }
+        }),
+      }))
+      return searchIndexCache
+    })
+    .finally(() => {
+      searchIndexPromise = null
+    })
 
   return searchIndexPromise
 }
