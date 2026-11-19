@@ -5,72 +5,31 @@ export interface ArticleIndexEntry {
   updateDate: string
 }
 
-export interface ArticleIndexManifest {
-  categories: string[]
-}
+let indexCache: ArticleIndexEntry[] | null = null
+let indexPromise: Promise<ArticleIndexEntry[]> | null = null
 
-let indexCacheAll: ArticleIndexEntry[] | null = null
-const indexCacheByCategory = new Map<string, ArticleIndexEntry[]>()
-let indexManifest: ArticleIndexManifest | null = null
-let indexManifestPromise: Promise<ArticleIndexManifest> | null = null
-let indexAllPromise: Promise<ArticleIndexEntry[]> | null = null
+// index.html で先読みしている /article-index-all.json を使う
+export const loadArticleIndexAll = async () => {
+  if (indexCache) return indexCache
+  if (indexPromise) return indexPromise
 
-export const loadArticleIndexManifest = async () => {
-  if (indexManifest) return indexManifest
-  if (indexManifestPromise) return indexManifestPromise
-
-  indexManifestPromise = fetch('/article-index.json')
+  indexPromise = fetch('/article-index-all.json')
     .then(async (res) => {
       if (!res.ok) throw new Error('Failed to load article index')
-      return (await res.json()) as ArticleIndexManifest
+      return (await res.json()) as ArticleIndexEntry[]
     })
     .then((data) => {
-      indexManifest = data
+      indexCache = data
       return data
     })
     .finally(() => {
-      indexManifestPromise = null
+      indexPromise = null
     })
 
-  return indexManifestPromise
+  return indexPromise
 }
 
 export const loadArticleIndexByCategory = async (category: string) => {
-  const cached = indexCacheByCategory.get(category)
-  if (cached) return cached
-
-  const data = await fetch(`/article-index-${category}.json`).then(
-    async (res) => {
-      if (!res.ok) throw new Error('Failed to load article index')
-      return (await res.json()) as ArticleIndexEntry[]
-    }
-  )
-
-  indexCacheByCategory.set(category, data)
-  return data
-}
-
-export const loadArticleIndexAll = async () => {
-  if (indexCacheAll) return indexCacheAll
-  if (indexAllPromise) return indexAllPromise
-
-  indexAllPromise = (async () => {
-    const manifest = await loadArticleIndexManifest()
-    const results = await Promise.allSettled(
-      manifest.categories.map((category) =>
-        loadArticleIndexByCategory(category)
-      )
-    )
-    indexCacheAll = results
-      .filter(
-        (r): r is PromiseFulfilledResult<ArticleIndexEntry[]> =>
-          r.status === 'fulfilled'
-      )
-      .flatMap((r) => r.value)
-    return indexCacheAll
-  })().finally(() => {
-    indexAllPromise = null
-  })
-
-  return indexAllPromise
+  const index = await loadArticleIndexAll()
+  return index.filter((entry) => entry.category === category)
 }

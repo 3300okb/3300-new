@@ -1,11 +1,13 @@
 <script setup lang="ts">
 import { ref, nextTick, watch, defineAsyncComponent } from 'vue'
 import GlobalHeader from './components/GlobalHeader.vue'
-import { scrollToPreElement } from './utils/scrollToPreElement'
+// トップページの初期表示に必要なため、遅延読み込みにせず最初の JS に含める
+import ArticleList from './components/ArticleList.vue'
+import {
+  scrollToPreElement,
+  waitForPreElement,
+} from './utils/scrollToPreElement'
 
-const ArticleList = defineAsyncComponent(
-  () => import('./components/ArticleList.vue')
-)
 const ArticleContent = defineAsyncComponent(
   () => import('./components/ArticleContent.vue')
 )
@@ -76,10 +78,10 @@ const handleScrollToPreIndex = async (
   }
 
   await nextTick()
-  // ArticleContentが読み込まれるのを待つ
-  setTimeout(() => {
+  // 記事が描画されるのを待つ（固定時間で待つと、速い回線では余計に待たされ、遅い回線では間に合わない）
+  if (await waitForPreElement(preIndex)) {
     scrollToPreElement(preIndex, searchQuery)
-  }, 500)
+  }
 }
 </script>
 
