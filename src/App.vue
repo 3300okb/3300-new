@@ -1,11 +1,13 @@
 <script setup lang="ts">
 import { ref, nextTick, watch, defineAsyncComponent } from 'vue'
 import GlobalHeader from './components/GlobalHeader.vue'
-import { scrollToPreElement } from './utils/scrollToPreElement'
+// トップページの初期表示に必要なため、遅延読み込みにせず最初の JS に含める
+import ArticleList from './components/ArticleList.vue'
+import {
+  scrollToPreElement,
+  waitForPreElement,
+} from './utils/scrollToPreElement'
 
-const ArticleList = defineAsyncComponent(
-  () => import('./components/ArticleList.vue')
-)
 const ArticleContent = defineAsyncComponent(
   () => import('./components/ArticleContent.vue')
 )
@@ -58,10 +60,15 @@ watch(selectedArticle, (newValue, oldValue) => {
   }
 })
 
+let scrollRequestId = 0
+
 const handleScrollToPreIndex = async (
   preIndex: number,
   searchQuery: string
 ) => {
+  // 呼ばれた時点で記事の選択は更新済みなので、ここで対象の記事を控えておく
+  const requestId = ++scrollRequestId
+  const targetArticle = `${selectedCategory.value}/${selectedArticle.value}`
   targetPreIndex.value = preIndex
 
   // リロード後の最初のスクロールの場合、URL更新をスキップ
@@ -76,10 +83,15 @@ const handleScrollToPreIndex = async (
   }
 
   await nextTick()
-  // ArticleContentが読み込まれるのを待つ
-  setTimeout(() => {
+  // 記事が描画されるのを待つ（固定時間で待つと、速い回線では余計に待たされ、遅い回線では間に合わない）
+  const found = await waitForPreElement(preIndex)
+  // 待っている間に別の記事へ移動したり、別の検索結果を選んだりしていたら、古い依頼ではスクロールしない
+  const isCurrentRequest =
+    requestId === scrollRequestId &&
+    targetArticle === `${selectedCategory.value}/${selectedArticle.value}`
+  if (found && isCurrentRequest) {
     scrollToPreElement(preIndex, searchQuery)
-  }, 500)
+  }
 }
 </script>
 

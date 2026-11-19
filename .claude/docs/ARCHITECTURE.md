@@ -39,8 +39,7 @@
 │   ├── markuplint-changed.ts      # 変更ファイルのみ markuplint 実行
 │   └── check-title-mismatch.ts   # 記事タイトル不一致チェック
 ├── public/
-│   ├── article-index.json             # 全カテゴリ一覧
-│   ├── article-index-<category>.json  # カテゴリ別記事一覧（自動生成）
+│   ├── article-index-all.json         # 全記事の一覧（自動生成。index.html で先読み）
 │   └── search-index-all.json          # 全記事の検索インデックス（自動生成）
 ├── dist/                          # ビルド出力（gitignore）
 ├── .github/
@@ -70,7 +69,7 @@
 
 - `scripts/generate-article-index.ts` が `.vue` ファイルを解析
 - `updateDate` と `<pre>` ブロック内テキストを抽出
-- 記事一覧はカテゴリ別、検索インデックスは全記事を1つの JSON ファイルとして `public/` に出力
+- 記事一覧・検索インデックスとも、全記事を1つの JSON ファイルとして `public/` に出力（カテゴリ別の一覧はクライアントで絞り込む）
 - ランタイムでフェッチされ、`useArticleIndex.ts` / `useSearchIndex.ts` で管理
 
 ### 状態管理
@@ -91,7 +90,7 @@ App.vue（状態管理: selectedCategory / selectedArticle）
   │         ├─ useSearchBoxLogic.ts（検索ロジック）
   │         └─ useSearchIndex.ts → fetch public/search-index-all.json
   ├─ ArticleList.vue
-  │    └─ useArticleIndex.ts → fetch public/article-index-<cat>.json
+  │    └─ useArticleIndex.ts → fetch public/article-index-all.json
   └─ ArticleContent.vue（動的インポート）
        └─ src/components/article/<category>/<name>.vue（記事コンポーネント）
 ```

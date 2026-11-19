@@ -33,7 +33,7 @@ npm run index:generate
 ```
 
 - `src/components/article/` 配下の `.vue` ファイルを走査して記事インデックスを生成する
-- 出力先: `public/article-index.json`, `public/article-index-<category>.json`, `public/search-index-all.json`
+- 出力先: `public/article-index-all.json`, `public/search-index-all.json`
 - **記事ファイルを追加・削除・移動したら必ず実行すること**
 
 ## Lint / フォーマット

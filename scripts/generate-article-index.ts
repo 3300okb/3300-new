@@ -3,10 +3,10 @@ import path from 'node:path'
 
 const ROOT = process.cwd()
 const ARTICLES_DIR = path.join(ROOT, 'src/components/article')
-const OUT_INDEX = path.join(ROOT, 'public/article-index.json')
+// 旧形式（カテゴリ一覧のみ）の article-index.json がブラウザキャッシュに残っていても当たらないよう、別名で出力する
+const OUT_INDEX = path.join(ROOT, 'public/article-index-all.json')
 // 旧形式（カテゴリ一覧のみ）の search-index.json がブラウザキャッシュに残っていても当たらないよう、別名で出力する
 const OUT_SEARCH = path.join(ROOT, 'public/search-index-all.json')
-const OUT_INDEX_PREFIX = path.join(ROOT, 'public/article-index-')
 
 interface ArticleIndexEntry {
   articlePath: string
@@ -88,7 +88,6 @@ const run = async () => {
 
   const indexEntries: ArticleIndexEntry[] = []
   const searchEntries: SearchIndexEntry[] = []
-  const categories = new Set<string>()
 
   for (const file of files) {
     const rel = path.relative(ARTICLES_DIR, file)
@@ -108,7 +107,6 @@ const run = async () => {
       category,
       updateDate,
     })
-    categories.add(category)
 
     const preBlocks = getPreBlocks(content)
     searchEntries.push({
@@ -119,32 +117,10 @@ const run = async () => {
     })
   }
 
-  const categoryList = Array.from(categories).sort((a, b) => a.localeCompare(b))
-
-  await fs.writeFile(
-    OUT_INDEX,
-    JSON.stringify({ categories: categoryList }, null, 2),
-    'utf8'
-  )
+  // 記事一覧は全記事でも小さいため1ファイルにまとめ、カテゴリ別の一覧はクライアントで絞り込む
+  await fs.writeFile(OUT_INDEX, JSON.stringify(indexEntries, null, 2), 'utf8')
   // 検索は常に全記事を対象にするため、1リクエストで取れるよう1ファイルにまとめる
   await fs.writeFile(OUT_SEARCH, JSON.stringify(searchEntries, null, 2), 'utf8')
-
-  const indexByCategory = new Map<string, ArticleIndexEntry[]>()
-
-  for (const entry of indexEntries) {
-    const list = indexByCategory.get(entry.category) || []
-    list.push(entry)
-    indexByCategory.set(entry.category, list)
-  }
-
-  for (const category of categoryList) {
-    const indexList = indexByCategory.get(category) || []
-    await fs.writeFile(
-      `${OUT_INDEX_PREFIX}${category}.json`,
-      JSON.stringify(indexList, null, 2),
-      'utf8'
-    )
-  }
 }
 
 run().catch((err) => {

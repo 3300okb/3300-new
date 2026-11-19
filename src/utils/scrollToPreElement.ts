@@ -1,5 +1,23 @@
+const PRE_SELECTOR = '.pre-codes-container pre'
+
+// 対象の pre 要素が描画されるまで待つ。記事に該当の pre がない場合に備えてタイムアウトする
+export const waitForPreElement = (preIndex: number, timeoutMs = 5000) =>
+  new Promise<boolean>((resolve) => {
+    const start = performance.now()
+    const check = () => {
+      if (document.querySelectorAll(PRE_SELECTOR)[preIndex]) {
+        resolve(true)
+      } else if (performance.now() - start > timeoutMs) {
+        resolve(false)
+      } else {
+        requestAnimationFrame(check)
+      }
+    }
+    check()
+  })
+
 export const scrollToPreElement = (preIndex: number, searchQuery: string) => {
-  const preElements = document.querySelectorAll('.pre-codes-container pre')
+  const preElements = document.querySelectorAll(PRE_SELECTOR)
   if (!preElements[preIndex]) return
 
   const targetPre = preElements[preIndex] as HTMLElement
