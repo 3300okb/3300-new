@@ -1,6 +1,6 @@
 <script lang="ts">
 export const metadata = {
-  updateDate: '2026/11/14',
+  updateDate: '2026/11/20',
 }
 </script>
 
@@ -59,8 +59,10 @@ import CopyCode from '@/components/CopyCode.vue'
       Codex なら Codex アプリで
       <code>$continue-from-claude</code> を実行する。git worktree
       内の直近のセッションが最大 10 件、worktree
-      付きで表示されるので、番号で選ぶ。セッション ID が分かっていれば
-      <code>--session</code> で指定できる。Codex
+      付きの番号付きリストで表示されるので、番号を返信して選ぶ。選択ボタン（Claude
+      の AskUserQuestion、Codex の request_user_input）は選べる件数が 2〜4
+      件程度に限られ候補が欠けるため、スキルでは使わせない。セッション ID
+      が分かっていれば <code>--session</code> で指定できる。Codex
       のサンドボックスなどで別フォルダへ書き込めない場合は、その worktree
       を開いたスレッドで実行する。元アプリが working のままなら、同じ worktree
       を同時に編集しないよう先に中断しておく。
@@ -104,7 +106,8 @@ import CopyCode from '@/components/CopyCode.vue'
 
 1. 対象の特定（worktree は入力させず、直近のセッションから選ぶ）
    - 元セッションは --session があればそれを使う。なければ catchup codex --list を全ディレクトリ対象で取得し、作業先が git worktree 内のものを新しい順に最大 10 件、ID・タイトル・更新日時・worktree とともに表示する。git 外や削除済みの作業先は続行できないため候補から除き、除外件数を示す。
-   - 候補が 1 件、または最新が明確に突出していても、選んだ ID・タイトル・worktree をユーザーに示してから進める。判断が分かれるときは番号で選んでもらう。「最新だから」だけで別セッションを黙って選ばない。
+   - 候補は全件を番号付きリストとして返信の本文に表示し、ユーザーが番号か ID を返信するのを待つ。Claude の AskUserQuestion や Codex の request_user_input のような選択ボタン型の質問ツールは、選べる件数が限られ候補が欠けるため使わない。この指示と、リストの書式例を各 SKILL.md に明記する。
+   - 候補が 1 件、または最新が明確に突出していても、ユーザーの返信で確認を取ってから進める。「最新だから」だけで別セッションを黙って選ばない。
    - 作業先は選んだセッションの cwd から決める。実パスへ正規化し、git rev-parse --show-toplevel で worktree を確認する。cwd が存在しない・git でない場合は停止して報告する。メイン checkout へ移動したり、新しい worktree を作ったりしない。
    - その worktree が現在のスレッドの cwd と異なる場合はその旨を示し、以降のファイル操作と git コマンドは worktree の絶対パスで行う。権限やサンドボックスで書き込めない場合は、その worktree を開いた新しいスレッドで実行し直してもらう。
    - --dir が指定された場合は候補をその worktree に絞り、--session と併用時は照合する。一致しない場合は理由を示して停止し確認する。
