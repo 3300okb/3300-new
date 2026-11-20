@@ -460,7 +460,7 @@ codex() {
 <b class="t02">//   入力欄に文字を打ち始めていたら、空になるまで待つ（最大 120 秒）</b>
 <b class="t02">//   画面の文言で判定するので、Codex の更新で文言が変わると名前が付かなくなる</b>
 <b class="t02">// jq を使う（無ければ brew install jq）</b>
-<b class="t02">// 確認バージョン: herdr 0.9.5 / Claude Code 2.1.329 / Codex 0.169.0</b>
+<b class="t02">// 確認バージョン: herdr 0.9.5 / Claude Code 2.1.329 / Codex 0.171.0</b>
 </code></pre>
   </PreCodes>
 </template>
