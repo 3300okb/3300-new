@@ -1,6 +1,6 @@
 <script lang="ts">
 export const metadata = {
-  updateDate: '2026/11/04',
+  updateDate: '2026/11/21',
 }
 </script>
 
@@ -393,6 +393,74 @@ p=$(herdr plugin pane open --plugin ttt.editor --entrypoint editor --placement s
 <b class="t02">// text:\x1b/ は ESC + "/"（[option]+/ のレガシー表現）。herdr のペインを通してもそのまま届く</b>
 <b class="t02">// ノーマルモードではカーソル行、v / V で選択中なら選択範囲をコメント化 / 解除する</b>
 <b class="t02">// 反映は [command]+[shift]+,</b>
+</code></pre>
+
+    <p>12. herdr のタブ名を Claude Code / Codex のセッション名にする</p>
+
+    <pre><code><b class="t02">// 中断したセッションを後日 resume するとき、一覧にタブ名が出ていると見分けやすい</b>
+<b class="t02">// ~/.zshrc に追記</b>
+<CopyCode top><b class="t02"># herdr のタブ名を Claude Code / Codex のセッション名にする</b>
+<b class="t02"># 新規起動（引数なし、または先頭がオプション）のときだけ。サブコマンドや resume 時は何もしない</b>
+_herdr_tab_label() {
+  [[ -n $HERDR_TAB_ID ]] || return 1
+  local label
+  label=$(herdr tab get "$HERDR_TAB_ID" 2>/dev/null | jq -r '.result.tab.label // empty')
+  <b class="t02"># 名前を付けていないタブの既定ラベルは数字なので対象外</b>
+  [[ -n $label &amp;&amp; $label != &lt;-&gt; ]] || return 1
+  print -r -- "$label"
+}
+
+claude() {
+  local label
+  if [[ -z $1 || $1 == -* ]] &amp;&amp;
+     (( ! ${@[(I)(-r|--resume|-c|--continue|-p|--print|-n|--name)(|=*)]} )) &amp;&amp;
+     label=$(_herdr_tab_label); then
+    command claude --name "$label" "$@"
+  else
+    command claude "$@"
+  fi
+}
+
+<b class="t02"># Codex には起動時に名前を付けるフラグがないので、入力待ちになったら /rename を送る</b>
+_herdr_codex_rename() {
+  local pane=$1 label=$2 deadline=$((SECONDS + 120))
+  <b class="t02"># herdr が idle と判定するダイアログもあるため、空の入力欄（プレースホルダー）が見えるまで待つ</b>
+  until [[ $(herdr agent get "$pane" 2>/dev/null | jq -r '.result.agent | "\(.agent) \(.agent_status)"') == "codex idle" ]] &amp;&amp;
+        herdr pane read "$pane" --source visible | grep -qE '› (Ask Codex to do anything|Ask a follow-up question)'; do
+    (( SECONDS &lt; deadline )) || return 1
+    sleep 0.5
+  done
+  <b class="t02"># 各段階で画面を確かめてから Enter を送る</b>
+  herdr pane send-text "$pane" /rename &amp;&amp;
+    herdr pane wait-output "$pane" --source visible --match '› /rename' --timeout 3000 &amp;&amp;
+    herdr pane send-keys "$pane" enter &amp;&amp;
+    herdr pane wait-output "$pane" --source visible --match 'Name thread' --timeout 3000 &amp;&amp;
+    herdr agent prompt "$pane" "$label"
+}
+
+codex() {
+  local label pid rc
+  if [[ -z $1 || $1 == -* ]] &amp;&amp; [[ -n $HERDR_PANE_ID ]] &amp;&amp; label=$(_herdr_tab_label); then
+    _herdr_codex_rename "$HERDR_PANE_ID" "$label" &lt;/dev/null &amp;&gt;/dev/null &amp;!
+    pid=$!
+  fi
+  command codex "$@"
+  rc=$?
+  <b class="t02"># 名前を付ける前に Codex を終えたら待機も止める（次の起動に紛れ込ませない）</b>
+  [[ -n $pid ]] &amp;&amp; kill $pid 2>/dev/null
+  return $rc
+}</CopyCode>
+<b class="t02">// 反映は新しいタブを開くか、開いているシェルで source ~/.zshrc</b>
+<b class="t02">// 先にタブ名を [command]+[shift]+t（prefix+[shift]+t）で付けておく</b>
+<b class="t02">// タブで claude / codex を起動すると、タブ名がセッション名になる</b>
+<b class="t02">//   claude -r / -c / -p、codex resume などのサブコマンド、プロンプトを直接渡したときは何もしない</b>
+<b class="t02">// Claude Code は --name でセッション名を渡す。プロンプト欄・ターミナルのタイトル・claude --resume の一覧に出る</b>
+<b class="t02">// Codex は起動後に /rename と名前をペインへ送る。codex resume の一覧に出る</b>
+<b class="t02">//   Enter は、入力欄に /rename が入ったこと、名前の入力ダイアログ（Name thread）が開いたことを確かめてから送る</b>
+<b class="t02">//   入力欄に文字を打ち始めていたら、空になるまで待つ（最大 120 秒）</b>
+<b class="t02">//   画面の文言で判定するので、Codex の更新で文言が変わると名前が付かなくなる</b>
+<b class="t02">// jq を使う（無ければ brew install jq）</b>
+<b class="t02">// 確認バージョン: herdr 0.9.5 / Claude Code 2.1.329 / Codex 0.169.0</b>
 </code></pre>
   </PreCodes>
 </template>
