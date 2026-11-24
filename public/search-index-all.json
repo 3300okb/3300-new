@@ -715,6 +715,12 @@
     ]
   },
   {
+    "articlePath": "etc/wikipedia-random",
+    "articleName": "wikipedia-random",
+    "category": "etc",
+    "preBlocks": []
+  },
+  {
     "articlePath": "etc/xampp",
     "articleName": "xampp",
     "category": "etc",
