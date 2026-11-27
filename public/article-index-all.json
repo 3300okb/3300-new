@@ -24,12 +24,6 @@
     "updateDate": "2026/10/09"
   },
   {
-    "articlePath": "ai/claude-setup-prompt",
-    "articleName": "claude-setup-prompt",
-    "category": "ai",
-    "updateDate": "2026/09/24"
-  },
-  {
     "articlePath": "ai/claude-skills",
     "articleName": "claude-skills",
     "category": "ai",
@@ -44,12 +38,6 @@
   {
     "articlePath": "ai/codex-hooks",
     "articleName": "codex-hooks",
-    "category": "ai",
-    "updateDate": "2026/10/09"
-  },
-  {
-    "articlePath": "ai/codex-setup-prompt",
-    "articleName": "codex-setup-prompt",
     "category": "ai",
     "updateDate": "2026/10/09"
   },
@@ -69,7 +57,7 @@
     "articlePath": "ai/global-setup-prompt",
     "articleName": "global-setup-prompt",
     "category": "ai",
-    "updateDate": "2026/10/09"
+    "updateDate": "2026/11/27"
   },
   {
     "articlePath": "ai/harness-brushup-skill-prompt",
@@ -82,6 +70,12 @@
     "articleName": "karpathy-claude-md",
     "category": "ai",
     "updateDate": "2026/05/24"
+  },
+  {
+    "articlePath": "ai/repository-setup-prompt",
+    "articleName": "repository-setup-prompt",
+    "category": "ai",
+    "updateDate": "2026/11/27"
   },
   {
     "articlePath": "ai/translation",

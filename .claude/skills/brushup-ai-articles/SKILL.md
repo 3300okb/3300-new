@@ -1,6 +1,6 @@
 ---
 name: brushup-ai-articles
-description: 新しい Claude / OpenAI モデルに合わせて、このリポジトリの AI 記事 7 本（セットアップ記事 global-setup-prompt・claude-setup-prompt・codex-setup-prompt、hooks 記事 claude-hooks・codex-hooks、一覧記事 claude-commands・claude-skills）をブラッシュアップし、PR 作成 → マージ後の同期 → このPC のグローバル設定（~/.claude・~/.codex）への反映 → ブランチ削除までを一通り行う。「Opus X 向けにセットアップ記事を更新して」「GPT-X 対応でプロンプト記事をブラッシュアップ」「新モデルが出たので CLAUDE.md / AGENTS.md の記事を見直したい」「hooks 記事も新モデル向けに直して」「claude commands / skills の記事を最新にして」など、モデル更新に伴って setup-prompt / hooks / commands / skills 記事やグローバル設定を見直す依頼では、記事名やスキル名が明示されていなくても使うこと。
+description: 新しい Claude / OpenAI モデルに合わせて、このリポジトリの AI 記事 6 本（セットアップ記事 global-setup-prompt・repository-setup-prompt、hooks 記事 claude-hooks・codex-hooks、一覧記事 claude-commands・claude-skills）をブラッシュアップし、PR 作成 → マージ後の同期 → このPC のグローバル設定（~/.claude・~/.codex）への反映 → ブランチ削除までを一通り行う。「Opus X 向けにセットアップ記事を更新して」「GPT-X 対応でプロンプト記事をブラッシュアップ」「新モデルが出たので CLAUDE.md / AGENTS.md の記事を見直したい」「hooks 記事も新モデル向けに直して」「claude commands / skills の記事を最新にして」など、モデル更新に伴って setup-prompt / hooks / commands / skills 記事やグローバル設定を見直す依頼では、記事名やスキル名が明示されていなくても使うこと。
 ---
 
 # AI 記事（セットアップ・hooks・commands・skills）の新モデル向けブラッシュアップ
@@ -9,7 +9,7 @@ description: 新しい Claude / OpenAI モデルに合わせて、このリポ�
 
 1. 対象モデルを聞く（Step 0）
 2. 新モデルの挙動の変化を一次情報で調べる（Phase 1）
-3. セットアップ記事 3 本を校正して PR（Phase 2）
+3. セットアップ記事 2 本を校正して PR（Phase 2）
 4. hooks 記事を見直し、不具合修正と新モデル向けの追加を別々の PR に（Phase 3）
 5. commands・skills 記事を新しい Claude Code とモデルに合わせて PR（Phase 4）
 6. マージ後にセットアップ記事と hooks 記事の食い違いを揃える（Phase 5）
@@ -23,8 +23,7 @@ Phase 6（ホームディレクトリの書き換え）と Phase 7（ブラン�
 対象ファイル:
 
 - `src/components/article/ai/global-setup-prompt.vue` — ~/.claude/CLAUDE.md（正本）と ~/.codex/AGENTS.md（symlink）を作るプロンプト
-- `src/components/article/ai/claude-setup-prompt.vue` — リポジトリ単位の Claude Code 設定を作るプロンプト
-- `src/components/article/ai/codex-setup-prompt.vue` — リポジトリ単位の Codex CLI 設定を作るプロンプト
+- `src/components/article/ai/repository-setup-prompt.vue` — リポジトリ単位の Claude Code / Codex CLI 設定を 1 本で作るプロンプト（事実は AGENTS.md と `.agents/docs/` で共有し、CLAUDE.md は `@AGENTS.md` で取り込む）
 - `src/components/article/ai/claude-hooks.vue` / `codex-hooks.vue` — グローバル hooks の設定とスクリプト
 - `src/components/article/ai/claude-commands.vue` — Claude Code のコマンド早見表
 - `src/components/article/ai/claude-skills.vue` — おすすめスキルの `npx skills add` 一覧
@@ -89,7 +88,7 @@ AskUserQuestion で次をまとめて聞いてください。
 常時ロードされる散文に置く価値があるのは、モデルの既定挙動とずれる数行だけです。
 「必ず / 絶対」の類は散文では守られないので、hooks / permissions / rules に寄せます。
 
-## Phase 2: セットアップ記事 3 本を校正する
+## Phase 2: セットアップ記事 2 本を校正する
 
 開発ブランチを切ってから作業します（`dev/{YYYYMMDDHHMM}-{name}`。`main` への直接 push は禁止）。
 旧モデル名で grep すると、更新箇所の取りこぼしを防げます。
@@ -107,23 +106,18 @@ grep -n "旧モデル名\|旧モデルID" src/components/article/ai/*-setup-prom
   - Phase 1 の CLAUDE.md テンプレート（ヘッダーの前提行、セクション 1〜6）と、その直後の注記
   - Phase 4 の effort 設定キーの注記
   - Phase 6 の完了報告の「前提モデル」
-- **claude-setup-prompt:**
-  - 冒頭の前提モデルと進め方
-  - 制御手段の表（Effort 行）、アンチパターン、校正の表
-  - Phase 1 の「作業の進め方」
-  - Phase 2〜5（rules / skills・agents の effort / settings.json）
-  - Phase 10 の完了報告
-- **codex-setup-prompt:**
-  - 冒頭の前提モデルと進め方、アンチパターン、校正の表
-  - Phase 0-B（モデルの利用可否確認）
-  - Phase 1 の AGENTS.md（作業の進め方・文書の読むタイミング）
-  - Phase 2 の各文書、Phase 3 の agents の model / effort
-  - Phase 5 の skill の書き方、Phase 6 の rules の allow、Phase 8 の個人設定の提案
-  - Phase 11 の完了報告
+- **repository-setup-prompt:**
+  - 冒頭の前提モデルと「このセットアップ作業自体の進め方」の effort
+  - 制御手段の表（Effort 行）、アンチパターン、「〇〇 / 〇〇 向けの校正」の表
+  - Phase 0-B（モデルと effort の確認）
+  - Phase 1 の AGENTS.md（作業の進め方・Codex CLI 固有・文書の読むタイミング）と、Phase 2 の CLAUDE.md（Claude Code 固有）
+  - Phase 5 の skill の書き方と effort、Phase 6 の agents の形式表（model / effort）
+  - Phase 8 の settings.json（effort）、Phase 9 の rules の allow、Phase 10 の個人設定の提案
+  - Phase 13 の完了報告
 
 注意点:
 
-- global の CLAUDE.md は symlink で Codex も同じ本文を読みます。ツール固有の指示は見出しで対象を明示してください（無印だと Codex 側に無効な指示が混ざる）。
+- global の CLAUDE.md は symlink で、repository の AGENTS.md は `@AGENTS.md` の取り込みで、両ツールが同じ本文を読みます。ツール固有の指示は見出しで対象を明示してください（無印だと片方に無効な指示が混ざる）。
 - 記事内の `&` `<` は HTML エスケープが必要です。コードを丸ごと差し替えるときは `scripts/article_code.py` を使ってください。
 - 各記事の `updateDate` を今日の日付にします。
 
